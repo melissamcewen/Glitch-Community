@@ -31,7 +31,7 @@ const addFallbackSrc = (event) => {
 const ProjectDetails = ({ projectDetails }) => (
   <article className="project-details">
     <ProjectLink project={projectDetails}>
-      <ProjectAvatar projectDetails} />
+      <ProjectAvatar {...projectDetails} />
     </ProjectLink>
     <table>
       <tbody>

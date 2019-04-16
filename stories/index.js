@@ -35,6 +35,18 @@ window.CDN_URL = 'https://cdn.glitch.com';
 window.EDITOR_URL = 'https://glitch.com/edit/';
 window.APP_URL = 'https://glitch.com';
 
+// mock data
+const projects = {
+  example: {
+    id: 'ea4b9a75-92ac-4057-9a6e-31dde0d03682',
+    domain: 'thimble-import',
+  },
+  helloWebpage: {
+    id: '929980a8-32fc-4ae7-a66f-dddb3ae4912c hello-webpage',
+    domain: 'hello-webpage',
+  }
+};
+
 const helloAlert = () => {
   alert('hello');
 };
@@ -241,17 +253,6 @@ const users = {
     updatedAt: '2019-04-03T13:34:21.147Z',
     features: [],
   },
-};
-
-const projects = {
-  example: {
-    id: 123,
-    domain: 'potent-pink',
-  },
-  helloWebpage: {
-    id: 1,
-    domain: 'hello-webpage',
-  }
 };
 
 storiesOf('ProjectItem', module).add(
