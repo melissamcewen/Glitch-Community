@@ -5,8 +5,7 @@ import Pluralize from 'react-pluralize';
 import Markdown from 'Components/text/markdown';
 import Button from 'Components/buttons/button';
 import { ProfileItem } from 'Components/profile/profile-list';
-
-import CollectionAvatar from '../../presenters/includes/collection-avatar';
+import { CollectionAvatar } from 'Components/images/avatar';
 
 import styles from './collection-item.styl';
 

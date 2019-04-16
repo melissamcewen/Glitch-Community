@@ -4,13 +4,12 @@ import Pluralize from 'react-pluralize';
 
 import Markdown from 'Components/text/markdown';
 import Text from 'Components/text/text';
-import { TeamAvatar, UserAvatar } from 'Components/images/avatar';
+import { TeamAvatar, UserAvatar, CollectionAvatar } from 'Components/images/avatar';
 import Image from 'Components/images/image';
 import Loader from 'Components/loaders/loader';
 
 import CollectionOptionsContainer from './pop-overs/collection-options-pop';
 import { TeamLink, UserLink, CollectionLink, ProjectLink } from './includes/link';
-import CollectionAvatar from './includes/collection-avatar';
 import { getAvatarUrl } from '../models/project';
 import { isDarkColor } from '../models/collection';
 
