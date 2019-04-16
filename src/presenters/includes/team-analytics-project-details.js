@@ -5,8 +5,8 @@ import dayjs from 'dayjs';
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import Text from 'Components/text/text';
 import Loader from 'Components/loaders/loader';
+import { ProjectAvatar } from 'Components/images/avatar';
 import { ProjectLink } from './link';
-import { DEFAULT_PROJECT_AVATAR, getAvatarUrl } from '../../models/project';
 import { useAPI } from '../../state/api';
 
 const RECENT_REMIXES_COUNT = 100;
@@ -25,28 +25,13 @@ const addFallbackSrc = (event) => {
   event.target.src = DEFAULT_PROJECT_AVATAR;
 };
 
-const ProjectAvatar = ({ project, className = '' }) => (
-  <img src={getAvatarUrl(project.id)} className={`avatar ${className}`} alt={project.domain} onError={addFallbackSrc} />
-);
-ProjectAvatar.propTypes = {
-  project: PropTypes.shape({
-    domain: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-  }).isRequired,
-  className: PropTypes.string,
-};
-
-ProjectAvatar.defaultProps = {
-  className: '',
-};
-
 // This uses dayjs().fromNow() a bunch of times
 // That requires the relativeTime plugin
 // Which is added to dayjs elsewhere
 const ProjectDetails = ({ projectDetails }) => (
   <article className="project-details">
     <ProjectLink project={projectDetails}>
-      <ProjectAvatar project={projectDetails} />
+      <ProjectAvatar projectDetails} />
     </ProjectLink>
     <table>
       <tbody>
@@ -91,7 +76,7 @@ const ProjectDetails = ({ projectDetails }) => (
             <td className="label">Originally remixed from</td>
             <td>
               <ProjectLink project={projectDetails.baseProject}>
-                <ProjectAvatar project={projectDetails.baseProject} className="baseproject-avatar" />
+                <ProjectAvatar {...projectDetails.baseProject} className="baseproject-avatar" />
                 {projectDetails.baseProject.domain}
               </ProjectLink>
             </td>

@@ -4,10 +4,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loader from 'Components/loaders/loader';
+import { ProjectAvatar } from 'Components/images/avatar';
 import { useTrackedFunc } from '../segment-analytics';
 import { NestedPopoverTitle } from './popover-nested';
 import { getAvatarThumbnailUrl, getDisplayName } from '../../models/user';
-import { getAvatarUrl as getProjectAvatarUrl } from '../../models/project';
 
 const TeamUserRemoveButton = ({ userAvatar, userLogin, userStyle, removeUser }) => {
   const onClick = useTrackedFunc(removeUser, 'Remove from Team submitted');
@@ -90,7 +90,7 @@ class TeamUserRemovePop extends React.Component {
                   value={project.id}
                   onChange={this.handleCheckboxChange}
                 />
-                <img className="avatar" src={getProjectAvatarUrl(project.id)} alt="" />
+                <ProjectAvatar {...project} />
                 {project.domain}
               </label>
             ))}

@@ -6,7 +6,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Heading from 'Components/text/heading';
 import Loader from 'Components/loaders/loader';
-import { getAvatarUrl } from '../models/project';
 
 import { useAPI } from '../state/api';
 import { useTrackedFunc } from './segment-analytics';
@@ -23,7 +22,7 @@ const DeletedProject = ({ id, domain, onClick }) => {
   return (
     <button className="button-unstyled" onClick={onClickTracked}>
       <div className="deleted-project">
-        <img className="avatar" src={getAvatarUrl(id)} alt="" />
+        <ProjectAvatar id={id} domain={domain} />
         <div className="deleted-project-name">{domain}</div>
         <div className="button button-small">Undelete</div>
       </div>

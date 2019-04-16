@@ -4,14 +4,12 @@ import Pluralize from 'react-pluralize';
 
 import Markdown from 'Components/text/markdown';
 import Text from 'Components/text/text';
-import { TeamAvatar, UserAvatar } from 'Components/images/avatar';
-import Image from 'Components/images/image';
+import { TeamAvatar, UserAvatar, ProjectAvatar } from 'Components/images/avatar';
 import Loader from 'Components/loaders/loader';
 
 import CollectionOptionsContainer from './pop-overs/collection-options-pop';
 import { TeamLink, UserLink, CollectionLink, ProjectLink } from './includes/link';
 import CollectionAvatar from './includes/collection-avatar';
-import { getAvatarUrl } from '../models/project';
 import { isDarkColor } from '../models/collection';
 
 const ProjectsPreview = ({ collection, isAuthorized }) => {
@@ -31,7 +29,7 @@ const ProjectsPreview = ({ collection, isAuthorized }) => {
           {collection.projects.slice(0, 3).map((project) => (
             <li key={project.id} className={`project-container ${project.private ? 'private' : ''}`}>
               <ProjectLink project={project} className="project-link">
-                <Image className="avatar" src={getAvatarUrl(project.id)} alt="" />
+                <ProjectAvatar {...project} />
                 <div className="project-name">{project.domain}</div>
                 <div className="project-badge private-project-badge" aria-label="private" />
               </ProjectLink>

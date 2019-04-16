@@ -3,10 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { orderBy, remove } from 'lodash';
 import Loader from 'Components/loaders/loader';
+import { ProjectAvatar } from 'Components/images/avatar';
 import { captureException } from '../../utils/sentry';
 
 import { useTrackedFunc } from '../segment-analytics';
-import { getAvatarUrl } from '../../models/project';
 import { useAPI } from '../../state/api';
 import { useCurrentUser } from '../../state/current-user';
 
@@ -21,7 +21,7 @@ const NoCollectionPlaceholder = <p className="info-description">Create collectio
 
 const AddProjectPopoverTitle = ({ project }) => (
   <NestedPopoverTitle>
-    <img src={getAvatarUrl(project.id)} alt="" /> Add {project.domain} to collection
+    <ProjectAvatar {...project} /> Add {project.domain} to collection
   </NestedPopoverTitle>
 );
 AddProjectPopoverTitle.propTypes = {
