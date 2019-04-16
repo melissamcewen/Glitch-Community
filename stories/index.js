@@ -7,6 +7,7 @@ import TooltipContainer from 'Components/tooltips/tooltip-container';
 import TextInput from 'Components/inputs/text-input';
 import TextArea from 'Components/inputs/text-area';
 import Image from 'Components/images/image';
+import { CollectionAvatar } from 'Components/images/avatar';
 import MaskImage from 'Components/images/mask-image';
 import Text from 'Components/text/text';
 import Heading from 'Components/text/heading';
@@ -370,6 +371,8 @@ storiesOf('SearchResults', module).add(
     )),
   ),
 );
+
+storiesOf('CollectionAvatar', module).add('collection avatar', () => <CollectionAvatar color={'#00ff00'} />);
 
 storiesOf('MaskImage', module)
   .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
