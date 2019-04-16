@@ -311,7 +311,7 @@ storiesOf('UserItem', module).add('base', () => (
 
 storiesOf('TeamItem', module).add('base', () => (
   <div style={{ margin: '2em', width: '25%' }}>
-    <TeamItem team={testTeam} />
+    <TeamItem team={teams.example} />
   </div>
 ));
 
@@ -374,13 +374,7 @@ storiesOf('SearchResults', module).add(
   ),
 );
 
-storiesOf('UserAvatar', module)
-  .add('authenticated user', () => <UserAvatar user={users.modernserf} />)
-  .add('anonymous user', () => <UserAvatar />);
-
-storiesOf('TeamAvatar', module).add('base', () => <TeamAvatar team={testTeam} />);
-
-storiesOf('CollectionAvatar', module).add('base', () => <CollectionAvatar color={'#00ff00'} />);
+storiesOf('CollectionAvatar', module).add('collection avatar', () => <CollectionAvatar color={'#00ff00'} />);
 
 storiesOf('MaskImage', module)
   .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
