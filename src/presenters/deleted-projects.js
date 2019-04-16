@@ -22,7 +22,7 @@ const DeletedProject = ({ id, domain, onClick }) => {
   return (
     <button className="button-unstyled" onClick={onClickTracked}>
       <div className="deleted-project">
-        <ProjectAvatar id={id} domain={domain} />
+        <ProjectAvatar id={id} />
         <div className="deleted-project-name">{domain}</div>
         <div className="button button-small">Undelete</div>
       </div>

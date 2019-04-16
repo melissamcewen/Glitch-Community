@@ -42,8 +42,8 @@ const projects = {
     domain: 'thimble-import',
   },
   helloWebpage: {
-    id: '929980a8-32fc-4ae7-a66f-dddb3ae4912c hello-webpage',
-    domain: 'hello-webpage',
+    id: '8e2e7c51-4309-46d8-a1d6-4a343d93726d',
+    domain: 'email',
   }
 };
 

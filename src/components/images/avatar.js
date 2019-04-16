@@ -46,14 +46,14 @@ Avatar.defaultProps = {
   hideTooltip: false,
 };
 
-export const ProjectAvatar = ({ id, domain }) => {
-  console.log(id, domain);
+export const ProjectAvatar = ({ id }) => {
   return (
   <Avatar
-    name={domain}
+    name=''
     src={getProjectAvatarUrl(id)}
     srcFallback={DEFAULT_PROJECT_AVATAR}
     type="project"
+    hideTooltip
   />
 )};
 ProjectAvatar.propTypes = {
