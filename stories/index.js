@@ -8,7 +8,6 @@ import TextInput from 'Components/inputs/text-input';
 import TextArea from 'Components/inputs/text-area';
 import Image from 'Components/images/image';
 import MaskImage from 'Components/images/mask-image';
-import { UserAvatar, TeamAvatar, CollectionAvatar } from 'Components/images/avatar';
 import Text from 'Components/text/text';
 import Heading from 'Components/text/heading';
 import Markdown from 'Components/text/markdown';
@@ -34,44 +33,6 @@ import FeaturedProject from 'Components/project/featured-project';
 window.CDN_URL = 'https://cdn.glitch.com';
 window.EDITOR_URL = 'https://glitch.com/edit/';
 window.APP_URL = 'https://glitch.com';
-
-const users = {
-  modernserf: {
-    isSupport: false,
-    isInfrastructureUser: false,
-    id: 271885,
-    avatarUrl: 'https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/user-avatar/560e4b07-a70b-4f87-b8d4-699d738792d0-large.jpg',
-    avatarThumbnailUrl: 'https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/user-avatar/560e4b07-a70b-4f87-b8d4-699d738792d0-small.jpg',
-    login: 'modernserf',
-    name: 'Justin Falcone',
-    location: 'Brooklyn, NY',
-    color: '#ea6996',
-    description:
-      'programmer & writer\n\n[🐦](https://twitter.com/modernserf) [🐙](https://github.com/modernserf) [🏠](https://justinfalcone.com) [☄](http://pronoun.is/they/.../themselves)',
-    hasCoverImage: true,
-    coverColor: 'rgb(84,138,53)',
-    thanksCount: 1,
-    utcOffset: -240,
-    featuredProjectId: '22a883dc-a45d-4257-b44c-a43b6b8cabe9',
-    createdAt: '2017-03-21T00:14:37.651Z',
-    updatedAt: '2019-04-03T13:34:21.147Z',
-    features: [],
-  },
-};
-
-const teams = {
-  example : { 
-  id: 12345,
-  coverColor: '#efe',
-  description: 'An example team',
-  hasAvatarImage: false,
-  hasCoverImage: false,
-  isVerified: false,
-  name: ['Example Team'],
-  url: 'example-team',
-  users: [users.modernserf],
-  }
-};
 
 const helloAlert = () => {
   alert('hello');
@@ -257,6 +218,30 @@ storiesOf('Segmented-Buttons', module)
     )),
   );
 
+const users = {
+  modernserf: {
+    isSupport: false,
+    isInfrastructureUser: false,
+    id: 271885,
+    avatarUrl: 'https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/user-avatar/560e4b07-a70b-4f87-b8d4-699d738792d0-large.jpg',
+    avatarThumbnailUrl: 'https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/user-avatar/560e4b07-a70b-4f87-b8d4-699d738792d0-small.jpg',
+    login: 'modernserf',
+    name: 'Justin Falcone',
+    location: 'Brooklyn, NY',
+    color: '#ea6996',
+    description:
+      'programmer & writer\n\n[🐦](https://twitter.com/modernserf) [🐙](https://github.com/modernserf) [🏠](https://justinfalcone.com) [☄](http://pronoun.is/they/.../themselves)',
+    hasCoverImage: true,
+    coverColor: 'rgb(84,138,53)',
+    thanksCount: 1,
+    utcOffset: -240,
+    featuredProjectId: '22a883dc-a45d-4257-b44c-a43b6b8cabe9',
+    createdAt: '2017-03-21T00:14:37.651Z',
+    updatedAt: '2019-04-03T13:34:21.147Z',
+    features: [],
+  },
+};
+
 storiesOf('ProjectItem', module).add(
   'base',
   provideContext({ currentUser: {} }, () => (
@@ -311,7 +296,19 @@ storiesOf('UserItem', module).add('base', () => (
 
 storiesOf('TeamItem', module).add('base', () => (
   <div style={{ margin: '2em', width: '25%' }}>
-    <TeamItem team={teams.example} />
+    <TeamItem
+      team={{
+        id: 12345,
+        coverColor: '#efe',
+        description: 'An example team',
+        hasAvatarImage: false,
+        hasCoverImage: false,
+        isVerified: false,
+        name: ['Example Team'],
+        url: 'example-team',
+        users: [users.modernserf],
+      }}
+    />
   </div>
 ));
 
@@ -373,8 +370,6 @@ storiesOf('SearchResults', module).add(
     )),
   ),
 );
-
-storiesOf('CollectionAvatar', module).add('collection avatar', () => <CollectionAvatar color={'#00ff00'} />);
 
 storiesOf('MaskImage', module)
   .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
@@ -471,6 +466,10 @@ storiesOf('FeaturedProject', module)
   .add(
     'does not own featured project',
     provideContext({ currentUser: { login: '@sarahzinger' } }, () => (
-      <FeaturedProject featuredProject={{ id: '123', domain: 'community-staging' }} isAuthorized={false} currentUser={{ login: '@sarahzinger' }} />
+      <FeaturedProject
+        featuredProject={{ id: '123', domain: 'community-staging' }}
+        isAuthorized={false}
+        currentUser={{ login: '@sarahzinger' }}
+      />
     )),
   );
