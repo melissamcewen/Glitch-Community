@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import Image from 'Components/images/image';
@@ -8,10 +9,19 @@ import { DEFAULT_PROJECT_AVATAR, getAvatarUrl as getProjectAvatarUrl } from 'Mod
 import { DEFAULT_TEAM_AVATAR, getAvatarUrl as getTeamAvatarUrl } from 'Models/team';
 import { ANON_AVATAR_URL, getAvatarThumbnailUrl, getDisplayName } from 'Models/user';
 import styles from './avatar.styl';
+const cx = classNames.bind(styles);
 
 // UserAvatar
 
 export const Avatar = ({ name, src, color, srcFallback, type, hideTooltip, withinButton }) => {
+  const className = cx({
+    avatar: true,
+    project: type === 'project',
+    team: type === 'team',
+    user: type === 'user',
+    collection: type === 'collection',
+  });
+
   const contents = (
     <Image
       width="32px"
@@ -20,7 +30,7 @@ export const Avatar = ({ name, src, color, srcFallback, type, hideTooltip, withi
       defaultSrc={srcFallback}
       alt={name}
       backgroundColor={color}
-      className={styles[type]}
+      className={className}
     />
   );
 
