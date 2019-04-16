@@ -47,6 +47,7 @@ Avatar.defaultProps = {
 };
 
 export const ProjectAvatar = ({ id, domain }) => {
+  console.log(id);
   console.log('domain', domain);
   return (
   <Avatar

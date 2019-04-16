@@ -7,6 +7,7 @@ import TooltipContainer from 'Components/tooltips/tooltip-container';
 import TextInput from 'Components/inputs/text-input';
 import TextArea from 'Components/inputs/text-area';
 import Image from 'Components/images/image';
+import { ProjectAvatar } from 'Components/images/avatar';
 import MaskImage from 'Components/images/mask-image';
 import Text from 'Components/text/text';
 import Heading from 'Components/text/heading';
@@ -242,6 +243,17 @@ const users = {
   },
 };
 
+const projects = {
+  example: {
+    id: 123,
+    domain: 'potent-pink',
+  },
+  helloWebpage: {
+    id: 1,
+    domain: 'hello-webpage',
+  }
+};
+
 storiesOf('ProjectItem', module).add(
   'base',
   provideContext({ currentUser: {} }, () => (
@@ -370,6 +382,10 @@ storiesOf('SearchResults', module).add(
     )),
   ),
 );
+
+storiesOf('ProjectAvatar', module)
+  .add('project', () => <ProjectAvatar {...projects.example} />)
+  .add('project with avatar', () => <ProjectAvatar {...projects.helloWebpage} />);
 
 storiesOf('MaskImage', module)
   .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
