@@ -2,11 +2,11 @@ import React from 'react';
 
 import Heading from 'Components/text/heading';
 import Image from 'Components/images/image';
+import { CollectionAvatar } from 'Components/images/avatar';
 import categories from '../curated/categories';
 import { moreIdeasTeam } from '../curated/collections';
 import { isDarkColor } from '../models/collection';
 
-import CollectionAvatar from './includes/collection-avatar';
 import { CollectionLink, Link } from './includes/link';
 import { DataLoader } from './includes/loader';
 

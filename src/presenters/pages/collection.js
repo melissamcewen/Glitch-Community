@@ -7,6 +7,7 @@ import Helmet from 'react-helmet';
 import Text from 'Components/text/text';
 import ProjectItem from 'Components/project/project-item';
 import Image from 'Components/images/image';
+import { CollectionAvatar } from 'Components/images/avatar';
 import NotFound from 'Components/errors/not-found';
 import { ProfileItem } from 'Components/profile/profile-list';
 import Layout from '../layout';
@@ -21,8 +22,6 @@ import EditCollectionColor from '../includes/edit-collection-color';
 import EditCollectionNameAndUrl from '../includes/edit-collection-name-and-url';
 import AddCollectionProject from '../includes/add-collection-project';
 import ReportButton from '../pop-overs/report-abuse-pop';
-
-import CollectionAvatar from '../includes/collection-avatar';
 
 import { useAPI } from '../../state/api';
 import { useCurrentUser } from '../../state/current-user';
