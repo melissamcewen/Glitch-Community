@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ProfileList from 'Components/profile/profile-list';
+import { ProjectAvatar } from 'Components/images/avatar';
 import { ProjectLink } from './link';
-import ProjectAvatar from './project-avatar';
 
 const ProjectResultItem = ({ onClick, isActive, isPrivate, ...project }) => {
   const activeClass = isActive ? 'active' : '';

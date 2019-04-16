@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loader from 'Components/loaders/loader';
+import { ProjectAvatar } from 'Components/images/avatar';
 import { TrackedExternalLink } from '../segment-analytics';
-import ProjectAvatar from '../includes/project-avatar';
 import PopoverWithButton from './popover-with-button';
 
 import { createAPIHook } from '../../state/api';
