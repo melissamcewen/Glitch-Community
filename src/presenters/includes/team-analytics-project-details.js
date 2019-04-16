@@ -6,7 +6,7 @@ import TooltipContainer from 'Components/tooltips/tooltip-container';
 import Text from 'Components/text/text';
 import Loader from 'Components/loaders/loader';
 import { ProjectLink } from './link';
-import { FALLBACK_AVATAR_URL, getAvatarUrl } from '../../models/project';
+import { DEFAULT_PROJECT_AVATAR, getAvatarUrl } from '../../models/project';
 import { useAPI } from '../../state/api';
 
 const RECENT_REMIXES_COUNT = 100;
@@ -22,7 +22,7 @@ const getProjectDetails = async (id, api, currentProjectDomain) => {
 };
 
 const addFallbackSrc = (event) => {
-  event.target.src = FALLBACK_AVATAR_URL;
+  event.target.src = DEFAULT_PROJECT_AVATAR;
 };
 
 const ProjectAvatar = ({ project, className = '' }) => (
