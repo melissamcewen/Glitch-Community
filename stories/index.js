@@ -379,7 +379,10 @@ storiesOf('UserAvatar', module)
   .add('base', () => <UserAvatar user={users.modernserf} />);
 
 storiesOf('TeamAvatar', module) 
-  .add('base', () => <TeamAvatar team={teams.} />
+  .add('base', () => <TeamAvatar team={testTeam} />);
+       
+storiesOf('CollectionAvatar', module)
+  .add('base', () => <CollectionAvatar color={"#ff0000"} />)
 
 storiesOf('MaskImage', module)
   .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
