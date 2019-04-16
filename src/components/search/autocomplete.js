@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MaskImage from 'Components/images/mask-image';
-import { TeamAvatar, UserAvatar } from 'Components/images/avatar';
+import { TeamAvatar, UserAvatar, ProjectAvatar } from 'Components/images/avatar';
 import { Link, TeamLink, UserLink, ProjectLink } from '../../presenters/includes/link';
-import ProjectAvatar from '../../presenters/includes/project-avatar';
 import CollectionAvatar from '../../presenters/includes/collection-avatar';
 import { useAlgoliaSearch } from '../../state/search';
 import styles from './autocomplete.styl';

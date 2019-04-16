@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import Image from 'Components/images/image';
 
+import { DEFAULT_PROJECT_AVATAR, getAvatarUrl as getProjectAvatarUrl } from 'Models/project';
 import { DEFAULT_TEAM_AVATAR, getAvatarUrl as getTeamAvatarUrl } from 'Models/team';
 import { ANON_AVATAR_URL, getAvatarThumbnailUrl, getDisplayName } from 'Models/user';
 import styles from './avatar.styl';
@@ -43,6 +44,20 @@ Avatar.defaultProps = {
   color: null,
   srcFallback: '',
   hideTooltip: false,
+};
+
+export const ProjectAvatar = ({ id }) => (
+  <img
+    className="avatar"
+    src={getProjectAvatarUrl(id)}
+    alt=""
+    onError={(event) => {
+      event.target.src = DEFAULT_PROJECT_AVATAR;
+    }}
+  />
+);
+ProjectAvatar.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export const TeamAvatar = ({ team, hideTooltip }) => (
