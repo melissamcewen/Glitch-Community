@@ -8,6 +8,7 @@ import TextInput from 'Components/inputs/text-input';
 import TextArea from 'Components/inputs/text-area';
 import Image from 'Components/images/image';
 import MaskImage from 'Components/images/mask-image';
+import { UserAvatar, TeamAvatar, CollectionAvatar } from 'Components/images/avatar';
 import Text from 'Components/text/text';
 import Heading from 'Components/text/heading';
 import Markdown from 'Components/text/markdown';
@@ -33,6 +34,21 @@ import FeaturedProject from 'Components/project/featured-project';
 window.CDN_URL = 'https://cdn.glitch.com';
 window.EDITOR_URL = 'https://glitch.com/edit/';
 window.APP_URL = 'https://glitch.com';
+
+const testUsers = [
+];
+
+const testTeam = {
+  id: 12345,
+  coverColor: '#efe',
+  description: 'An example team',
+  hasAvatarImage: false,
+  hasCoverImage: false,
+  isVerified: false,
+  name: ['Example Team'],
+  url: 'example-team',
+  users: [users.modernserf],
+}
 
 const helloAlert = () => {
   alert('hello');
@@ -296,19 +312,7 @@ storiesOf('UserItem', module).add('base', () => (
 
 storiesOf('TeamItem', module).add('base', () => (
   <div style={{ margin: '2em', width: '25%' }}>
-    <TeamItem
-      team={{
-        id: 12345,
-        coverColor: '#efe',
-        description: 'An example team',
-        hasAvatarImage: false,
-        hasCoverImage: false,
-        isVerified: false,
-        name: ['Example Team'],
-        url: 'example-team',
-        users: [users.modernserf],
-      }}
-    />
+    <TeamItem team={testTeam} />
   </div>
 ));
 
@@ -370,6 +374,12 @@ storiesOf('SearchResults', module).add(
     )),
   ),
 );
+
+storiesOf('UserAvatar', module)
+  .add('base', () => <UserAvatar user={users.modernserf} />);
+
+storiesOf('TeamAvatar', module) 
+  .add('base', () => <TeamAvatar team={teams.} />
 
 storiesOf('MaskImage', module)
   .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
