@@ -14,13 +14,13 @@ const cx = classNames.bind(styles);
 // UserAvatar
 
 export const Avatar = ({ name, src, color, srcFallback, type, hideTooltip, withinButton }) => {
-  const className = cx({
-    avatar: true,
-    project: type === 'project',
-    team: type === 'team',
-    user: type === 'user',
-    collection: type === 'collection',
-  });
+  // const className = cx({
+  //   avatar: true,
+  //   project: type === 'project',
+  //   team: type === 'team',
+  //   user: type === 'user',
+  //   collection: type === 'collection',
+  // });
 
   const contents = (
     <Image
@@ -30,7 +30,7 @@ export const Avatar = ({ name, src, color, srcFallback, type, hideTooltip, withi
       defaultSrc={srcFallback}
       alt={name}
       backgroundColor={color}
-      className={className}
+      className={'avatar ' + styles[type]}
     />
   );
 

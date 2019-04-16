@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Heading from 'Components/text/heading';
 import Loader from 'Components/loaders/loader';
+import { ProjectAvatar } from 'Components/images/avatar';
 
 import { useAPI } from '../state/api';
 import { useTrackedFunc } from './segment-analytics';

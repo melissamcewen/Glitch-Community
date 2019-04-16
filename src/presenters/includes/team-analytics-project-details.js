@@ -21,10 +21,6 @@ const getProjectDetails = async (id, api, currentProjectDomain) => {
   return null;
 };
 
-const addFallbackSrc = (event) => {
-  event.target.src = DEFAULT_PROJECT_AVATAR;
-};
-
 // This uses dayjs().fromNow() a bunch of times
 // That requires the relativeTime plugin
 // Which is added to dayjs elsewhere
