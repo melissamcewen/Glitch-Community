@@ -35,8 +35,7 @@ window.CDN_URL = 'https://cdn.glitch.com';
 window.EDITOR_URL = 'https://glitch.com/edit/';
 window.APP_URL = 'https://glitch.com';
 
-const testUsers = [
-];
+const testUsers = [];
 
 const testTeam = {
   id: 12345,
@@ -48,7 +47,7 @@ const testTeam = {
   name: ['Example Team'],
   url: 'example-team',
   users: [users.modernserf],
-}
+};
 
 const helloAlert = () => {
   alert('hello');
@@ -375,14 +374,11 @@ storiesOf('SearchResults', module).add(
   ),
 );
 
-storiesOf('UserAvatar', module)
-  .add('base', () => <UserAvatar user={users.modernserf} />);
+storiesOf('UserAvatar', module).add('base', () => <UserAvatar user={users.modernserf} />);
 
-storiesOf('TeamAvatar', module) 
-  .add('base', () => <TeamAvatar team={testTeam} />);
-       
-storiesOf('CollectionAvatar', module)
-  .add('base', () => <CollectionAvatar color={"#ff0000"} />)
+storiesOf('TeamAvatar', module).add('base', () => <TeamAvatar team={testTeam} />);
+
+// storiesOf('CollectionAvatar', module).add('base', () => <CollectionAvatar color={'#ff0000'} />);
 
 storiesOf('MaskImage', module)
   .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
@@ -479,10 +475,6 @@ storiesOf('FeaturedProject', module)
   .add(
     'does not own featured project',
     provideContext({ currentUser: { login: '@sarahzinger' } }, () => (
-      <FeaturedProject
-        featuredProject={{ id: '123', domain: 'community-staging' }}
-        isAuthorized={false}
-        currentUser={{ login: '@sarahzinger' }}
-      />
+      <FeaturedProject featuredProject={{ id: '123', domain: 'community-staging' }} isAuthorized={false} currentUser={{ login: '@sarahzinger' }} />
     )),
   );
