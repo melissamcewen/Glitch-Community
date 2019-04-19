@@ -21,7 +21,7 @@ const importGitRepo = () => {
 
 const NewProjectResultItem = ({ id, domain, description }) => (
   <div className="result result-project">
-    <ProjectAvatar id={id} />
+    <ProjectAvatar id={id} size={22} />
     <div className="results-info">
       <div className="result-name" title={domain}>
         {domain}
