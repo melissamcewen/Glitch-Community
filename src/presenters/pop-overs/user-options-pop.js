@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { orderBy } from 'lodash';
 import TooltipContainer from 'Components/tooltips/tooltip-container';
-import { getAvatarUrl as getTeamAvatarUrl } from '../../models/team';
+import { TeamAvatar, UserAvatar } from 'Components/images/avatar';
 import { getAvatarThumbnailUrl as getUserAvatarUrl } from '../../models/user';
 import { useTrackedFunc, useTracker } from '../segment-analytics';
 import { Link, TeamLink, UserLink } from '../includes/link';
@@ -54,7 +54,8 @@ const TeamList = ({ teams, showCreateTeam, userIsAnon }) => {
           <TeamLink key={team.id} team={team} className="button button-small has-emoji button-tertiary">
             {team.name}
             &nbsp;
-            <img className="emoji avatar" src={getTeamAvatarUrl({ ...team, size: 'small' })} alt="" width="16px" height="16px" />
+            <TeamAvatar {...team} />
+<!--             <img className="emoji avatar" src={getTeamAvatarUrl({ ...team, size: 'small' })} alt="" width="16px" height="16px" /> -->
           </TeamLink>
         </div>
       ))}
@@ -104,13 +105,13 @@ Are you sure you want to sign out?`)
   };
 
   const userName = user.name || 'Anonymous';
-  const userAvatarStyle = { backgroundColor: user.color };
+  const userAvatarStyle = { backgroundColor: user.color }; // TODO tbv
 
   return (
     <dialog className="pop-over user-options-pop">
       <UserLink user={user} className="user-info">
         <section className="pop-over-actions user-info">
-          <img className="avatar" src={getUserAvatarUrl(user)} alt="Your avatar" style={userAvatarStyle} />
+          <UserAvatar {...user} />
           <div className="info-container">
             <p className="name" title={userName}>
               {userName}

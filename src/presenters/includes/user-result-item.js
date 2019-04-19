@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import randomColor from 'randomcolor';
 import { ANON_AVATAR_URL, getAvatarThumbnailUrl, getDisplayName } from 'Models/user';
 import Thanks from 'Components/blocks/thanks';
+import { UserAvatar } from 'Components/images/avatar';
 
 import { WhitelistedDomainIcon } from './team-elements';
 
@@ -17,7 +18,8 @@ const UserResultItem = ({ user, action }) => {
 
   return (
     <button onClick={handleClick} className="button-unstyled result result-user">
-      <img className="avatar" src={getAvatarThumbnailUrl(user)} alt="" />
+<!--       <img className="avatar" src={getAvatarThumbnailUrl(user)} alt="" /> -->
+      <UserAvatar src={getAvatarThumbnailUrl(user)} />
       <div className="result-info">
         <div className="result-name" title={name}>
           {name}
@@ -52,6 +54,7 @@ export class InviteByEmail extends React.Component {
     return (
       <button onClick={this.props.onClick} className="button-unstyled result">
         <img className="avatar" src={ANON_AVATAR_URL} style={style} alt="" />
+        <UserAvatar src={ANON_AVATAR_URL} />
         <div className="result-name">Invite {this.props.email}</div>
       </button>
     );
