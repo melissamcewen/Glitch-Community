@@ -54,7 +54,7 @@ const TeamList = ({ teams, showCreateTeam, userIsAnon }) => {
           <TeamLink key={team.id} team={team} className="button button-small has-emoji button-tertiary">
             {team.name}
             &nbsp;
-            <TeamAvatar {...team} size={16} alt="TODO tbv" />
+            <TeamAvatar team size={16} alt="TODO tbv" />
           </TeamLink>
         </div>
       ))}
@@ -172,11 +172,11 @@ export default function UserOptionsAndCreateTeamPopContainer(props) {
       {(createTeamOpen) => (
         <PopoverContainer startOpen={createTeamOpen}>
           {({ togglePopover, visible, user }) => {
-            const userOptionsButton = !!props.user ? (
+            const userOptionsButton = (
               <button className="user" onClick={togglePopover} disabled={!props.user.id} type="button">
-                <UserAvatar {...props.user} size={30} alt="User options TODO tbv" />
+                {user && <UserAvatar {...user} size={30} alt="User options TODO tbv" />}
                 <span className="down-arrow icon" />
-              </button>) : null;
+              </button>);
 
             return (
               <TooltipContainer
