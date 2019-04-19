@@ -254,16 +254,16 @@ popover-secondary-background()
     
   .pop-over-actions
     .user-info
-      .avatar
+      .avatar-container // TODO tbv
         width: 30px
         height: 30px
       
   .pop-over-info.user-info
-    .avatar
+    .avatar-container // TODO tbv
       width: 44px
       height: 44px
   .pop-over-actions.user-info, .pop-over-info.user-info
-    .avatar
+    .avatar-container // TODO tbv
       border-radius: 50%
       vertical-align: middle
       margin-right: 10px
@@ -454,7 +454,7 @@ popover-secondary-background()
     max-width: 200px
   .view-result-link
     display: none
-  .avatar
+  .avatar-container // TODO tbv
     width: 22px
     height: 22px
     margin-right: 10px
@@ -506,14 +506,14 @@ popover-secondary-background()
       margin: 0
       margin-right: 5px
       cursor: pointer
-    .avatar
+    .avatar-container // TODO tbv
       vertical-align: middle
       margin-right: 5px
 
     // shrink avatars if there are more than 10 projects
     label:nth-last-child(n+10) // every label at least ten from the end
       &, & ~ label // will style itself and all following labels
-        .avatar
+        .avatar-container // TODO tbv
           width: 20px
           height: 20px
 
