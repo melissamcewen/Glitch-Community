@@ -18,8 +18,7 @@ const UserResultItem = ({ user, action }) => {
 
   return (
     <button onClick={handleClick} className="button-unstyled result result-user">
-<!--       <img className="avatar" src={getAvatarThumbnailUrl(user)} alt="" /> -->
-      <UserAvatar src={getAvatarThumbnailUrl(user)} />
+      <UserAvatar src={getAvatarThumbnailUrl(user)} alt="TODO tbv" />
       <div className="result-info">
         <div className="result-name" title={name}>
           {name}
