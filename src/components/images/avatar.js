@@ -11,7 +11,7 @@ import styles from './avatar.styl';
 
 export const Avatar = ({ name, src, color, srcFallback, type, hideTooltip, withinButton, size }) => {
   const contents = (
-    <Image width={`${size}px`} height={`${size}px`} src={src} defaultSrc={srcFallback} alt={name} backgroundColor={color} className={`avatar ${styles[type]}`} />
+    <Image width={`${size}px`} height={`${size}px`} src={src} defaultSrc={srcFallback} alt={name} backgroundColor={color} className={styles[type]} />
   );
 
   if (!hideTooltip) {
