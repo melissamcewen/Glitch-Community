@@ -23,15 +23,7 @@ export const Avatar = ({ name, src, color, srcFallback, type, hideTooltip, withi
   // });
 
   const contents = (
-    <Image
-      width="32px"
-      height="32px"
-      src={src}
-      defaultSrc={srcFallback}
-      alt={name}
-      backgroundColor={color}
-      className={'avatar ' + styles[type]}
-    />
+    <Image width="32px" height="32px" src={src} defaultSrc={srcFallback} alt={name} backgroundColor={color} className={'avatar ' + styles[type]} />
   );
 
   if (!hideTooltip) {
@@ -57,15 +49,9 @@ Avatar.defaultProps = {
 };
 
 export const ProjectAvatar = ({ id }) => {
-  return (
-  <Avatar
-    name=''
-    src={getProjectAvatarUrl(id)}
-    srcFallback={DEFAULT_PROJECT_AVATAR}
-    type="project"
-    hideTooltip
-  />
-)};
+  console.log(id);
+  return <Avatar name="" src={getProjectAvatarUrl(id)} srcFallback={DEFAULT_PROJECT_AVATAR} type="project" hideTooltip />;
+};
 ProjectAvatar.propTypes = {
   id: PropTypes.string.isRequired,
 };
