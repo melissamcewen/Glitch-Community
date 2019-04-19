@@ -110,7 +110,7 @@ Are you sure you want to sign out?`)
     <dialog className="pop-over user-options-pop">
       <UserLink user={user} className="user-info">
         <section className="pop-over-actions user-info">
-          <UserAvatar {...user} />
+          {user && <UserAvatar {...user} />}
           <div className="info-container">
             <p className="name" title={userName}>
               {userName}
@@ -172,12 +172,11 @@ export default function UserOptionsAndCreateTeamPopContainer(props) {
       {(createTeamOpen) => (
         <PopoverContainer startOpen={createTeamOpen}>
           {({ togglePopover, visible, user }) => {
-            const userOptionsButton = props.user && (
+            const userOptionsButton = props.user ? (
               <button className="user" onClick={togglePopover} disabled={!props.user.id} type="button">
                 <UserAvatar {...props.user} size={30} alt="User options TODO tbv" />
                 <span className="down-arrow icon" />
-              </button>
-            );
+              </button>) : null;
 
             return (
               <TooltipContainer
