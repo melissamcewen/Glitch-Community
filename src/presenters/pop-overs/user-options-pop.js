@@ -171,10 +171,10 @@ export default function UserOptionsAndCreateTeamPopContainer(props) {
     <CheckForCreateTeamHash>
       {(createTeamOpen) => (
         <PopoverContainer startOpen={createTeamOpen}>
-          {({ togglePopover, visible }) => {
-            const userOptionsButton = (
+          {({ togglePopover, visible, user }) => {
+            const userOptionsButton = props.user && (
               <button className="user" onClick={togglePopover} disabled={!props.user.id} type="button">
-                <UserAvatar {...user} size={30} alt="User options TODO tbv" />
+                <UserAvatar {...props.user} size={30} alt="User options TODO tbv" />
                 <span className="down-arrow icon" />
               </button>
             );
