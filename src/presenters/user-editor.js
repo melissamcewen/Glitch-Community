@@ -25,10 +25,6 @@ class UserEditor extends React.Component {
 
   isCurrentUser() {
     return !!this.props.currentUser && this.state.id === this.props.currentUser.id;
-  }  
-  
-  isSuperUser() {
-    return !!this.props.currentUser && this.props.currentUser.isSupport;
   }
 
   async updateFields(changes) {
@@ -157,7 +153,7 @@ class UserEditor extends React.Component {
       featureProject: (id) => this.featureProject(id).catch(handleError),
       unfeatureProject: (id) => this.unfeatureProject(id).catch(handleError),
     };
-    return this.props.children(this.state, funcs, this.isCurrentUser() || this.isSuperUser());
+    return this.props.children(this.state, funcs, this.isCurrentUser());
   }
 }
 UserEditor.propTypes = {
