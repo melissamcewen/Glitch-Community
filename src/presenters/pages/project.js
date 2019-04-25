@@ -172,7 +172,7 @@ async function getProject(api, domain) {
 const ProjectPageLoader = ({ domain, ...props }) => {
   const api = useAPI();
   const { currentUser } = useCurrentUser();
-  const superUser = currentUser.features && currentUser.features.find((feature) => feature.name === 'super_user');
+  const superUser = currentUser.isSupport;
 
   return (
     <DataLoader get={() => getProject(api, domain)} renderError={() => <NotFound name={domain} />}>
