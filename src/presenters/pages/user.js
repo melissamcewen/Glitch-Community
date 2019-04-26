@@ -99,7 +99,7 @@ const UserPage = ({
   // filter featuredProject out of both pinned & recent projects
   const [pinnedProjects, recentProjects] = partition(user.projects.filter(({ id }) => id !== featuredProjectId), ({ id }) => pinnedSet.has(id));
   const featuredProject = user.projects.find(({ id }) => id === featuredProjectId);
-  const isSuperUser = maybeCurrentUser.isSupport;
+
   return (
     <main className="profile-page user-page">
       <section>
@@ -117,7 +117,7 @@ const UserPage = ({
           <NameAndLogin
             name={user.name}
             login={user.login}
-            {...{ isAuthorized: isAuthorized || isSuperUser, updateName }}
+            {...{ isAuthorized: isAuthorized || maybeCurrentUser.isSupport, updateName }}
             updateLogin={(login) => updateLogin(login).then(() => syncPageToLogin(login))}
           />
           <Thanks count={user.thanksCount} />
@@ -181,7 +181,9 @@ const UserPage = ({
         enableFiltering={recentProjects.length > 6}
         enablePagination
       />
-      {isAuthorized && <DeletedProjects setDeletedProjects={setDeletedProjects} deletedProjects={_deletedProjects} undelete={undeleteProject} />}
+      {isAuthorized && (
+        <DeletedProjects 
+          setDeletedProjects={setDeletedProjects} deletedProjects={_deletedProjects} undelete={undeleteProject} />}
       {!isAuthorized && <ReportButton reportedType="user" reportedModel={user} />}
     </main>
   );

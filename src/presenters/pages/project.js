@@ -172,7 +172,6 @@ async function getProject(api, domain) {
 const ProjectPageLoader = ({ domain, ...props }) => {
   const api = useAPI();
   const { currentUser } = useCurrentUser();
-  const superUser = currentUser.isSupport;
 
   return (
     <DataLoader get={() => getProject(api, domain)} renderError={() => <NotFound name={domain} />}>
@@ -182,7 +181,7 @@ const ProjectPageLoader = ({ domain, ...props }) => {
             {(currentProject, funcs, userIsMember) => (
               <>
                 <Helmet title={currentProject.domain} />
-                <ProjectPage project={currentProject} {...funcs} isAuthorized={userIsMember || !!superUser} currentUser={currentUser} {...props} />
+                <ProjectPage project={currentProject} {...funcs} isAuthorized={userIsMember || currentUser.isSupport} currentUser={currentUser} {...props} />
               </>
             )}
           </ProjectEditor>
