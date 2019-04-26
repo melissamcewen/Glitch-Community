@@ -181,7 +181,13 @@ const ProjectPageLoader = ({ domain, ...props }) => {
             {(currentProject, funcs, userIsMember) => (
               <>
                 <Helmet title={currentProject.domain} />
-                <ProjectPage project={currentProject} {...funcs} isAuthorized={userIsMember || currentUser.isSupport} currentUser={currentUser} {...props} />
+                <ProjectPage
+                  project={currentProject}
+                  isAuthorized={userIsMember || currentUser.isSupport}
+                  currentUser={currentUser}
+                  {...funcs}
+                  {...props}
+                />
               </>
             )}
           </ProjectEditor>
