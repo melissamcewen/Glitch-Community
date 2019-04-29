@@ -99,7 +99,6 @@ const UserPage = ({
   // filter featuredProject out of both pinned & recent projects
   const [pinnedProjects, recentProjects] = partition(user.projects.filter(({ id }) => id !== featuredProjectId), ({ id }) => pinnedSet.has(id));
   const featuredProject = user.projects.find(({ id }) => id === featuredProjectId);
-  const superUser = maybeCurrentUser.features && maybeCurrentUser.features.find((feature) => feature.name === 'super_user');
 
   return (
     <main className="profile-page user-page">
@@ -118,7 +117,7 @@ const UserPage = ({
           <NameAndLogin
             name={user.name}
             login={user.login}
-            {...{ isAuthorized: isAuthorized || !!superUser, updateName }}
+            {...{ isAuthorized, updateName }}
             updateLogin={(login) => updateLogin(login).then(() => syncPageToLogin(login))}
           />
           <Thanks count={user.thanksCount} />
