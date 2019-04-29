@@ -90,7 +90,6 @@ ReadmeLoader.propTypes = {
 
 const ProjectPage = ({ project, addProjectToCollection, currentUser, isAuthorized, updateDomain, updateDescription, updatePrivate }) => {
   const { domain, users, teams } = project;
-  console.log(isAuthorized);
   return (
     <main className="project-page">
       <section id="info">
