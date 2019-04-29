@@ -150,7 +150,7 @@ module.exports = smp.wrap({
       hash: true,
       publicPath: true,
     }),
-    new CleanWebpackPlugin({ verbose: true, cleanOnceBeforeBuildPatterns: ['!storybook/*', '!stats.json']}),
+    new CleanWebpackPlugin({ dry:true, cleanStaleWebpackAssets: true, verbose: true, cleanOnceBeforeBuildPatterns: ['**/*', '!storybook/*', '!stats.json']}),
   ],
   watchOptions: {
     ignored: /node_modules/,
