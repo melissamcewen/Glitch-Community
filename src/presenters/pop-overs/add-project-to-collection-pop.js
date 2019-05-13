@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pluralize from 'react-pluralize';
-import { flatten, orderBy } from 'lodash';
+import { flatten, orderBy, partition } from 'lodash';
 import Loader from 'Components/loader';
 import TextInput from 'Components/inputs/text-input';
 import { CollectionLink } from 'Components/link';
@@ -156,15 +156,19 @@ const AddProjectToCollectionPop = (props) => {
           ...currentUser.teams.map((team) => loadTeamCollections(team)),
         ];
         const [projectCollections, ...collectionArrays] = await Promise.all(requests);
+        
+        window.projectCollections = projectCollections;
+        window.collectionsArrays = collectionArrays;
 
         const alreadyInCollectionIds = new Set(projectCollections.map((c) => c.id));
-        const collections = flatten(collectionArrays).filter((c) => !alreadyInCollectionIds.has(c.id));
-
+        const [collections, collectionsWithProject] = flatten(partition(collectionArrays).filter((c) => !alreadyInCollectionIds.has(c.id)));
+        console.log('collections', collections, 'collectionsWithProject', collectionsWithProject);
+        
         const orderedCollections = orderBy(collections, (collection) => collection.updatedAt, 'desc');
 
         if (!canceled) {
           setMaybeCollections(orderedCollections);
-          setCollectionsWithProject(projectCollections);
+          setCollectionsWithProject(collectionsWithProject);
         }
       };
 
