@@ -187,7 +187,7 @@ class AddCollectionProjectPop extends React.Component {
     let nonCollectionResults = [];
     if (searchByUrl) {
       // get the single result that matches the URL exactly - check with https://community.glitch.me/
-      nonCollectionResults = results.filter((result) => result.domain === query);
+      nonCollectionResults = results.filter((result) => result && result.domain === query);
 
       // check if the project is already in the collection
       if (nonCollectionResults.length > 0 && collectionProjectIds.includes(nonCollectionResults[0].id)) {
