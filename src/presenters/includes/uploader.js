@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { uploadAsset, uploadAssetSizes } from '../../utils/assets';
-import { useNotifications } from '../notifications';
+import { uploadAsset, uploadAssetSizes } from 'Utils/assets';
+import { useNotifications } from 'State/notifications';
 
 const NotifyUploading = ({ progress }) => (
   <>

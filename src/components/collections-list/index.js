@@ -11,7 +11,7 @@ import { getLink, createCollection } from 'Models/collection';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useAPI } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
-import { useNotifications } from '../../presenters/notifications';
+import { useNotifications } from 'State/notifications';
 import styles from './styles.styl';
 
 const CreateFirstCollection = () => (

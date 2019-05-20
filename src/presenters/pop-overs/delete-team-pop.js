@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import Loader from 'Components/loader';
 // import { teamAdmins } from 'Models/team';
-import { useNotifications } from '../notifications';
-import { useAPI } from '../../state/api';
+import { useNotifications } from 'State/notifications';
+import { useAPI } from 'State/api';
 
 const illustration = 'https://cdn.glitch.com/c53fd895-ee00-4295-b111-7e024967a033%2Fdelete-team.svg?1531267699621';
 

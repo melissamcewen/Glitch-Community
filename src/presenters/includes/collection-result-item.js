@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { getLink as getCollectionLink } from 'Models/collection';
 import { UserAvatar, TeamAvatar } from 'Components/images/avatar';
 import Markdown from 'Components/text/markdown';
-import { AddProjectToCollectionMsg, useNotifications } from '../notifications';
+import { AddProjectToCollectionMsg } from 'Components/notifications';
+import { useNotifications } from 'State/notifications';
 import CollectionAvatar from './collection-avatar';
 
 const addProject = (addProjectToCollection, project, collection, collectionPath, notification, togglePopover) => {

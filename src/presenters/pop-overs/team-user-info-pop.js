@@ -9,9 +9,9 @@ import Thanks from 'Components/thanks';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useAPI } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
+import { useNotifications } from 'State/notifications';
 
 import { NestedPopover } from './popover-nested';
-import { useNotifications } from '../notifications';
 import TeamUserRemovePop from './team-user-remove-pop';
 
 const MEMBER_ACCESS_LEVEL = 20;

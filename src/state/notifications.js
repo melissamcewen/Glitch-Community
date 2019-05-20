@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
-import { uniqueId } from 'lodash'
+import React, { createContext, useContext, useState, useMemo } from 'react';
+import { uniqueId } from 'lodash';
 
 const Context = createContext();
 export const useNotifications = () => useContext(Context);
@@ -56,7 +56,7 @@ function handleCustomError(notify, error) {
   return Promise.reject(error);
 }
 
-const useErrorHandlers = () => {
+export const useErrorHandlers = () => {
   const { createNotification, createErrorNotification } = useNotifications();
   return {
     handleError: (error) => handleError(createErrorNotification, error),

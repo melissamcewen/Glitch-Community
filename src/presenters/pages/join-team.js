@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { captureException } from '../../utils/sentry';
+import { captureException } from 'Utils/sentry';
 
-import { getLink } from '../../models/team';
-import { useAPI } from '../../state/api';
-import { useCurrentUser } from '../../state/current-user';
-import { useNotifications } from '../notifications';
+import { getLink } from 'Models/team';
+import { useAPI } from 'State/api';
+import { useCurrentUser } from 'State/current-user';
+import { useNotifications } from 'State/notifications';
 
 class JoinTeamPageBase extends React.Component {
   constructor(props) {

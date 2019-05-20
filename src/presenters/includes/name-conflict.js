@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import Text from 'Components/text/text';
 import Link from 'Components/link';
-import { useCurrentUser } from '../../state/current-user';
-import { useNotifications } from '../notifications';
+import { useCurrentUser } from 'State/current-user';
+import { useNotifications } from 'State/notifications';
 
 const NameConflictWarning = ({ id }) => (
   <>

@@ -1,11 +1,10 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { uniqueId } from 'lodash';
 
 import AnimationContainer from 'Components/animation-container';
 import Text from 'Components/text/text';
-import { useNotifications } from 'State/notifications'; 
+import { useNotifications } from 'State/notifications';
 
 const styles = {};
 
@@ -13,7 +12,7 @@ const NOTIFICATION_TIMEOUT = 2500;
 
 const Notification = ({ notification, onRemove }) => {
   useEffect(() => {
-    if (notification.persistent) return;
+    if (notification.persistent) return undefined;
     const timeout = setTimeout(onRemove, NOTIFICATION_TIMEOUT);
     return () => {
       clearTimeout(timeout);

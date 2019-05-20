@@ -5,12 +5,12 @@ import Pluralize from 'react-pluralize';
 import { debounce } from 'lodash';
 
 import Loader from 'Components/loader';
+import { AddProjectToCollectionMsg } from 'Components/notifications';
+import { useNotifications } from 'State/notifications';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useAPI } from 'State/api';
 import ProjectResultItem from '../includes/project-result-item';
 import ProjectsLoader from '../projects-loader';
-
-import { useNotifications, AddProjectToCollectionMsg } from '../notifications';
 
 const ProjectResultsUL = ({ projects, collection, onClick }) => {
   const { createNotification } = useNotifications();
