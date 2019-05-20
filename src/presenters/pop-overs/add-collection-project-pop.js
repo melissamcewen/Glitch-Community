@@ -119,7 +119,7 @@ class AddCollectionProjectPop extends React.Component {
     // add project to page if successful & show notification
     this.props
       .addProjectToCollection(project, collection)
-      .then(() => createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} />, 'notifySuccess'));
+      .then(() => createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} />, 'success'));
   }
 
   handleChange(evt) {

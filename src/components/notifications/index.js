@@ -4,6 +4,7 @@ import classnames from 'classnames';
 
 import AnimationContainer from 'Components/animation-container';
 import Text from 'Components/text/text';
+import Button from 'Components/buttons/button';
 import { useNotifications } from 'State/notifications';
 import styles from './styles.styl';
 
@@ -45,7 +46,7 @@ export const AddProjectToCollectionMsg = ({ projectDomain, collectionName, url }
       {collectionName && `to collection ${collectionName}`}
     </Text>
     {url && (
-      <Button to={url} type="tertiary" size="small" matchBackground>
+      <Button href={url} type="tertiary" size="small" matchBackground>
         Take me there
       </Button>
     )}

@@ -8,17 +8,6 @@ import { AddProjectToCollectionMsg } from 'Components/notifications';
 import { useNotifications } from 'State/notifications';
 import CollectionAvatar from './collection-avatar';
 
-const addProject = (addProjectToCollection, project, collection, collectionPath, notification, togglePopover) => {
-  // add project to collection
-  addProjectToCollection(project, collection).then(() => {
-    // show notification
-    const content = <AddProjectToCollectionMsg projectDomain={project.domain} collectionName={collection.name} url={collectionPath} />;
-    notification(content, 'notifySuccess');
-  });
-
-  togglePopover();
-};
-
 const CollectionResultItem = ({ onClick, project, collection, isActive, togglePopover }) => {
   const { createNotification } = useNotifications();
   let resultClass = 'button-unstyled result result-collection';
@@ -32,7 +21,16 @@ const CollectionResultItem = ({ onClick, project, collection, isActive, togglePo
     <div>
       <button
         className={resultClass}
-        onClick={() => addProject(onClick, project, collection, collectionPath, createNotification, togglePopover)}
+        onClick={() => {
+          // add project to collection
+          onClick(project, collection).then(() => {
+            // show notification
+            const content = <AddProjectToCollectionMsg projectDomain={project.domain} collectionName={collection.name} url={collectionPath} />;
+            createNotification(content, 'success');
+          });
+
+          togglePopover();
+        }}
         data-project-id={project.id}
       >
         <div className="avatar" id={`avatar-collection-${collection.id}`}>

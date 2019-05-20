@@ -31,7 +31,7 @@ export function NotificationsProvider({ children }) {
     };
   }, []);
 
-  const context = useMemo(() => ({ notifications, ...funcs }), notifications);
+  const context = useMemo(() => ({ notifications, ...funcs }), [notifications]);
 
   return <Context.Provider value={context}>{children}</Context.Provider>;
 }

@@ -77,7 +77,7 @@ export async function createCollection(api, name, teamId, createNotification) {
     if (!generatedName && error.response && error.response.data) {
       errorMessage = error.response.data.message;
     }
-    createNotification(errorMessage, 'notifyError');
+    createNotification(errorMessage, 'error');
   }
   return null;
 }
