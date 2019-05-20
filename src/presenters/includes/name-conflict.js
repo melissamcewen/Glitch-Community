@@ -6,7 +6,7 @@ import Link from 'Components/link';
 import { useCurrentUser } from 'State/current-user';
 import { useNotifications } from 'State/notifications';
 
-const NameConflictWarning = ({ id }) => (
+const NameConflictWarning = ({ id, onRemove }) => (
   <>
     <Text>This team has your name. You should update your info to remain unique ❄</Text>
     <Link className="button button-small button-tertiary button-in-notification-container" to={`/user/${id}`}>
@@ -20,11 +20,11 @@ NameConflictWarning.propTypes = {
 
 export function useNameConflict() {
   const { currentUser } = useCurrentUser();
-  const { createPersistentNotification } = useNotifications();
+  const { createPersistentNotification, removeNotification } = useNotifications();
   useEffect(() => {
-    const notification = createPersistentNotification(<NameConflictWarning id={currentUser.id} />);
+    const notification = createPersistentNotification(({ onRemove }) => <NameConflictWarning onRemove={onRemove} id={currentUser.id} />);
     return () => {
-      notification.removeNotification();
+      removeNotification(removeNotification);
     };
   }, [currentUser.id]);
 }

@@ -16,7 +16,10 @@ const create = ({ content, type, persistent = false }) => ({
 export function NotificationsProvider({ children }) {
   const [notifications, setNotifications] = useState([]);
   const funcs = useMemo(() => {
-    const addNotification = (notification) => setNotifications((oldNotifications) => [...oldNotifications, notification]);
+    const addNotification = (notification) => {
+      setNotifications((oldNotifications) => [...oldNotifications, notification]);
+      return notification;
+    };
     const removeNotification = ({ id }) => {
       setNotifications((oldNotifications) => oldNotifications.filter((n) => n.id !== id));
     };

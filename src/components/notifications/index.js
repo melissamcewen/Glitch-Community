@@ -5,8 +5,7 @@ import classnames from 'classnames';
 import AnimationContainer from 'Components/animation-container';
 import Text from 'Components/text/text';
 import { useNotifications } from 'State/notifications';
-
-const styles = {};
+import styles from './styles.styl';
 
 const NOTIFICATION_TIMEOUT = 2500;
 
@@ -46,9 +45,9 @@ export const AddProjectToCollectionMsg = ({ projectDomain, collectionName, url }
       {collectionName && `to collection ${collectionName}`}
     </Text>
     {url && (
-      <a href={url} rel="noopener noreferrer" className="button button-small button-tertiary button-in-notification-container notify-collection-link">
+      <Button to={url} type="tertiary" size="small" matchBackground>
         Take me there
-      </a>
+      </Button>
     )}
   </>
 );
