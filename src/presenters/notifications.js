@@ -15,8 +15,15 @@ const Notification = ({ children, className, remove }) => (
   </aside>
 );
 
-function NotificationsController () {
-  const [notifications, setNotifications] = useState([])
+function
+
+function reducer (state, action) {
+  switch
+}
+
+
+function NotificationsController() {
+  const [notifications, setNotifications] = useState([]);
   const context = useMemo(() => {
     function create(content, className = '') {
       const notification = {
@@ -24,32 +31,26 @@ function NotificationsController () {
         className,
         content,
       };
-      setNotifications((oldNotifications) => [...oldNotifications, notification])
+      setNotifications((oldNotifications) => [...oldNotifications, notification]);
       return notification.id;
     }
-    function createError(content = 'Something went wrong. Try refreshing?') {
-      return create(content, 'notifyError')
+    function remove(id) {
+      setNotifications((oldNotifications) => oldNotifications.filter((n) => n.id !== id));
     }
-    createPersistent(content, className = '') {
-    const id = this.create(content, `notifyPersistent ${className}`);
-    const updateNotification = (updatedContent) => {
-      this.setState(({ notifications }) => ({
-        notifications: notifications.map((n) => (n.id === id ? { ...n, updatedContent } : n)),
-      }));
-    };
-    const removeNotification = () => {
-      this.remove(id);
-    };
-    return {
-      updateNotification,
-      removeNotification,
-    };
-  }
-
-  }, [])
-  
-  
-  
+    function createError(content = 'Something went wrong. Try refreshing?') {
+      return create(content, 'notifyError');
+    }
+    function createPersistent(content, className = '') {
+      const id = create(content, `notifyPersistent ${className}`);
+      const updateNotification = (updatedContent) => {
+        setNotifications((oldNotifications) => oldNotifications.map((n) => (n.id === id ? { ...n, updatedContent } : n)));
+      };
+      const removeNotification = () => {
+        remove(id);
+      };
+      return { updateNotification, removeNotification };
+    }
+  }, []);
 }
 
 export class Notifications extends React.Component {
