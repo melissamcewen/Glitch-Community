@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
@@ -6,17 +6,18 @@ import { uniqueId } from 'lodash';
 import AnimationContainer from 'Components/animation-container';
 import Text from 'Components/text/text';
 
-const styles = {}
+const styles = {};
 
 const Context = React.createContext();
 export const useNotifications = () => React.useContext(Context);
 
 const notificationTypes = ['info', 'warning', 'error', 'success'];
 
-const create = ({ content, type, persistent = false }) => ({
+const create = ({ content, type, custom = false }) => ({
   id: uniqueId('notification-'),
   type,
   content,
+  custom,
 });
 
 export function NotificationsProvider({ children }) {
@@ -26,16 +27,11 @@ export function NotificationsProvider({ children }) {
     const removeNotification = ({ id }) => {
       setNotifications((oldNotifications) => oldNotifications.filter((n) => n.id !== id));
     };
-    const updateNotification = ({ id, content }) => {
-      setNotifications((oldNotifications) => oldNotifications.map((n) => (n.id === id ? { ...n, content } : n)));
-    };
-
     return {
       createNotification: (content, type = 'info') => addNotification(create({ content, type })),
       createErrorNotification: (content = 'Something went wrong. Try refreshing?') => addNotification(create({ content, type: 'error' })),
-      createPersistentNotification: (content, type = 'info') => addNotification(create({ content, type, persistent: 'true' })),
+      createCustomNotification: (content, type = 'info') => addNotification(create({ content, type, custom: true })),
       removeNotification,
-      updateNotification,
     };
   }, []);
 
@@ -44,103 +40,42 @@ export function NotificationsProvider({ children }) {
   return <Context.Provider value={context}>{children}</Context.Provider>;
 }
 
-const Notification = ({ notification, onRemove }) => 
+const NOTIFICATION_TIMEOUT = 5000;
+
+const Notification = ({ notification, onRemove }) => {
   useEffect(() => {
-    if (notification.persistent) return;
-    const timeout = setTimeout()
-  })
-return (
-  <AnimationContainer type="slideDown" onAnimationEnd={onRemove}>
-    {(animateOutAndRemove) => <div className={classnames(styles.notification, styles[notification.type])}>{notification.content}</div>}
-  </AnimationContainer>
-);
-}
+    const timeout = setTimeout(onRemove, NOTIFICATION_TIMEOUT);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [notification.id]);
+  return (
+    <TransparentButton onClick={onRemove}>
+      <div className={classnames(styles.notification, styles[notification.type])}>{notification.content}</div>}
+    </TransparentButton>
+  );
+};
+
 const NotificationsContainer = () => {
   const { notifications, removeNotification } = useNotifications();
   return (
-    <ul>
-      {notifications.map((notification) => (
-        <li key={notification.id} />
+    <ul className={styles.notificationContainer}>
+      {notifications.map((notification) => notification.custom ? (
+        <li key={notification.id}>
+          <div className={classnames(styles.notification, styles[notification.type])}>
+            {notification.content({ remove: () => removeNotification(notification) })}
+          </div>}
+        </li>
+      ) : (
+        <li key={notification.id}>
+          <AnimationContainer type="slideDown" onAnimationEnd={() => removeNotification(notification)}>
+            {(animateOutAndRemove) => <Notification notification={notification} onRemove={animateOutAndRemove} />}
+          </AnimationContainer>
+        </li>
       ))}
     </ul>
   );
 };
-
-const Notification = ({ children, className, remove }) => (
-  <aside className={`notification ${className}`} onAnimationEnd={remove}>
-    {children}
-  </aside>
-);
-
-export class Notifications extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      notifications: [],
-    };
-  }
-
-  create(content, className = '') {
-    const notification = {
-      id: `${Date.now()}{Math.random()}`,
-      className,
-      content,
-    };
-    this.setState(({ notifications }) => ({
-      notifications: [...notifications, notification],
-    }));
-    return notification.id;
-  }
-
-  createError(content = 'Something went wrong. Try refreshing?') {
-    this.create(content, 'notifyError');
-  }
-
-  createPersistent(content, className = '') {
-    const id = this.create(content, `notifyPersistent ${className}`);
-    const updateNotification = (updatedContent) => {
-      this.setState(({ notifications }) => ({
-        notifications: notifications.map((n) => (n.id === id ? { ...n, updatedContent } : n)),
-      }));
-    };
-    const removeNotification = () => {
-      this.remove(id);
-    };
-    return {
-      updateNotification,
-      removeNotification,
-    };
-  }
-
-  remove(id) {
-    this.setState(({ notifications }) => ({
-      notifications: notifications.filter((n) => n.id !== id),
-    }));
-  }
-
-  render() {
-    const funcs = {
-      createNotification: this.create.bind(this),
-      createPersistentNotification: this.createPersistent.bind(this),
-      createErrorNotification: this.createError.bind(this),
-    };
-    const { notifications } = this.state;
-    return (
-      <>
-        <Provider value={funcs}>{this.props.children}</Provider>
-        {!!notifications.length && (
-          <div className="notifications">
-            {notifications.map(({ id, className, content }) => (
-              <Notification key={id} className={className} remove={this.remove.bind(this, id)}>
-                {content}
-              </Notification>
-            ))}
-          </div>
-        )}
-      </>
-    );
-  }
-}
 
 export const AddProjectToCollectionMsg = ({ projectDomain, collectionName, url }) => (
   <>
@@ -166,4 +101,4 @@ AddProjectToCollectionMsg.defaultProps = {
   url: null,
   collectionName: null,
 };
-a
+
