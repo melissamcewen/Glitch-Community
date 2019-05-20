@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as assets from '../utils/assets';
-import { useAPI } from '../state/api';
-import { useCurrentUser } from '../state/current-user';
-import useErrorHandlers from './error-handlers';
+import * as assets from 'Utils/assets';
+import { useAPI } from 'State/api';
+import { useCurrentUser } from 'State/current-user';
+import { useErrorHandlers } from 'State/notifications';
 import useUploader from './includes/uploader';
 
 class ProjectEditor extends React.Component {

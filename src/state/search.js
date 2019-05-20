@@ -2,9 +2,9 @@
 import algoliasearch from 'algoliasearch/lite';
 import { useEffect, useReducer, useMemo } from 'react';
 import { mapValues, sumBy } from 'lodash';
-import { useAPI } from './api';
-import { allByKeys } from '../../shared/api';
-import useErrorHandlers from '../presenters/error-handlers';
+import { allByKeys } from 'Shared/api';
+import { useAPI } from 'State/api';
+import { useErrorHandlers } from 'State/notifications';
 import starterKits from '../curated/starter-kits';
 
 // TODO: this is super hacky; this would probably work a lot better with algolia

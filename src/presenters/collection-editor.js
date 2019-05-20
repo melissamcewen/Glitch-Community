@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { useAPI } from '../state/api';
-import { useCurrentUser } from '../state/current-user';
-import useErrorHandlers from './error-handlers';
+import { useAPI } from 'State/api';
+import { useCurrentUser } from 'State/current-user';
+import { useErrorHandlers } from 'State/notifications';
 
 class CollectionEditor extends React.Component {
   constructor(props) {
