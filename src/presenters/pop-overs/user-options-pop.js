@@ -126,6 +126,9 @@ Are you sure you want to sign out?`)
       </UserLink>
       <TeamList teams={user.teams} showCreateTeam={showCreateTeam} userIsAnon={!user.login} />
       <section className="pop-over-info">
+        <input type="checkbox" className="button-small button-tertiary button-on-secondary-background" />
+          Enable Super User
+     
         <button type="button" onClick={clickNewStuff} className="button-small has-emoji button-tertiary button-on-secondary-background">
           New Stuff <span className="emoji dog-face" />
         </button>
