@@ -9,7 +9,7 @@ import { useNotifications } from 'State/notifications';
 
 const styles = {};
 
-const NOTIFICATION_TIMEOUT = 5000;
+const NOTIFICATION_TIMEOUT = 2500;
 
 const Notification = ({ notification, onRemove }) => {
   useEffect(() => {
@@ -18,7 +18,7 @@ const Notification = ({ notification, onRemove }) => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [notification.id]);
+  }, []);
 
   const children = typeof notification.content === 'function' ? notification.content({ onRemove }) : notification.content;
 
@@ -31,7 +31,7 @@ const NotificationsContainer = () => {
     <ul className={styles.container}>
       {notifications.map((notification) => (
         <li key={notification.id}>
-          <AnimationContainer type="slideDown" onAnimationEnd={() => removeNotification(notification)}>
+          <AnimationContainer type="fadeOut" onAnimationEnd={() => removeNotification(notification)}>
             {(animateOutAndRemove) => <Notification notification={notification} onRemove={animateOutAndRemove} />}
           </AnimationContainer>
         </li>
@@ -64,3 +64,5 @@ AddProjectToCollectionMsg.defaultProps = {
   url: null,
   collectionName: null,
 };
+
+export default NotificationsContainer;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import styles from './animations.styl';
 
-const types = ['slideDown', 'slideUp'];
+const types = ['slideDown', 'slideUp', 'fadeOut'];
 
 /* Usage:
 <AnimationContainer type="slideDown" onAnimationEnd={(id) => deleteProject(id)}>

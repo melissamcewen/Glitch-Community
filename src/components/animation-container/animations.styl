@@ -7,6 +7,12 @@
   to
     transform: translateY(50px)
     opacity: 0
+    
+@keyframes fadeOut
+  0%
+    opacity: 1
+  100%
+    opacity: 0
 
 .slideUp
   animation: slideUp 0.1s ease-out
@@ -15,3 +21,8 @@
 .slideDown
   animation: slideDown 0.1s ease-out
   animation-fill-mode: forwards
+  
+.fadeOut
+  animation-name: fadeOut 0.1s ease-out
+  animation-fill-mode: forwards
+    
