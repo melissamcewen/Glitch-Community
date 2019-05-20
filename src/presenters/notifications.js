@@ -4,64 +4,54 @@ import { uniqueId } from 'lodash';
 
 import Text from 'Components/text/text';
 
-const context = React.createContext();
-const { Provider } = context;
-export const NotificationConsumer = context.Consumer;
-export const useNotifications = () => React.useContext(context);
+const Context = React.createContext();
+export const useNotifications = () => React.useContext(Context);
+
+const notificationTypes = ['info', 'warning', 'error', 'success'];
+
+const create = ({ content, type, persistent = false }) => ({
+  id: uniqueId('notification-'),
+  type,
+  content,
+});
+
+export function NotificationsProvider({ children }) {
+  const [notifications, setNotifications] = useState([]);
+  const funcs = useMemo(() => {
+    const addNotification = (notification) => setNotifications((oldNotifications) => [...oldNotifications, notification]);
+    const removeNotification = ({ id }) => {
+      setNotifications((oldNotifications) => oldNotifications.filter((n) => n.id !== id));
+    };
+    const updateNotification = ({ id, content }) => {
+      setNotifications((oldNotifications) => oldNotifications.map((n) => (n.id === id ? { ...n, content } : n)));
+    };
+
+    return {
+      createNotification: (content, type = 'info') => addNotification(create({ content, type })),
+      createErrorNotification: (content = 'Something went wrong. Try refreshing?') => addNotification(create({ content, type: 'error' })),
+      createPersistentNotification: (content, type = 'info') => addNotification(create({ content, type, persistent: 'true' })),
+      removeNotification,
+      updateNotification,
+    };
+  }, []);
+
+  const context = useMemo(() => ({ notifications, ...funcs }), notifications);
+
+  return <Context.Provider value={context}>{children}</Context.Provider>;
+}
+
+const NotificationsContainer = () => {
+  const { notifications } = useNotifications()
+  
+}
+
+
 
 const Notification = ({ children, className, remove }) => (
   <aside className={`notification ${className}`} onAnimationEnd={remove}>
     {children}
   </aside>
 );
-
-const notificationTypes = ['info', 'warning', 'error', 'success']
-
-const create = (content, type = 'info') => ({
-        id: uniqueId('notification-'),
-        type,
-        content,
-      })
-
-function NotificationsController() {
-  const [notifications, setNotifications] = useState([]);
-  const context = useMemo(() => {
-    const addNotification = (notification) => setNotifications((oldNotifications) => [...oldNotifications, notification]);
-    const removeNotification = ({ id }) => {
-      setNotifications((oldNotifications) => oldNotifications.filter((n) => n.id !== id));
-    }
-    const updateNotification = ({ id, content }) => {
-      setNotifications((oldNotifications) => oldNotifications.map((n) => (n.id === id ? { ...n, content } : n))); 
-    }
-    
-    return {
-      createNotification: (content, type) => addNotification(
-    
-    }
-    
-    
-    function createNotification(content, type = 'info') {
-      const notification = ;
-      
-      return notification.id;
-    }
-    
-    function createErrorNotification(content = 'Something went wrong. Try refreshing?') {
-      return createNotification(content, 'error');
-    }
-    function createPersistentNotification(content, className = '') {
-      return createNotification(content, `notifyPersistent ${className}`);
-      const updateNotification = (updatedContent) => {
-        setNotifications((oldNotifications) => oldNotifications.map((n) => (n.id === id ? { ...n, updatedContent } : n)));
-      };
-      const removeNotification = () => {
-        removeNotification(id);
-      };
-      return { updateNotification, removeNotification };
-    }
-    
-  }, []);
-}
 
 export class Notifications extends React.Component {
   constructor(props) {
