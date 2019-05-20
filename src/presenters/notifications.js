@@ -15,41 +15,51 @@ const Notification = ({ children, className, remove }) => (
   </aside>
 );
 
-function
+const notificationTypes = ['info', 'warning', 'error', 'success']
 
-function reducer (state, action) {
-  switch
-}
-
+const create = (content, type = 'info') => ({
+        id: uniqueId('notification-'),
+        type,
+        content,
+      })
 
 function NotificationsController() {
   const [notifications, setNotifications] = useState([]);
   const context = useMemo(() => {
-    function create(content, className = '') {
-      const notification = {
-        id: uniqueId('notification-'),
-        className,
-        content,
-      };
-      setNotifications((oldNotifications) => [...oldNotifications, notification]);
-      return notification.id;
-    }
-    function remove(id) {
+    const addNotification = (notification) => setNotifications((oldNotifications) => [...oldNotifications, notification]);
+    const removeNotification = ({ id }) => {
       setNotifications((oldNotifications) => oldNotifications.filter((n) => n.id !== id));
     }
-    function createError(content = 'Something went wrong. Try refreshing?') {
-      return create(content, 'notifyError');
+    const updateNotification = ({ id, content }) => {
+      setNotifications((oldNotifications) => oldNotifications.map((n) => (n.id === id ? { ...n, content } : n))); 
     }
-    function createPersistent(content, className = '') {
-      const id = create(content, `notifyPersistent ${className}`);
+    
+    return {
+      createNotification: (content, type) => addNotification(
+    
+    }
+    
+    
+    function createNotification(content, type = 'info') {
+      const notification = ;
+      
+      return notification.id;
+    }
+    
+    function createErrorNotification(content = 'Something went wrong. Try refreshing?') {
+      return createNotification(content, 'error');
+    }
+    function createPersistentNotification(content, className = '') {
+      return createNotification(content, `notifyPersistent ${className}`);
       const updateNotification = (updatedContent) => {
         setNotifications((oldNotifications) => oldNotifications.map((n) => (n.id === id ? { ...n, updatedContent } : n)));
       };
       const removeNotification = () => {
-        remove(id);
+        removeNotification(id);
       };
       return { updateNotification, removeNotification };
     }
+    
   }, []);
 }
 
