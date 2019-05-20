@@ -10,7 +10,7 @@ import styles from './styles.styl';
 
 const NOTIFICATION_TIMEOUT = 2500;
 
-const NotificationWrapper = ({ onRemove, persistent }) => {
+const Notification = ({ content, type, persistent, onRemove }) => {
   useEffect(() => {
     if (persistent) return undefined;
     const timeout = setTimeout(onRemove, NOTIFICATION_TIMEOUT);
@@ -18,6 +18,8 @@ const NotificationWrapper = ({ onRemove, persistent }) => {
       clearTimeout(timeout);
     };
   }, []);
+
+  return <div className={classnames(styles.notification, styles[type])}>{content}</div>;
 };
 
 const NotificationsContainer = () => {
@@ -27,9 +29,7 @@ const NotificationsContainer = () => {
       {notifications.map((notification) => (
         <li key={notification.id}>
           <AnimationContainer type="fadeOut" onAnimationEnd={() => removeNotification(notification)}>
-            {(animateOutAndRemove) => <NotificationWrapper notification={notification} onRemove={animateOutAndRemove}>
-              {notification.content}
-            </NotificationWrapper>}
+            {(animateOutAndRemove) => <Notification {...notification} onRemove={animateOutAndRemove} />}
           </AnimationContainer>
         </li>
       ))}
@@ -37,32 +37,18 @@ const NotificationsContainer = () => {
   );
 };
 
-export const Notification = ({ children, type }) => (
-  <div className={classnames(styles.notification, styles[type])}>{children}</div>
-)
-
-Notification.propTypes = ({
-  children: PropTypes.node.isRequired,
-  type: PropTypes.string,
-})
-
-Notification.defaultProps = ({
-  type: 'info',
-})
-
-
 export const AddProjectToCollectionMsg = ({ projectDomain, collectionName, url }) => (
-  <Notification type="success">
+  <>
     <Text>
       {`Added ${projectDomain} `}
       {collectionName && `to collection ${collectionName}`}
     </Text>
     {url && (
-      <Button href={url} type="tertiary" size="small" matchBackground>
-        Take me there
+      <Button href={url} size="small" type="tertiary" matchBackground>
+       Take me there
       </Button>
     )}
-  </Notification>
+  </>
 );
 
 AddProjectToCollectionMsg.propTypes = {
