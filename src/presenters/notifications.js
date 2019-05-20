@@ -1,8 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { uniqueId } from 'lodash';
 
+import AnimationContainer from 'Components/animation-container';
 import Text from 'Components/text/text';
+
+const styles = {}
 
 const Context = React.createContext();
 export const useNotifications = () => React.useContext(Context);
@@ -40,12 +44,27 @@ export function NotificationsProvider({ children }) {
   return <Context.Provider value={context}>{children}</Context.Provider>;
 }
 
-const NotificationsContainer = () => {
-  const { notifications } = useNotifications()
-  
+const Notification = ({ notification, onRemove }) => 
+  useEffect(() => {
+    if (notification.persistent) return;
+    const timeout = setTimeout()
+  })
+return (
+  <AnimationContainer type="slideDown" onAnimationEnd={onRemove}>
+    {(animateOutAndRemove) => <div className={classnames(styles.notification, styles[notification.type])}>{notification.content}</div>}
+  </AnimationContainer>
+);
 }
-
-
+const NotificationsContainer = () => {
+  const { notifications, removeNotification } = useNotifications();
+  return (
+    <ul>
+      {notifications.map((notification) => (
+        <li key={notification.id} />
+      ))}
+    </ul>
+  );
+};
 
 const Notification = ({ children, className, remove }) => (
   <aside className={`notification ${className}`} onAnimationEnd={remove}>
@@ -147,3 +166,4 @@ AddProjectToCollectionMsg.defaultProps = {
   url: null,
   collectionName: null,
 };
+a
