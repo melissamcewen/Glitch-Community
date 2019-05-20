@@ -1,5 +1,3 @@
-import { useNotifications } from './notifications';
-
 function handleError(notify, error) {
   console.error(error);
   notify();

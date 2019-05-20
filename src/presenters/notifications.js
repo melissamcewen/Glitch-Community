@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { uniqueId } from 'lodash';
 
 import Text from 'Components/text/text';
 
@@ -13,6 +14,43 @@ const Notification = ({ children, className, remove }) => (
     {children}
   </aside>
 );
+
+function NotificationsController () {
+  const [notifications, setNotifications] = useState([])
+  const context = useMemo(() => {
+    function create(content, className = '') {
+      const notification = {
+        id: uniqueId('notification-'),
+        className,
+        content,
+      };
+      setNotifications((oldNotifications) => [...oldNotifications, notification])
+      return notification.id;
+    }
+    function createError(content = 'Something went wrong. Try refreshing?') {
+      return create(content, 'notifyError')
+    }
+    createPersistent(content, className = '') {
+    const id = this.create(content, `notifyPersistent ${className}`);
+    const updateNotification = (updatedContent) => {
+      this.setState(({ notifications }) => ({
+        notifications: notifications.map((n) => (n.id === id ? { ...n, updatedContent } : n)),
+      }));
+    };
+    const removeNotification = () => {
+      this.remove(id);
+    };
+    return {
+      updateNotification,
+      removeNotification,
+    };
+  }
+
+  }, [])
+  
+  
+  
+}
 
 export class Notifications extends React.Component {
   constructor(props) {
