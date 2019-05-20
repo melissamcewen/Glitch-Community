@@ -1,3 +1,38 @@
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
+import { uniqueId } from 'lodash'
+
+const Context = createContext();
+export const useNotifications = () => useContext(Context);
+
+export const notificationTypes = ['info', 'warning', 'error', 'success'];
+
+const create = ({ content, type, persistent = false }) => ({
+  id: uniqueId('notification-'),
+  type,
+  content,
+  persistent,
+});
+
+export function NotificationsProvider({ children }) {
+  const [notifications, setNotifications] = useState([]);
+  const funcs = useMemo(() => {
+    const addNotification = (notification) => setNotifications((oldNotifications) => [...oldNotifications, notification]);
+    const removeNotification = ({ id }) => {
+      setNotifications((oldNotifications) => oldNotifications.filter((n) => n.id !== id));
+    };
+    return {
+      createNotification: (content, type = 'info') => addNotification(create({ content, type })),
+      createErrorNotification: (content = 'Something went wrong. Try refreshing?') => addNotification(create({ content, type: 'error' })),
+      createPersistentNotification: (content, type = 'info') => addNotification(create({ content, type, persistent: true })),
+      removeNotification,
+    };
+  }, []);
+
+  const context = useMemo(() => ({ notifications, ...funcs }), notifications);
+
+  return <Context.Provider value={context}>{children}</Context.Provider>;
+}
+
 function handleError(notify, error) {
   console.error(error);
   notify();
@@ -30,4 +65,4 @@ const useErrorHandlers = () => {
   };
 };
 
-export default useErrorHandlers;
+export default NotificationsProvider;

@@ -1,27 +1,29 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
+import NotificationsContainer from 'Components/notifications';
 import { AnalyticsContext } from 'State/segment-analytics';
-import ErrorBoundary from './presenters/includes/error-boundary';
-import { CurrentUserProvider } from './state/current-user';
-import { APIContextProvider } from './state/api';
+import { CurrentUserProvider } from 'State/current-user';
+import { APIContextProvider } from 'State/api';
+import { NotificationsProvider } from 'State/notifications';
 import { UserPrefsProvider } from './presenters/includes/user-prefs';
 import { DevTogglesProvider } from './presenters/includes/dev-toggles';
-import { Notifications } from './presenters/notifications';
-import SuperUserBanner from './presenters/overlays/super-user-banner';
 
+import ErrorBoundary from './presenters/includes/error-boundary';
+import SuperUserBanner from './presenters/overlays/super-user-banner';
 import Router from './presenters/pages/router';
 
 const App = () => (
   <ErrorBoundary fallback="Something went very wrong, try refreshing?">
     <BrowserRouter>
-      <Notifications>
+      <NotificationsProvider>
         <UserPrefsProvider>
           <DevTogglesProvider>
             <AnalyticsContext context={{ groupId: '0' }}>
               <CurrentUserProvider>
                 <APIContextProvider>
                   <>
+                    <NotificationsContainer />
                     <SuperUserBanner />
                     <Router />
                   </>
@@ -30,7 +32,7 @@ const App = () => (
             </AnalyticsContext>
           </DevTogglesProvider>
         </UserPrefsProvider>
-      </Notifications>
+      </NotificationsProvider>
     </BrowserRouter>
   </ErrorBoundary>
 );
