@@ -4,6 +4,8 @@ import { orderBy } from 'lodash';
 
 import { getAvatarUrl as getTeamAvatarUrl } from 'Models/team';
 import { getAvatarThumbnailUrl as getUserAvatarUrl } from 'Models/user';
+
+import CheckboxButton from 'Components/buttons/checkbox-button';
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import Link, { TeamLink, UserLink } from 'Components/link';
 import { useTrackedFunc, useTracker } from 'State/segment-analytics';
@@ -126,9 +128,9 @@ Are you sure you want to sign out?`)
       </UserLink>
       <TeamList teams={user.teams} showCreateTeam={showCreateTeam} userIsAnon={!user.login} />
       <section className="pop-over-info">
-        <button type="checkbox" className="button-small button-tertiary button-on-secondary-background" >
-          Enable Super User
-        </button>
+        <CheckboxButton value={true} onChange={() => {}}>
+          Support Features
+        </CheckboxButton>
         <button type="button" onClick={clickNewStuff} className="button-small has-emoji button-tertiary button-on-secondary-background">
           New Stuff <span className="emoji dog-face" />
         </button>
