@@ -9,16 +9,8 @@ import styles from './super-user.styl';
 
 const cx = classNames.bind(styles);
 
-const toggleSuperUser = async (superUserIsEnabled) => {
-  const api = useAPI();
-  await api.post(`https://support-toggle.glitch.me/support/${superUserIsEnabled ? 'disable' : 'enable'}`);
-  window.location.reload();
-};
-
-
-
 const SuperUserBanner = () => {
-  const { currentUser, persistentToken } = useCurrentUser();
+  const { currentUser, persistentToken, superUserHelpers } = useCurrentUser();
   const [showSupportBanner, setShowSupportBanner] = useLocalStorage('showSupportBanner', false);
   const canBecomeSuperUser = currentUser && currentUser.projects && currentUser.projects.filter((p) => p.id === 'b9f7fbdd-ac07-45f9-84ea-d484533635ff').length > 0;
   const superUser = currentUser.features && currentUser.features.find((feature) => feature.name === 'super_user');
@@ -26,7 +18,6 @@ const SuperUserBanner = () => {
   if (persistentToken && (superUser || canBecomeSuperUser)) {
     const expirationDate = superUser && new Date(superUser.expiresAt).toUTCString();
     const displayText = `SUPER USER MODE ${superUser ? `ENABLED UNTIL: ${expirationDate}` : 'DISABLED'} `;
-
 
     if (superUser || showSupportBanner) {
       const className = cx({ container: true, isDisabled: !superUser });
