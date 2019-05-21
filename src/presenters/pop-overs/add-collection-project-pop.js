@@ -4,13 +4,16 @@ import PropTypes from 'prop-types';
 import Pluralize from 'react-pluralize';
 import { debounce } from 'lodash';
 
+import { getAllPages } from 'Shared/api';
 import Loader from 'Components/loader';
 import { useTrackedFunc } from 'State/segment-analytics';
-import { useAPI } from 'State/api';
+import { useAPI, createAPIHook } from 'State/api';
+import { useCurrentUser } from 'State/current-user';
+
 import ProjectResultItem from '../includes/project-result-item';
 import ProjectsLoader from '../projects-loader';
-
 import { useNotifications, AddProjectToCollectionMsg } from '../notifications';
+import PopoverWithButton from './popover-with-button';
 
 const ProjectResultsUL = ({ projects, collection, onClick }) => {
   const { createNotification } = useNotifications();
@@ -276,7 +279,44 @@ AddCollectionProjectPop.defaultProps = {
   togglePopover: null,
 };
 
-export default (props) => {
+const useTeamProjects = createAPIHook(async (api, teamId) => {
+  if (teamId > 0) {
+    const projects = await getAllPages(api, `/v1/teams/by/id/projects?limit=100&orderKey=updatedAt&orderDirection=ASC&id=${teamId}`);
+    return projects;
+  }
+  return null;
+});
+
+function AddCollectionProject({ collection, addProjectToCollection }) {
+  const teamResponse = useTeamProjects(collection.teamId);
   const api = useAPI();
-  return <AddCollectionProjectPop {...props} api={api} />;
+  const { currentUser } = useCurrentUser();
+
+  let initialProjects = [];
+  if (teamResponse.status === 'ready' && teamResponse.value) {
+    initialProjects = teamResponse.value;
+  } else {
+    initialProjects = currentUser.projects;
+  }
+
+  return (
+    <PopoverWithButton buttonClass="add-project" buttonText="Add Project">
+      {({ togglePopover }) => (
+        <AddCollectionProjectPop
+          api={api}
+          collection={collection}
+          initialProjects={initialProjects.slice(0, 20)}
+          addProjectToCollection={addProjectToCollection}
+          togglePopover={togglePopover}
+        />
+      )}
+    </PopoverWithButton>
+  );
+}
+
+AddCollectionProject.propTypes = {
+  collection: PropTypes.object.isRequired,
+  addProjectToCollection: PropTypes.func.isRequired,
 };
+
+export default AddCollectionProject;

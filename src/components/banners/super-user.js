@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 
-import { useCurrentUser } from '../../state/current-user';
+import { useCurrentUser } from 'State/current-user';
 
-import useLocalStorage from '../../state/local-storage';
+import useLocalStorage from 'State/local-storage';
 
 import styles from './super-user.styl';
 

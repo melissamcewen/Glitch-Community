@@ -5,6 +5,7 @@ import Loader from 'Components/loader';
 // import { teamAdmins } from 'Models/team';
 import { useNotifications } from '../notifications';
 import { useAPI } from '../../state/api';
+import PopoverWithButton from './popover-with-button';
 
 const illustration = 'https://cdn.glitch.com/c53fd895-ee00-4295-b111-7e024967a033%2Fdelete-team.svg?1531267699621';
 
@@ -60,4 +61,25 @@ DeleteTeamPop.propTypes = {
   focusFirstElement: PropTypes.func.isRequired,
 };
 
-export default DeleteTeamPop;
+const DeleteTeam = ({ team }) => (
+  <section>
+    <PopoverWithButton
+      buttonClass="button-small button-tertiary has-emoji danger-zone"
+      buttonText={
+        <>
+          Delete {team.name}
+          &nbsp;
+          <span className="emoji bomb" role="img" aria-label="" />
+        </>
+      }
+    >
+      {({ togglePopover, focusFirstElement }) => <DeleteTeamPop team={team} togglePopover={togglePopover} focusFirstElement={focusFirstElement} />}
+    </PopoverWithButton>
+  </section>
+);
+
+DeleteTeam.propTypes = {
+  team: PropTypes.object.isRequired,
+};
+
+export default DeleteTeam;

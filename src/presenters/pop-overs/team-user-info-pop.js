@@ -5,6 +5,7 @@ import { getAvatarThumbnailUrl, getDisplayName } from 'Models/user';
 import { userIsTeamAdmin, userIsOnlyTeamAdmin } from 'Models/team';
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import { UserLink } from 'Components/link';
+import { UserAvatar } from 'Components/images/avatar';
 import Thanks from 'Components/thanks';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useAPI } from 'State/api';
@@ -13,9 +14,17 @@ import { useCurrentUser } from 'State/current-user';
 import { NestedPopover } from './popover-nested';
 import { useNotifications } from '../notifications';
 import TeamUserRemovePop from './team-user-remove-pop';
+import PopoverWithButton from './popover-with-button';
 
 const MEMBER_ACCESS_LEVEL = 20;
 const ADMIN_ACCESS_LEVEL = 30;
+
+const adminStatusDisplay = (adminIds, user) => {
+  if (adminIds.includes(user.id)) {
+    return ' (admin)';
+  }
+  return '';
+};
 
 // Remove from Team 👋
 
@@ -193,4 +202,35 @@ TeamUserInfoAndRemovePop.propTypes = {
   focusFirstElement: PropTypes.func.isRequired,
 };
 
-export default TeamUserInfoAndRemovePop;
+const TeamUsers = ({ team, removeUserFromTeam, updateUserPermissions }) => (
+  <ul className="users">
+    {team.users.map((user) => (
+      <li key={user.id}>
+        <PopoverWithButton
+          buttonClass="user button-unstyled tooltip-container-button"
+          buttonText={<UserAvatar user={user} suffix={adminStatusDisplay(team.adminIds, user)} withinButton />}
+        >
+          {({ togglePopover, focusFirstElement }) => (
+            <TeamUserInfoAndRemovePop
+              team={team}
+              removeUserFromTeam={removeUserFromTeam}
+              user={user}
+              updateUserPermissions={updateUserPermissions}
+              togglePopover={togglePopover}
+              focusFirstElement={focusFirstElement}
+            />
+          )}
+        </PopoverWithButton>
+      </li>
+    ))}
+  </ul>
+);
+
+TeamUsers.propTypes = {
+  team: PropTypes.object.isRequired,
+  removeUserFromTeam: PropTypes.func.isRequired,
+  updateUserPermissions: PropTypes.func.isRequired,
+};
+
+
+export default TeamUsers;

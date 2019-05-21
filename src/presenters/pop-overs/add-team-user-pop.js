@@ -1,19 +1,23 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { debounce } from 'lodash';
+import { debounce, uniqBy } from 'lodash';
 import { parseOneAddress } from 'email-addresses';
 import randomColor from 'randomcolor';
 
 import Thanks from 'Components/thanks';
 import Loader from 'Components/loader';
+import { UserAvatar } from 'Components/images/avatar';
+import { UserLink } from 'Components/link';
 import TransparentButton from 'Components/buttons/transparent-button';
 import WhitelistedDomainIcon from 'Components/whitelisted-domain';
 import { ANON_AVATAR_URL, getAvatarThumbnailUrl, getDisplayName } from 'Models/user';
-import { captureException } from '../../utils/sentry';
+import { useAPI } from 'State/api';
+import { useTracker } from 'State/segment-analytics';
+import { captureException } from 'Utils/sentry';
 import useDevToggle from '../includes/dev-toggles';
+import PopoverWithButton from './popover-with-button';
 
-import { useAPI } from '../../state/api';
 
 const WhitelistEmailDomain = ({ domain, onClick }) => (
   <TransparentButton onClick={onClick} className="result">
@@ -309,10 +313,89 @@ Results.propTypes = {
   isLoading: PropTypes.bool.isRequired,
 };
 
-const AddTeamUserPopWithDevToggles = (props) => {
+const AddTeamUser = ({ inviteEmail, inviteUser, setWhitelistedDomain, members, invitedMembers, whitelistedDomain }) => {
+  const [invitee, setInvitee] = useState('');
+  const [newlyInvited, setNewlyInvited] = useState([]);
+
+  const alreadyInvitedAndNewInvited = uniqBy(invitedMembers.concat(newlyInvited), (user) => user.id);
+  const track = useTracker('Add to Team clicked');
   const api = useAPI();
   const allowEmailInvites = useDevToggle('Email Invites');
-  return <AddTeamUserPop {...props} api={api} allowEmailInvites={allowEmailInvites} />;
+
+  const onSetWhitelistedDomain = async (togglePopover, domain) => {
+    togglePopover();
+    await setWhitelistedDomain(domain);
+  };
+
+  const onInviteUser = async (togglePopover, user) => {
+    togglePopover();
+    setInvitee(getDisplayName(user));
+    setNewlyInvited((invited) => [...invited, user]);
+    try {
+      await inviteUser(user);
+    } catch (error) {
+      setInvitee('');
+      setNewlyInvited((invited) => invited.filter((u) => u.id !== user.id));
+    }
+  };
+
+  const onInviteEmail = async (togglePopover, email) => {
+    togglePopover();
+    setInvitee(email);
+    try {
+      await inviteEmail(email);
+    } catch (error) {
+      setInvitee('');
+    }
+  };
+
+  const removeNotifyInvited = () => {
+    setInvitee('');
+  };
+
+  return (
+    <span className="add-user-container">
+      <ul className="users">
+        {alreadyInvitedAndNewInvited.map((user) => (
+          <li key={user.id}>
+            <UserLink user={user} className="user">
+              <UserAvatar user={user} />
+            </UserLink>
+          </li>
+        ))}
+      </ul>
+      <span className="add-user-wrap">
+        <PopoverWithButton buttonClass="button-small button-tertiary add-user" buttonText="Add" onOpen={track}>
+          {({ togglePopover }) => (
+            <AddTeamUserPop
+              api={api}
+              allowEmailInvites={allowEmailInvites}
+              members={members}
+              whitelistedDomain={whitelistedDomain}
+              setWhitelistedDomain={setWhitelistedDomain ? (domain) => onSetWhitelistedDomain(togglePopover, domain) : null}
+              inviteUser={inviteUser ? (user) => onInviteUser(togglePopover, user) : null}
+              inviteEmail={inviteEmail ? (email) => onInviteEmail(togglePopover, email) : null}
+            />
+          )}
+        </PopoverWithButton>
+        {!!invitee && (
+          <div className="notification notifySuccess inline-notification" onAnimationEnd={removeNotifyInvited}>
+            Invited {invitee}
+          </div>
+        )}
+      </span>
+    </span>
+  );
+};
+AddTeamUser.propTypes = {
+  inviteEmail: PropTypes.func,
+  inviteUser: PropTypes.func,
+  setWhitelistedDomain: PropTypes.func,
+};
+AddTeamUser.defaultProps = {
+  setWhitelistedDomain: null,
+  inviteUser: null,
+  inviteEmail: null,
 };
 
-export default AddTeamUserPopWithDevToggles;
+export default AddTeamUser;

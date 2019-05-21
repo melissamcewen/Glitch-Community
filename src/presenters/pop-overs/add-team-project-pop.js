@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useAPI } from '../../state/api';
 import { useCurrentUser } from '../../state/current-user';
 import ProjectResultItem from '../includes/project-result-item';
+import PopoverWithButton from './popover-with-button';
 
 class AddTeamProjectPop extends React.Component {
   constructor(props) {
@@ -192,10 +193,36 @@ AddTeamProjectPop.propTypes = {
   api: PropTypes.func.isRequired,
 };
 
-const AddTeamProjectPopContainer = (props) => {
+const AddTeamProject = ({ addProject, teamProjects }) => {
   const api = useAPI();
   const { currentUser } = useCurrentUser();
-  return <AddTeamProjectPop myProjects={currentUser.projects} api={api} {...props} />;
+  return (
+    <section className="add-project-container">
+      {/* Add disabled={props.projectLimitIsReached} once billing is ready */}
+      <PopoverWithButton
+        buttonClass="add-project has-emoji"
+        buttonText={
+          <>
+            Add Project <span className="emoji bento-box" role="img" aria-label="" />
+          </>
+        }
+      >
+        {({ togglePopover }) => (
+          <AddTeamProjectPop
+            myProjects={currentUser.projects}
+            api={api}
+            addProject={addProject}
+            teamProjects={teamProjects}
+            togglePopover={togglePopover}
+          />
+        )}
+      </PopoverWithButton>
+    </section>
+  );
+};
+AddTeamProject.propTypes = {
+  addProject: PropTypes.func.isRequired,
+  teamProjects: PropTypes.array.isRequired,
 };
 
-export default AddTeamProjectPopContainer;
+export default AddTeamProject;

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import randomColor from 'randomcolor';
-
 import { throttle } from 'lodash';
 
 import TextInput from 'Components/inputs/text-input';
+import PopoverWithButton from './popover-with-button';
 
 const validHex = (hex) => {
   const re = /[0-9A-Fa-f]{6}/g;
@@ -118,4 +118,23 @@ EditCollectionColorPop.propTypes = {
   focusFirstElement: PropTypes.func.isRequired,
 };
 
-export default EditCollectionColorPop;
+const EditCollectionColor = ({ update, initialColor, ...props }) => (
+  <PopoverWithButton containerClass="edit-collection-color-btn" buttonClass="add-project" buttonText="Color">
+    {({ togglePopover, focusFirstElement }) => (
+      <EditCollectionColorPop
+        {...props}
+        updateColor={update}
+        initialColor={initialColor}
+        togglePopover={togglePopover}
+        focusFirstElement={focusFirstElement}
+      />
+    )}
+  </PopoverWithButton>
+);
+
+EditCollectionColor.propTypes = {
+  update: PropTypes.func.isRequired,
+  initialColor: PropTypes.string.isRequired,
+};
+
+export default EditCollectionColor;

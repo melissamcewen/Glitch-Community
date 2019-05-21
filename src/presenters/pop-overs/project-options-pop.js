@@ -6,7 +6,7 @@ import { useCurrentUser } from 'State/current-user';
 
 import PopoverWithButton from './popover-with-button';
 import { NestedPopover } from './popover-nested';
-import AddProjectToCollectionPop from './add-project-to-collection-pop';
+import { AddProjectToCollectionBase } from './add-project-to-collection-pop';
 
 const isTeamProject = ({ currentUser, project }) => {
   for (const team of currentUser.teams) {
@@ -200,7 +200,7 @@ export default function ProjectOptionsPop(props) {
       {({ togglePopover, focusFirstElement }) => (
         <NestedPopover
           alternateContent={() => (
-            <AddProjectToCollectionPop
+            <AddProjectToCollectionBase
               {...props}
               {...projectOptions}
               togglePopover={togglePopover}
