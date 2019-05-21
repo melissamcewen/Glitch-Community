@@ -10,22 +10,22 @@ import styles from './super-user.styl';
 const cx = classNames.bind(styles);
 
 const SuperUserBanner = () => {
-  const { currentUser, persistentToken, superUserHelpers } = useCurrentUser();
+  const { superUserHelpers } = useCurrentUser();
+  const { superUserFeature, canBecomeSuperUser, toggleSuperUser } = superUserHelpers;
+  console.log("hi", superUserFeature, canBecomeSuperUser, toggleSuperUser)
   const [showSupportBanner, setShowSupportBanner] = useLocalStorage('showSupportBanner', false);
-  const canBecomeSuperUser = currentUser && currentUser.projects && currentUser.projects.filter((p) => p.id === 'b9f7fbdd-ac07-45f9-84ea-d484533635ff').length > 0;
-  const superUser = currentUser.features && currentUser.features.find((feature) => feature.name === 'super_user');
+  
+  if (superUserFeature || canBecomeSuperUser) {
+    const expirationDate = superUserFeature && new Date(superUserFeature.expiresAt).toUTCString();
+    const displayText = `SUPER USER MODE ${superUserFeature ? `ENABLED UNTIL: ${expirationDate}` : 'DISABLED'} `;
 
-  if (persistentToken && (superUser || canBecomeSuperUser)) {
-    const expirationDate = superUser && new Date(superUser.expiresAt).toUTCString();
-    const displayText = `SUPER USER MODE ${superUser ? `ENABLED UNTIL: ${expirationDate}` : 'DISABLED'} `;
-
-    if (superUser || showSupportBanner) {
-      const className = cx({ container: true, isDisabled: !superUser });
+    if (superUserFeature || showSupportBanner) {
+      const className = cx({ container: true, isDisabled: !superUserFeature });
       return (
         <div className={className}>
           {displayText}
-          <button onClick={toggleSuperUser}>Click to {superUser ? 'disable' : 'enable'}</button>
-          {!superUser && <button onClick={() => setShowSupportBanner(false)}>Hide</button>}
+          <button onClick={toggleSuperUser}>Click to {superUserFeature ? 'disable' : 'enable'}</button>
+          {!superUserFeature && <button onClick={() => setShowSupportBanner(false)}>Hide</button>}
         </div>
       );
     }
