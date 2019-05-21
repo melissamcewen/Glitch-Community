@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 
 import SearchForm from 'Components/search-form';
 import Button from 'Components/buttons/button';
-import SignInPop from 'Components/sign-in-pop';
 import Link, { TrackedExternalLink } from 'Components/link';
-import { useCurrentUser } from 'State/current-user';
 import UserOptionsPop from '../../presenters/pop-overs/user-options-pop';
+import SignInPop from '../../presenters/pop-overs/sign-in-pop';
 import NewProjectPop from './new-project-pop';
+import { useCurrentUser } from '../../state/current-user';
 import Logo from './logo';
 import styles from './header.styl';
 
@@ -21,7 +21,7 @@ const ResumeCoding = () => (
 );
 
 const Header = ({ searchQuery, showNewStuffOverlay }) => {
-  const { currentUser, clear } = useCurrentUser();
+  const { currentUser, clear, superUserHelpers } = useCurrentUser();
   return (
     <header role="banner" className={styles.header}>
       <Link to="/" className={styles.logoWrap}>
@@ -43,12 +43,12 @@ const Header = ({ searchQuery, showNewStuffOverlay }) => {
           )}
           {!(currentUser && currentUser.login) && (
             <li className={styles.buttonWrap}>
-              <SignInPop align="right" />
+              <SignInPop />
             </li>
           )}
           {!!currentUser && currentUser.login && (
             <li className={styles.buttonWrap}>
-              <UserOptionsPop user={currentUser} signOut={clear} showNewStuffOverlay={showNewStuffOverlay} />
+              <UserOptionsPop user={currentUser} signOut={clear} showNewStuffOverlay={showNewStuffOverlay} superUserHelpers={superUserHelpers} />
             </li>
           )}
         </ul>

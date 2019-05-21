@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 
-import { useCurrentUser } from 'State/current-user';
+import { useCurrentUser } from '../../state/current-user';
 
-import useLocalStorage from 'State/local-storage';
+import useLocalStorage from '../../state/local-storage';
 
 import styles from './super-user.styl';
 
@@ -13,7 +13,7 @@ const SuperUserBanner = () => {
   const { superUserHelpers } = useCurrentUser();
   const { superUserFeature, canBecomeSuperUser, toggleSuperUser } = superUserHelpers;
   const [showSupportBanner, setShowSupportBanner] = useLocalStorage('showSupportBanner', false);
-  
+
   if (superUserFeature || canBecomeSuperUser) {
     const expirationDate = superUserFeature && new Date(superUserFeature.expiresAt).toUTCString();
     const displayText = `SUPER USER MODE ${superUserFeature ? `ENABLED UNTIL: ${expirationDate}` : 'DISABLED'} `;
