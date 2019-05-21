@@ -29,12 +29,12 @@ const defaultDevToggles = {
 };
 
 export const provideContext = (
-  { userPrefs = defaultUserPrefs, devToggles = defaultDevToggles, currentUser = {}, api = {} } = {},
+  { userPrefs = defaultUserPrefs, devToggles = defaultDevToggles, currentUser = {}, currentUserFetched = true, api = {} } = {},
   Component,
 ) => () => (
   <UserPrefsContext.Provider value={userPrefs}>
     <DevTogglesContext.Provider value={devToggles}>
-      <CurrentUserContext.Provider value={{ currentUser }}>
+      <CurrentUserContext.Provider value={{ currentUser, fetched: currentUserFetched }}>
         <APIContext.Provider value={api}>
           <Component />
         </APIContext.Provider>

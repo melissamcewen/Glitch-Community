@@ -1,0 +1,49 @@
+@import '../constants.styl'
+
+.anonUserSignUp
+  background: #83ffcd
+  margin: 5px 0px
+  padding: 12px
+  border-radius: 5px
+  position: relative
+  
+  button
+    margin-right: 3px
+    
+  button:hover
+    background-color: secondary-background-hover
+
+  @media(max-width: 800px)
+    width: 100%
+    margin-bottom: 1rem
+  
+  :global .sign-in-pop
+    left: 0px
+    top: 26px
+
+.clearSession
+  position: absolute
+  top: 16px
+  right: 16px
+  
+.coverWrap
+  display: flex
+  
+.avatarWrap
+  display: none
+  @media(min-width: 800px)
+    margin-right: 1rem
+    display: block
+    flex: 0 0 18%
+  
+.userAvatar
+  height: 0
+  padding-bottom: 100%
+  border-radius: 50%
+  background-size: cover
+  
+.projectsWrap
+  flex: 1 1 auto
+  max-width: 100%
+  & > article
+    margin: 0

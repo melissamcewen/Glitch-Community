@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import ProfileContainer from './index';
-import { users, teams } from '../../../stories/data';
+import { users, teams } from '../../../../stories/data';
 
 storiesOf('ProfileContainer', module)
   .add('user', () => (

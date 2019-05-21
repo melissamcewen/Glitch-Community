@@ -32,10 +32,11 @@ import CoverContainer from 'Components/containers/cover-container';
 import Note from 'Components/collection/note';
 import MoreIdeas from 'Components/more-ideas';
 import Footer from 'Components/footer';
+import RecentProjects from 'Components/recent-projects';
 import 'Components/profile-list/story';
 import 'Components/search-form/story';
 import 'Components/header/story';
-// import 'Components/profile-container/story';
+import 'Components/containers/profile/story';
 import 'Components/collections-list/story';
 import 'Components/questions/story';
 import 'Components/deleted-projects/story';
@@ -81,19 +82,21 @@ storiesOf('Button', module)
       </Button>
     </div>
   ))
-  .add(`checkbox`, withState(false, ({ state, setState }) => (
-    <>
-      <CheckboxButton value={state} onChange={setState}>
-        Click to toggle!
-      </CheckboxButton>
-      <p>
-        <label>
-          <input type="checkbox" checked={state} onChange={(evt) => setState(evt.target.checked)} />
-          ← linked state
-        </label>
-      </p>
-    </>
-  )));
+  .add(
+    `checkbox`,
+    withState(false, ({ state, setState }) => (
+      <>
+        <CheckboxButton value={state} onChange={setState}>
+          Click to toggle!
+        </CheckboxButton>
+        <p>
+          <label>
+            <input type="checkbox" checked={state} onChange={(evt) => setState(evt.target.checked)} />← linked state
+          </label>
+        </p>
+      </>
+    )),
+  );
 
 storiesOf('Emoji', module)
   .add('standard', () => <Emoji name="herb" />)
@@ -176,8 +179,7 @@ storiesOf('Badge', module)
   .add('success', () => <Badge type="success">Success</Badge>)
   .add('warning', () => <Badge type="warning">Warning</Badge>)
   .add('error', () => <Badge type="error">Error</Badge>)
-  .add('private', () => <Badge type="private"></Badge>);
-  
+  .add('private', () => <Badge type="private" />);
 
 storiesOf('Segmented-Buttons', module)
   .add(
@@ -218,38 +220,37 @@ storiesOf('Segmented-Buttons', module)
     )),
   );
 
-
-storiesOf('ProjectItem', module).add(
-  'base',
-  provideContext({ currentUser: {} }, () => (
-    <div style={{ margin: '2em', width: '25%' }}>
-      <ProjectItem project={projects['judicious-pruner']} />
+storiesOf('ProjectItem', module)
+  .add(
+    'base',
+    provideContext({ currentUser: {} }, () => (
+      <div style={{ margin: '2em', width: '25%' }}>
+        <ProjectItem project={projects['judicious-pruner']} />
+      </div>
+    )),
+  )
+  .add('Project Item Small', () => (
+    <div style={{ backgroundColor: '#F5F5F5', width: '375px', padding: '10px' }}>
+      <ProjectItemSmall
+        project={{
+          id: 'foo',
+          domain: 'judicious-pruner',
+          private: false,
+        }}
+      />
     </div>
-  )),
-)
-.add('Project Item Small', () => (
-  <div style={{ backgroundColor: '#F5F5F5', width: '375px', padding: '10px' }}>
-    <ProjectItemSmall
-      project={{
-        id: 'foo',
-        domain: 'judicious-pruner',
-        private: false,
-      }}
-    />
-  </div>
-))
-.add('Project Item Small - private', () => (
-  <div style={{ backgroundColor: '#F5F5F5', width: '375px', padding: '10px' }}>
-    <ProjectItemSmall
-      project={{
-        id: 'foo',
-        domain: 'judicious-pruner',
-        private: true,
-      }}
-    />
-  </div>
-));
-
+  ))
+  .add('Project Item Small - private', () => (
+    <div style={{ backgroundColor: '#F5F5F5', width: '375px', padding: '10px' }}>
+      <ProjectItemSmall
+        project={{
+          id: 'foo',
+          domain: 'judicious-pruner',
+          private: true,
+        }}
+      />
+    </div>
+  ));
 
 const mockAPI = {
   async get(url) {
@@ -260,29 +261,24 @@ const mockAPI = {
   },
 };
 
-storiesOf('Collection', module).add(
-  'Collection Item with projects',
-  provideContext({ currentUser: {}, api: mockAPI }, () => (
-    <CollectionItem collection={collections[12345]} />
-  ))
+storiesOf('Collection', module)
+  .add('Collection Item with projects', provideContext({ currentUser: {}, api: mockAPI }, () => <CollectionItem collection={collections[12345]} />))
+  .add(
+    'Collection Item without projects',
+    provideContext({ currentUser: {}, api: mockAPI }, () => <CollectionItem collection={collections['empty']} />),
   )
-  .add('Collection Item without projects',
+  .add(
+    'Collection Item with curator',
+    provideContext({ currentUser: {}, api: mockAPI }, () => <CollectionItem collection={collections[12345]} showCurator />),
+  )
+  .add(
+    'Collection Item Small',
     provideContext({ currentUser: {}, api: mockAPI }, () => (
-      <CollectionItem collection={collections['empty']} />
-    ))
-  )
-  .add('Collection Item with curator',
-    provideContext({ currentUser: {}, api: mockAPI}, () => (
-    <CollectionItem collection={collections[12345]} showCurator />
-  ))
-)
-.add('Collection Item Small',
-  provideContext({ currentUser: {}, api: mockAPI }, () => (
-    <div style={{ margin: '2em', width: '25%' }}>
-      <CollectionItemSmall collection={collections[12345]} />
-    </div>
-  ))
-);
+      <div style={{ margin: '2em', width: '25%' }}>
+        <CollectionItemSmall collection={collections[12345]} />
+      </div>
+    )),
+  );
 
 storiesOf('UserItem', module).add('base', () => (
   <div style={{ margin: '2em', width: '25%' }}>
@@ -487,44 +483,67 @@ const mockUpdateNote = (setState) => async ({ note }) => {
 
 storiesOf('Note', module)
   .add(
-    'when authorized', 
-    withState({
-      note: "You are authorized to edit this note, go on ahead and try, if you erase its contents and click away, this note will disappear after a short time",
-      isAddingANewNote: true
-    }, 
-    ({ state: project, setState }) => (
-      <Note
-        isAuthorized={true}
-        collection={collections["12345"]}
-        project={project}
-        updateNote={mockUpdateNote(setState)}
-        hideNote={() => setState({ isAddingANewNote: false })}
-      />
-    ))
+    'when authorized',
+    withState(
+      {
+        note:
+          'You are authorized to edit this note, go on ahead and try, if you erase its contents and click away, this note will disappear after a short time',
+        isAddingANewNote: true,
+      },
+      ({ state: project, setState }) => (
+        <Note
+          isAuthorized={true}
+          collection={collections['12345']}
+          project={project}
+          updateNote={mockUpdateNote(setState)}
+          hideNote={() => setState({ isAddingANewNote: false })}
+        />
+      ),
+    ),
   )
-  .add('when unauthorized', withState({
-    note: "this note you do not own, you can not edit it, you can not hide it",
-    isAddingANewNote: true
-  }, ({ state: project, setState }) => (
-    <Note
-      isAuthorized={false}
-      collection={collections["12345"]}
-      project={project}
-      updateNote={mockUpdateNote(setState)}
-      hideNote={() => setState({ isAddingANewNote: false })}
-    />
-  )))
-  .add('dark notes', withState({
-    note: "the background is dark, the text is light",
-    isAddingANewNote: true
-  }, ({ state: project, setState }) => (
-    <Note
-      isAuthorized={true}
-      collection={collections.dark}
-      project={project}
-      updateNote={mockUpdateNote(setState)}
-      hideNote={() => setState({ isAddingANewNote: false })}
-    />
-  )));
+  .add(
+    'when unauthorized',
+    withState(
+      {
+        note: 'this note you do not own, you can not edit it, you can not hide it',
+        isAddingANewNote: true,
+      },
+      ({ state: project, setState }) => (
+        <Note
+          isAuthorized={false}
+          collection={collections['12345']}
+          project={project}
+          updateNote={mockUpdateNote(setState)}
+          hideNote={() => setState({ isAddingANewNote: false })}
+        />
+      ),
+    ),
+  )
+  .add(
+    'dark notes',
+    withState(
+      {
+        note: 'the background is dark, the text is light',
+        isAddingANewNote: true,
+      },
+      ({ state: project, setState }) => (
+        <Note
+          isAuthorized={true}
+          collection={collections.dark}
+          project={project}
+          updateNote={mockUpdateNote(setState)}
+          hideNote={() => setState({ isAddingANewNote: false })}
+        />
+      ),
+    ),
+  );
 
 storiesOf('Footer', module).add('footer', () => <Footer />);
+
+storiesOf('Recent Projects', module)
+  .add('anonymous user', provideContext({ currentUser: { color: 'pink', projects: Object.values(projects) } }, () => <RecentProjects />))
+  .add(
+    'logged-in user loading',
+    provideContext({ currentUser: { ...users.modernserf, projects: [] }, currentUserFetched: false }, () => <RecentProjects />),
+  )
+  .add('logged-in user', provideContext({ currentUser: { ...users.modernserf, projects: Object.values(projects) } }, () => <RecentProjects />));
