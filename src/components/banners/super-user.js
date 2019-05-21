@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 
-import { useCurrentUser } from '../../state/current-user';
-import useLocalStorage from '../../state/local-storage';
-import { useAPI } from '../../state/api';
+import { useCurrentUser } from 'State/current-user';
+
+import useLocalStorage from 'State/local-storage';
 
 import styles from './super-user.styl';
 
@@ -12,7 +12,6 @@ const cx = classNames.bind(styles);
 const SuperUserBanner = () => {
   const { superUserHelpers } = useCurrentUser();
   const { superUserFeature, canBecomeSuperUser, toggleSuperUser } = superUserHelpers;
-  console.log("hi", superUserFeature, canBecomeSuperUser, toggleSuperUser)
   const [showSupportBanner, setShowSupportBanner] = useLocalStorage('showSupportBanner', false);
   
   if (superUserFeature || canBecomeSuperUser) {

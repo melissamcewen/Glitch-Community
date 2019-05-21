@@ -235,20 +235,20 @@ class CurrentUserManager extends React.Component {
     this.props.setSharedUser(user);
     this.props.setCachedUser(undefined);
   }
-  
+
   superUserHelpers() {
-    const { sharedUser } = this.props; //why shared?
-    const superUserFeature = sharedUser && sharedUser.features && sharedUser.features.find((feature) => feature.name === 'super_user')
-    
+    const { cachedUser } = this.props;
+    const superUserFeature = cachedUser && cachedUser.features && cachedUser.features.find((feature) => feature.name === 'super_user');
+
     return {
       toggleSuperUser: async () => {
         await this.api().post(`https://support-toggle.glitch.me/support/${superUserFeature ? 'disable' : 'enable'}`);
         window.location.reload();
       },
-      canBecomeSuperUser: sharedUser && sharedUser.projects && sharedUser.projects.filter((p) => p.id === 'b9f7fbdd-ac07-45f9-84ea-d484533635ff').length > 0,
+      canBecomeSuperUser: cachedUser && cachedUser.projects && cachedUser.projects.filter((p) => p.id === 'b9f7fbdd-ac07-45f9-84ea-d484533635ff').length > 0,
       superUserFeature,
-    }
-  };
+    };
+  }
 
   update(changes) {
     this.props.setCachedUser({
