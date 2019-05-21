@@ -6,17 +6,16 @@ import ProjectsList from 'Components/containers/projects-list';
 import Loader from 'Components/loader';
 import CoverContainer from 'Components/containers/cover-container';
 import { UserLink } from 'Components/link';
+import SignInPop from 'Components/sign-in-pop';
 import { getAvatarStyle } from 'Models/user';
 
 import { useCurrentUser } from '../state/current-user';
 import ProjectsLoader from './projects-loader';
-import SignInPop from './pop-overs/sign-in-pop';
 
 const SignInNotice = () => (
   <div className="anon-user-sign-up">
-    <span>
-      <SignInPop /> to keep your projects.
-    </span>
+    <SignInPop align="left" />
+    &nbsp;to keep your projects.
   </div>
 );
 

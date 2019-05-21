@@ -43,7 +43,9 @@
 .popoverSection + .popoverSection
   border-top: 1px solid secondary
     
-.popoverActions
+.popoverActions,
+.popoverInfo,
+.popoverTitle
   padding: 14px 12px
     
 .popoverWithButtonWrap
@@ -51,3 +53,16 @@
   
 .buttonWrap button
   margin: 0 !important
+  
+.popoverTitle
+  display: flex
+  align-items: center
+  font-weight: bold
+
+.backArrow
+  margin-top: -3px
+  padding: 1px 3px
+  border-radius: 3px
+  opacity: 0.7
+.popoverTitle:hover .backArrow
+  background-color: section-line
