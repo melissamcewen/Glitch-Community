@@ -74,12 +74,20 @@ RecentProjectsContainer.propTypes = {
 
 const RecentProjects = () => {
   const { currentUser: user, fetched, clear } = useCurrentUser();
+//   return (
+//     <RecentProjectsContainer user={user} clearUser={clear}>
+//         <Loader />
+//     </RecentProjectsContainer>
+
+//   )
   return (
     <RecentProjectsContainer user={user} clearUser={clear}>
       {fetched ? (
         <ProjectsLoader projects={user.projects.slice(0, 3)}>{(projects) => <ProjectsList layout="row" projects={projects} />}</ProjectsLoader>
       ) : (
-        <Loader />
+        <div>
+          <Loader />
+        </div>
       )}
     </RecentProjectsContainer>
   );
