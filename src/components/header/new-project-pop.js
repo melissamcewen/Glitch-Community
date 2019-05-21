@@ -83,7 +83,8 @@ const useNewProjectAPI = createAPIHook(async (api) => {
   ];
   const idString = projectIds.map((id) => `id=${id}`).join('&');
   // always request against the production API, with no token
-  const { data } = await api.get(`/v1/projects/by/id?${idString}`, {
+  // (this is necessary for it to work on glitch.development)
+  const { data } = await api.get(`https://api.glitch.com/v1/projects/by/id?${idString}`, {
     headers: {
       Authorization: '',
     },

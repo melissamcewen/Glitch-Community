@@ -1,13 +1,13 @@
 const body =
-  '<p>Style and remix themeable components, so you can create your own custom version of Material Design.</p><p>Define your theme, see it in action, and get the code.</p>';
+  '<p>90,000 developers shared their opinions about jobs, tech, and where the industry\'s going.</p><p>Remix our app to explore the data and discover your own insights.</p>';
 
 // make sure image urls use https
 export default {
-  image: 'https://culture-zine.glitch.me/culture/content/images/2019/04/Glitch_Illo_MaterialApps-Headline-v1--1--4.png',
+  image: 'https://culture-zine.glitch.me/culture/content/images/2019/05/stackFullDevSurveyBanner.png',
   mask: 'mask-4',
-  title: 'Build Your Own Material Theme',
-  appDomain: 'material-theme-builder',
-  blogUrl: '/build-material-design-themes-on-glitch/',
+  title: 'Explore Stack Overflow Dev Survey Results',
+  appDomain: '2019-stackoverflow-public-data',
+  blogUrl: '/discover-insights-explore-developer-survey-results-2019/',
   body,
   color: '#f5f5f5'
 };

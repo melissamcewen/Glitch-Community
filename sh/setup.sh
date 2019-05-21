@@ -9,7 +9,7 @@ if [ "$1" == "-h" ]; then
   exit 0
 fi
 
-git remote add $1 https://api.glitch.com/$1/git
+git remote add $1 https://api.glitch.com/git/$1
 git fetch $1 master:$1
 git checkout $1
 git push origin $1

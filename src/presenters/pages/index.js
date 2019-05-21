@@ -17,17 +17,6 @@ import OverlayVideo from '../overlays/overlay-video';
 import RecentProjects from '../recent-projects';
 import ReportButton from '../pop-overs/report-abuse-pop';
 
-const loadedScripts = new Set();
-function loadScript(src) {
-  if (!loadedScripts.has(src)) {
-    const script = document.createElement('script');
-    script.src = src;
-    script.async = true;
-    document.head.appendChild(script);
-    loadedScripts.add(src);
-  }
-}
-
 const Callout = ({ classes, imgUrl, title, description }) => (
   <div className={`callout ${classes}`}>
     <Image className="badge" src={imgUrl} width="114" height="115" alt={title} />
@@ -49,11 +38,6 @@ Callout.defaultProps = {
 };
 
 const WhatIsGlitch = () => {
-  React.useEffect(() => {
-    loadScript('//fast.wistia.com/embed/medias/i0m98yntdb.jsonp');
-    loadScript('//fast.wistia.com/assets/external/E-v1.js');
-  }, []);
-
   const witchLarge = 'https://cdn.glitch.com/a67e7e84-c063-4c8e-a7fc-f4c7ab86186f%2Fglitch-witch-large.svg?1543872118446';
   const witchSmall = 'https://cdn.glitch.com/a67e7e84-c063-4c8e-a7fc-f4c7ab86186f%2Fglitch-witch-small.svg?1543872119039';
 
