@@ -68,9 +68,7 @@ WhitelistedDomain.defaultProps = {
 // Join Team
 
 const JoinTeam = ({ onClick }) => (
-  <button className="button button-small button-cta join-team-button" onClick={onClick}>
-    Join Team
-  </button>
+  <Button type="cta" size="small" onClick={onClick} className="join-team-button">Join Team</Button>
 );
 
 const useInvitees = createAPIHook(async (api, team, currentUserIsOnTeam) => {

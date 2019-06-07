@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Heading from 'Components/text/heading';
 import Embed from 'Components/project/embed';
+import Button from 'Components/buttons/button';
 import MaskImage from 'Components/images/mask-image';
 import Link from 'Components/link';
 
@@ -22,7 +23,9 @@ const FeaturedEmbed = ({ image, mask, title, appDomain, blogUrl, body, color }) 
         {/* eslint-disable-next-line react/no-danger */}
         <p dangerouslySetInnerHTML={{ __html: body }} />
         <Link to={`culture${blogUrl}`} className="learn-more">
-          <Button size='small'>Learn More →</Button>
+          <Button size="small">
+            Learn More <span aria-hidden="true">→</span>
+          </Button>
         </Link>
       </div>
       <div className="glitch-embed-wrap">
