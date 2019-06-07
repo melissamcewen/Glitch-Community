@@ -22,7 +22,7 @@ const FeaturedEmbed = ({ image, mask, title, appDomain, blogUrl, body, color }) 
         {/* eslint-disable-next-line react/no-danger */}
         <p dangerouslySetInnerHTML={{ __html: body }} />
         <Link to={`culture${blogUrl}`} className="learn-more">
-          <button className="button-small">Learn More →</button>
+          <Button size='small'>Learn More →</Button>
         </Link>
       </div>
       <div className="glitch-embed-wrap">
