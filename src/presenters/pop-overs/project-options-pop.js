@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
 
+import Button from 'Components/buttons/button';
 import PopoverWithButton from './popover-with-button';
 import { NestedPopover } from './popover-nested';
 import { AddProjectToCollectionBase } from './add-project-to-collection-pop';
@@ -74,10 +75,9 @@ const determineProjectOptionsFunctions = ({ currentUser, project, projectOptions
 };
 
 const PopoverButton = ({ onClick, text, emoji }) => (
-  <button className="button-small has-emoji button-tertiary" onClick={onClick} type="button">
-    <span>{`${text} `}</span>
-    <span className={`emoji ${emoji}`} />
-  </button>
+  <Button type="tertiary" size="small" hasEmoji onClick={onClick} type="button">
+    {text} <Emoji name={emoji} />
+  </Button>
 );
 PopoverButton.propTypes = {
   onClick: PropTypes.func.isRequired,
