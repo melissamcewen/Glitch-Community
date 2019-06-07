@@ -5,6 +5,7 @@ import { useTrackedFunc } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
 
 import Button from 'Components/buttons/button';
+import Emoji from 'Components/images/emoji';
 import PopoverWithButton from './popover-with-button';
 import { NestedPopover } from './popover-nested';
 import { AddProjectToCollectionBase } from './add-project-to-collection-pop';
