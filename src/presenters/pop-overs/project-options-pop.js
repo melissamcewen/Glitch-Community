@@ -75,7 +75,7 @@ const determineProjectOptionsFunctions = ({ currentUser, project, projectOptions
 };
 
 const PopoverButton = ({ onClick, text, emoji }) => (
-  <Button type="tertiary" size="small" hasEmoji onClick={onClick} type="button">
+  <Button type="tertiary" size="small" hasEmoji onClick={onClick}>
     {text} <Emoji name={emoji} />
   </Button>
 );
