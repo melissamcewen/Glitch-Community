@@ -7,6 +7,7 @@ import TooltipContainer from 'Components/tooltips/tooltip-container';
 import { UserLink } from 'Components/link';
 import { UserAvatar } from 'Components/images/avatar';
 import Button from 'Components/buttons/button';
+import Emoji from 'Components/images/emoji';
 import Thanks from 'Components/thanks';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useAPI } from 'State/api';
@@ -33,8 +34,8 @@ const RemoveFromTeam = ({ onClick }) => {
   const onClickTracked = useTrackedFunc(onClick, 'Remove from Team clicked');
   return (
     <section className="pop-over-actions danger-zone">
-      <Button type="tertiary" size="small" hasEmoji matchBackground onClick={onClickTracked}>
-        Remove from Team <span className="emoji wave" role="img" aria-label="" />
+      <Button type="tertiary" size="small" hasEmoji onClick={onClickTracked}>
+        Remove from Team <Emoji name="wave" />
       </Button>
     </section>
   );
@@ -51,13 +52,13 @@ const AdminActions = ({ user, team, updateUserPermissions }) => {
     <section className="pop-over-actions admin-actions">
       <p className="action-description">Admins can update team info, billing, and remove users</p>
       {userIsTeamAdmin({ user, team }) ? (
-        <button className="button-small button-tertiary has-emoji" onClick={onClickRemoveAdmin}>
-          Remove Admin Status <span className="emoji fast-down" />
-        </button>
+        <Button type="tertiary" size="small" hasEmoji onClick={onClickRemoveAdmin}>
+          Remove Admin Status <Emoji name="fastDown" />
+        </Button>
       ) : (
-        <button className="button-small button-tertiary has-emoji" onClick={onClickMakeAdmin}>
-          Make an Admin <span className="emoji fast-up" />
-        </button>
+        <Button type="tertiary" size="small" hasEmoji onClick={onClickMakeAdmin}>
+          Make an Admin <Emoji name="fastUp" />
+        </Button>
       )}
     </section>
   );
