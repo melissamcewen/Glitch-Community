@@ -6,6 +6,7 @@ import { userIsTeamAdmin, userIsOnlyTeamAdmin } from 'Models/team';
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import { UserLink } from 'Components/link';
 import { UserAvatar } from 'Components/images/avatar';
+import Button from 'Components/buttons/button';
 import Thanks from 'Components/thanks';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useAPI } from 'State/api';
@@ -32,9 +33,9 @@ const RemoveFromTeam = ({ onClick }) => {
   const onClickTracked = useTrackedFunc(onClick, 'Remove from Team clicked');
   return (
     <section className="pop-over-actions danger-zone">
-      <button className="button-small has-emoji button-tertiary button-on-secondary-background" onClick={onClickTracked}>
+      <Button type="tertiary" size="small" hasEmoji matchBackground onClick={onClickTracked}>
         Remove from Team <span className="emoji wave" role="img" aria-label="" />
-      </button>
+      </Button>
     </section>
   );
 };
