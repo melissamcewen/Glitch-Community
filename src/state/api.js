@@ -1,6 +1,6 @@
 /* globals API_URL */
 import React, { useState, useEffect, useContext, useRef, createContext } from 'react';
-import axios from 'axios';
+import { axios } from 'axios';
 import { memoize } from 'lodash';
 import { useCurrentUser } from './current-user';
 import { captureException } from '../utils/sentry';
