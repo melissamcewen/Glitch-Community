@@ -63,6 +63,7 @@ dependencies:
   quantize: 1.0.2
   randomcolor: 0.5.4
   react: 16.8.6
+  react-aria-live: 2.0.5
   react-dom: 16.8.6
   react-helmet: 5.2.1
   react-is: 16.8.6
@@ -11282,6 +11283,14 @@ packages:
     dev: false
     resolution:
       integrity: sha1-o5TefCx77Na1R1uhuXrEcs58dPg=
+  /react-aria-live/2.0.5:
+    dependencies:
+      uuid: 3.3.2
+    dev: false
+    peerDependencies:
+      react: ^16.3.x
+    resolution:
+      integrity: sha512-rXiH1HNKJrr/UfVeGwA2aKY43r5WbjLs+AYB6/kJF1qny2hwxzQc1qewQmUpdQ5h8HAOTD8O/XlGcEHjqlCl0g==
   /react-clientside-effect/1.2.0/react@16.8.6:
     dependencies:
       '@babel/runtime': 7.4.2
@@ -14176,6 +14185,7 @@ specifiers:
   quantize: ^1.0.2
   randomcolor: ^0.5.4
   react: ^16.8.6
+  react-aria-live: ^2.0.5
   react-dom: ^16.8.6
   react-helmet: ^5.2.1
   react-is: ^16.8.6

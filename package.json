@@ -107,7 +107,8 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-middleware": "^3.7.0",
     "winston": "^3.2.1",
-    "wcag-contrast": "^2.1.1"
+    "wcag-contrast": "^2.1.1",
+    "react-aria-live": "^2.0.5"
   },
   "engines": {
     "node": "10.x"
