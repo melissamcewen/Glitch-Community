@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import TextInput from 'Components/inputs/text-input';
 import Loader from 'Components/loader';
+import Button from 'Components/buttons/button';
 import { getPredicates, getTeamPair } from 'Models/words';
 import { getLink } from 'Models/team';
 import { useAPI } from 'State/api';
@@ -17,9 +18,9 @@ import { NestedPopoverTitle } from './popover-nested';
 const CreateTeamSubmitButton = () => {
   const onClick = useTracker('Create Team submitted');
   return (
-    <button type="submit" className="button-small has-emoji" onClick={onClick}>
-      Create Team <span className="emoji thumbs_up" />
-    </button>
+    <Button size="small" emoji="thumbsUp" onClick={onClick}>
+      Create Team
+    </Button>
   );
 };
 

@@ -111,7 +111,7 @@ export const createAPIHook = (asyncFunction, options = {}) => (...args) => {
         const value = await asyncFunction(api, ...args);
         setResult({ status: 'ready', value });
       } catch (error) {
-        setResult({ status: 'error', value: error });
+        setResult({ status: 'error', error });
         if (options.captureException) {
           captureException(error);
         }

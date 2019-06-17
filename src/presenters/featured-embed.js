@@ -4,27 +4,30 @@ import PropTypes from 'prop-types';
 import Heading from 'Components/text/heading';
 import Embed from 'Components/project/embed';
 import MaskImage from 'Components/images/mask-image';
-import Link from 'Components/link';
+import Link, { WrappingLink } from 'Components/link';
+import Button from 'Components/buttons/button';
 
 const FeaturedEmbed = ({ image, mask, title, appDomain, blogUrl, body, color }) => (
   <div className="featured-embed">
     <div className="mask-container">
-      <Link to={`culture${blogUrl}`}>
+      <WrappingLink href={`culture${blogUrl}`}>
         <MaskImage maskClass={mask} src={image} />
-      </Link>
+      </WrappingLink>
     </div>
 
     <div className="content" style={{ backgroundColor: color }}>
-      <div className="description">
-        <Link to={`culture${blogUrl}`}>
+      <Link to={`culture${blogUrl}`}>
+        <div className="description">
           <Heading tagName="h2">{title}</Heading>
-        </Link>
-        {/* eslint-disable-next-line react/no-danger */}
-        <p dangerouslySetInnerHTML={{ __html: body }} />
-        <Link to={`culture${blogUrl}`} className="learn-more">
-          <button className="button-small">Learn More →</button>
-        </Link>
-      </div>
+          {/* eslint-disable-next-line react/no-danger */}
+          <div dangerouslySetInnerHTML={{ __html: body }} />
+          <div className="button-wrap">
+            <Button decorative size="small">
+              Learn More <span aria-hidden="true">→</span>
+            </Button>
+          </div>
+        </div>
+      </Link>
       <div className="glitch-embed-wrap">
         <Embed domain={appDomain} />
       </div>

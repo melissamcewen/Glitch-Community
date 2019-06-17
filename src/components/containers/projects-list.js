@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import classNames from 'classnames/bind';
@@ -13,6 +13,7 @@ import ProjectItem from 'Components/project/project-item';
 import Note from 'Components/collection/note';
 import Grid from 'Components/containers/grid';
 import Row from 'Components/containers/row';
+import { LiveMessage } from 'react-aria-live';
 
 import styles from './projects-list.styl';
 
@@ -48,16 +49,63 @@ const ProjectsUL = ({ collection, projects, sortable, onReorder, noteOptions, la
 
 const arrowSrc = 'https://cdn.glitch.com/11efcb07-3386-43b6-bab0-b8dc7372cba8%2Fleft-arrow.svg?1553883919269';
 
-const PaginationController = ({ enabled, projects, projectsPerPage, children }) => {
-  const [page, setPage] = useState(1);
-  const [expanded, setExpanded] = useState(false);
+const paginationReducer = (oldState, action) => {
+  switch (action) {
+    case 'next':
+      return {
+        page: oldState.page + 1,
+        totalPages: oldState.totalPages,
+        announce: `Showing page ${oldState.page + 1} of ${oldState.totalPages}`,
+      };
+    case 'previous':
+      return {
+        page: oldState.page - 1,
+        totalPages: oldState.totalPages,
+        announce: `Showing page ${oldState.page - 1} of ${oldState.totalPages}`,
+      };
+    case 'expand':
+      return {
+        expanded: true,
+        totalPages: oldState.totalPages,
+        announce: 'Showing all pages',
+      };
+    default:
+      return {};
+  }
+};
 
+const PaginationController = ({ enabled, projects, projectsPerPage, children }) => {
   const numProjects = projects.length;
   const numPages = Math.ceil(projects.length / projectsPerPage);
-  const canPaginate = enabled && !expanded && projectsPerPage < numProjects;
+
+  const [state, dispatchState] = useReducer(paginationReducer, {
+    page: 1,
+    totalPages: numPages,
+    announce: '',
+  });
+  const prevButtonRef = useRef();
+  const nextButtonRef = useRef();
+
+  const canPaginate = enabled && !state.expanded && projectsPerPage < numProjects;
+
+  const onNextButtonClick = () => {
+    if (state.page + 1 === numPages) {
+      prevButtonRef.current.focus();
+    }
+
+    dispatchState('next');
+  };
+
+  const onPreviousButtonClick = () => {
+    if (state.page - 1 === 1) {
+      nextButtonRef.current.focus();
+    }
+
+    dispatchState('previous');
+  };
 
   if (canPaginate) {
-    const startIdx = (page - 1) * projectsPerPage;
+    const startIdx = (state.page - 1) * projectsPerPage;
     projects = projects.slice(startIdx, startIdx + projectsPerPage);
   }
   return (
@@ -66,18 +114,19 @@ const PaginationController = ({ enabled, projects, projectsPerPage, children }) 
       {canPaginate && (
         <div className={styles.viewControls}>
           <div className={styles.paginationControls}>
-            <Button type="tertiary" disabled={page === 1} onClick={() => setPage(page - 1)}>
+            <Button ref={prevButtonRef} type="tertiary" disabled={state.page === 1} onClick={onPreviousButtonClick}>
               <Image alt="Previous" className={styles.paginationArrow} src={arrowSrc} />
             </Button>
+            {state.announce && <LiveMessage message={state.announce} aria-live="assertive" />}
             <div data-cy="page-numbers" className={styles.pageNumbers}>
-              {page} / {numPages}
+              {state.page} / {numPages}
             </div>
-            <Button type="tertiary" disabled={page === numPages} onClick={() => setPage(page + 1)}>
+            <Button ref={nextButtonRef} type="tertiary" disabled={state.page === numPages} onClick={onNextButtonClick}>
               <Image alt="Next" className={classNames(styles.paginationArrow, styles.next)} src={arrowSrc} />
             </Button>
           </div>
-          <Button data-cy="show-all" type="tertiary" onClick={() => setExpanded(true)}>
-            Show all<Badge>{numProjects}</Badge>
+          <Button data-cy="show-all" type="tertiary" onClick={() => dispatchState('expand')}>
+            Show all <Badge>{numProjects}</Badge>
           </Button>
         </div>
       )}
@@ -153,12 +202,12 @@ function ProjectsList({
   collection,
   noteOptions,
   projectOptions,
-  ...props
+  dataCy,
 }) {
   return (
     <FilterController enabled={enableFiltering} placeholder={placeholder} projects={projects}>
       {({ filterInput, renderProjects }) => (
-        <article {...props} className={classNames(styles.projectsContainer)}>
+        <article className={classNames(styles.projectsContainer)} data-cy={dataCy}>
           <div className={styles.header}>
             {title && <Heading tagName="h2">{title}</Heading>}
             {filterInput}
@@ -198,6 +247,7 @@ ProjectsList.propTypes = {
   collection: PropTypes.object,
   noteOptions: PropTypes.object,
   projectOptions: PropTypes.object,
+  dataCy: PropTypes.string,
 };
 
 ProjectsList.defaultProps = {
@@ -211,6 +261,7 @@ ProjectsList.defaultProps = {
   collection: null,
   noteOptions: {},
   projectOptions: {},
+  dataCy: null,
 };
 
 export default ProjectsList;

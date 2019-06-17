@@ -92,17 +92,13 @@ const CollectionItem = ({ collection, deleteCollection, isAuthorized, showCurato
 
         <ProjectsPreview collection={collection} isAuthorized={isAuthorized} />
 
-        <CollectionLink collection={collection} className={styles.footerLink}>
-          <>
-            {collection.projects && collection.projects.length > 0 && (
-              <>
-                {`View ${collection.projects.length >= 3 ? 'all' : ''} `}
-                <Pluralize count={collection.projects.length} singular="project" />
-                <span aria-hidden="true"> →</span>
-              </>
-            )}
-          </>
-        </CollectionLink>
+        {collection.projects && collection.projects.length > 0 && (
+          <CollectionLink collection={collection} className={styles.footerLink}>
+            {`View ${collection.projects.length >= 3 ? 'all' : ''} `}
+            <Pluralize count={collection.projects.length} singular="project" />
+            <span aria-hidden="true"> →</span>
+          </CollectionLink>
+        )}
       </div>
     )}
   </AnimationContainer>

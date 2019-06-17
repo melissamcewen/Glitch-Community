@@ -6,7 +6,6 @@ import { throttle } from 'lodash';
 import { getContrastWithDarkText, getContrastWithLightText } from 'Models/collection';
 import TextInput from 'Components/inputs/text-input';
 import ColorInput from 'Components/inputs/color';
-import Emoji from 'Components/images/emoji';
 import Button from 'Components/buttons/button';
 import { PopoverWithButton, PopoverDialog, PopoverInfo, PopoverActions } from 'Components/popover';
 import styles from './edit-collection-color-pop.styl';
@@ -102,8 +101,8 @@ function EditCollectionColorPop({ initialColor, updateColor, togglePopover }) {
       </PopoverInfo>
 
       <PopoverActions type="secondary">
-        <Button size="small" type="tertiary" onClick={setRandomColor}>
-          Random <Emoji name="bouquet" />
+        <Button size="small" type="tertiary" emoji="bouquet" onClick={setRandomColor}>
+          Random
         </Button>
       </PopoverActions>
     </PopoverDialog>

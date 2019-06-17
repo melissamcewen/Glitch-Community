@@ -46,7 +46,7 @@ Link.propTypes = {
 };
 
 export const CollectionLink = ({ collection, children, ...props }) => (
-  <Link to={getCollectionLink(collection)} {...props}>
+  <Link to={getCollectionLink(collection)} {...props} aria-label={collection.name}>
     {children}
   </Link>
 );

@@ -4,18 +4,16 @@ import { withRouter } from 'react-router-dom';
 import Loader from 'Components/loader';
 import { PopoverWithButton, PopoverDialog, PopoverActions, PopoverTitle, ActionDescription } from 'Components/popover';
 import Button from 'Components/buttons/button';
-import Emoji from 'Components/images/emoji';
 import Image from 'Components/images/image';
 import { useAPI } from 'State/api';
+import { useNotifications } from 'State/notifications';
 // import { teamAdmins } from 'Models/team';
-
-import { useNotifications } from '../../presenters/notifications';
 
 const illustration = 'https://cdn.glitch.com/c53fd895-ee00-4295-b111-7e024967a033%2Fdelete-team.svg?1531267699621';
 
 const DeleteTeamPop = withRouter(({ history, team }) => {
   const api = useAPI();
-  const { createErrorNotification } = useNotifications();
+  const { createNotification } = useNotifications();
   const [teamIsDeleting, setTeamIsDeleting] = useState(false);
 
   async function deleteTeam() {
@@ -26,7 +24,7 @@ const DeleteTeamPop = withRouter(({ history, team }) => {
       history.push('/');
     } catch (error) {
       console.error('deleteTeam', error, error.response);
-      createErrorNotification('Something went wrong, try refreshing?');
+      createNotification('Something went wrong, try refreshing?', { type: 'error' });
       setTeamIsDeleting(false);
     }
   }
@@ -41,8 +39,8 @@ const DeleteTeamPop = withRouter(({ history, team }) => {
         </ActionDescription>
       </PopoverActions>
       <PopoverActions type="dangerZone">
-        <Button size="small" type="dangerZone" onClick={deleteTeam} hasEmoji>
-          Delete {team.name} <Emoji name="bomb" />
+        <Button size="small" type="dangerZone" emoji="bomb" onClick={deleteTeam}>
+          Delete {team.name}
           {teamIsDeleting && <Loader />}
         </Button>
       </PopoverActions>
@@ -61,14 +59,7 @@ DeleteTeamPop.propTypes = {
 };
 
 const DeleteTeam = ({ team }) => (
-  <PopoverWithButton
-    buttonProps={{ size: 'small', type: 'dangerZone' }}
-    buttonText={
-      <>
-        Delete {team.name} <Emoji name="bomb" />
-      </>
-    }
-  >
+  <PopoverWithButton buttonProps={{ size: 'small', type: 'dangerZone', emoji: 'bomb' }} buttonText={<>Delete {team.name}</>}>
     {() => <DeleteTeamPop team={team} />}
   </PopoverWithButton>
 );

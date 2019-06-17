@@ -59,13 +59,13 @@ const mergeRefs = (...refs) => (element) => {
   });
 };
 
-const alignTypes = ['left', 'right', 'topLeft', 'topRight'];
+const alignTypes = ['none', 'left', 'right', 'topLeft', 'topRight'];
 const PopoverDialog = ({ children, align, wide, className, focusOnDialog }) => {
   const { ref: positionRef, offset } = usePositionAdjustment({ margin: 12 });
   const { ref: focusRef } = useOpenedFromKeyboardFocus(focusOnDialog);
   const focusProps = focusOnDialog ? { tabIndex: 0 } : {};
   return (
-    <div className={classnames(styles.popoverWrap, wide && styles.wide, styles[align], className)}>
+    <div className={classnames(styles.popoverWrap, wide && styles.wide, align !== 'none' && styles[align], className)}>
       <dialog ref={mergeRefs(positionRef, focusRef)} className={styles.popover} style={offset} {...focusProps}>
         {children}
       </dialog>

@@ -6,10 +6,11 @@ import Button from 'Components/buttons/button';
 import { PopoverWithButton, PopoverDialog, PopoverSection, PopoverActions } from 'Components/popover';
 import ResultsList from 'Components/containers/results-list';
 import { TrackedExternalLink } from 'Components/link';
+import { ProjectAvatar } from 'Components/images/avatar';
 import { getRemixUrl } from 'Models/project';
 import { useTracker } from 'State/segment-analytics';
 import { createAPIHook } from 'State/api';
-import ProjectAvatar from '../../presenters/includes/project-avatar';
+
 import styles from './new-project-pop.styl';
 
 const importGitRepo = () => {
@@ -22,16 +23,16 @@ const importGitRepo = () => {
   window.location.href = `/edit/#!/import/git?url=${repoUrl}`;
 };
 
-const NewProjectResultItem = ({ project: { id, domain, description } }) => (
+const NewProjectResultItem = ({ project }) => (
   <div className={styles.project}>
     <div className={styles.projectAvatar}>
-      <ProjectAvatar domain={domain} id={id} />
+      <ProjectAvatar project={project} />
     </div>
     <div className={styles.projectInfo}>
-      <div className={styles.projectDomain} title={domain}>
-        {domain}
+      <div className={styles.projectDomain} title={project.domain}>
+        {project.domain}
       </div>
-      {description.length > 0 && <div className={styles.projectDescription}>{description}</div>}
+      {project.description.length > 0 && <div className={styles.projectDescription}>{project.description}</div>}
     </div>
   </div>
 );

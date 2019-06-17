@@ -28,6 +28,10 @@ module.exports = {
     'jsx-a11y/label-has-for': OFF, // It's been deprecated. -- https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/label-has-for.md
     'arrow-parens': [ERROR, 'always'],
     'operator-linebreak': [ERROR, 'after', { overrides: { '?': 'before', ':': 'before' } }],
+    'jsx-a11y/label-has-associated-control': [ERROR, {
+      assert: "either",
+      depth: 3,
+    }],
     // disabled for prettier compatibility
     'implicit-arrow-linebreak': OFF,
     'object-curly-newline': OFF,

@@ -1,7 +1,7 @@
 function webpackBackgroundProcess() {
   // Launch webpack in a separate process because it blocks a bit
   const { spawn } = require('child_process');
-  const env = { ...process.env, NODE_OPTIONS: '--max-old-space-size=384' };
+  const env = { ...process.env, NODE_OPTIONS: '--max-old-space-size=512' };
   spawn('webpack', ['--watch', '--info-verbosity', 'verbose'], { env, stdio: 'inherit' });
 }
 

@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { uploadAsset, uploadAssetSizes } from '../../utils/assets';
-import { captureException } from '../../utils/sentry';
-import { useNotifications } from '../notifications';
+import { uploadAsset, uploadAssetSizes } from 'Utils/assets';
+import { captureException } from 'Utils/sentry';
+import { useNotifications } from 'State/notifications';
 
 const NotifyUploading = ({ progress }) => (
   <>
     Uploading asset
-    <progress className="notify-progress" value={progress} />
+    <progress value={progress} />
   </>
 );
 const NotifyError = ({ error }) => {
@@ -20,10 +20,9 @@ const NotifyError = ({ error }) => {
 async function uploadWrapper(notifications, upload) {
   let result = null;
   let progress = 0;
-  const { updateNotification, removeNotification } = notifications.createPersistentNotification(
-    <NotifyUploading progress={progress} />,
-    'notifyUploading',
-  );
+  const { updateNotification, removeNotification } = notifications.createNotification(<NotifyUploading progress={progress} />, {
+    persistent: true,
+  });
   try {
     result = await upload(({ lengthComputable, loaded, total }) => {
       if (lengthComputable) {
@@ -35,7 +34,7 @@ async function uploadWrapper(notifications, upload) {
     });
   } catch (error) {
     captureException(error);
-    notifications.createErrorNotification(<NotifyError error={error} />);
+    notifications.createNotification(<NotifyError error={error} />, { type: 'error' });
     removeNotification();
     return result;
   }

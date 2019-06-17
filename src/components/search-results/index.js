@@ -43,8 +43,13 @@ const FilterContainer = ({ filters, activeFilter, setFilter, query }) => {
 // Search results from algolia do not contain their associated users or teams,
 // so those need to be fetched after the search results have loaded.
 const useTeamUsers = createAPIHook(async (api, teamID) => {
-  const res = await api.get(`/v1/teams/by/id/users?id=${teamID}`);
-  return res.data.items;
+  try {
+    const res = await api.get(`/v1/teams/by/id/users?id=${teamID}`);
+    return res.data.items;
+  } catch (e) {
+    captureException(e);
+    return [];
+  }
 });
 
 function TeamWithDataLoading({ team }) {

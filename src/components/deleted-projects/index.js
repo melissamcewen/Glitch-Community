@@ -11,62 +11,80 @@ import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
 import AnimationContainer from 'Components/animation-container';
 import Grid from 'Components/containers/grid';
+import TooltipContainer from 'Components/tooltips/tooltip-container';
 import { getAvatarUrl } from 'Models/project';
 import { useAPI } from 'State/api';
 import { useTrackedFunc } from 'State/segment-analytics';
 
 import styles from './deleted-projects.styl';
 
-const DeletedProject = ({ id, domain, onClick }) => (
-  <AnimationContainer type="slideUp" onAnimationEnd={onClick}>
-    {(animateAndDeleteProject) => (
-      <TransparentButton onClick={animateAndDeleteProject} className={styles.deletedProject}>
+const DeletedProject = ({ id, domain, onClick }) => {
+  // non-admin members of projects and super users can't undelete
+  if (!onClick) {
+    return (
+      <div className={styles.deletedProject}>
         <img className={styles.avatar} src={getAvatarUrl(id)} alt="" />
         <div className={styles.projectName}>{domain}</div>
-        <div className={styles.buttonWrap}>
-          <Button size="small" decorative>
-            Undelete
-          </Button>
-        </div>
-      </TransparentButton>
-    )}
-  </AnimationContainer>
-);
-
-
+        <TooltipContainer
+          type="action"
+          id="undelete-project"
+          target={
+            <div className={styles.buttonWrap}>
+              <Button size="small" disabled decorative>
+                Undelete
+              </Button>
+            </div>
+          }
+          tooltip="Only admins can undelete a project"
+        />
+      </div>
+    );
+  }
+  return (
+    <AnimationContainer type="slideUp" onAnimationEnd={onClick}>
+      {(animateAndDeleteProject) => (
+        <TransparentButton onClick={animateAndDeleteProject} className={styles.deletedProject}>
+          <img className={styles.avatar} src={getAvatarUrl(id)} alt="" />
+          <div className={styles.projectName}>{domain}</div>
+          <div className={styles.buttonWrap}>
+            <Button size="small" decorative>
+              Undelete
+            </Button>
+          </div>
+        </TransparentButton>
+      )}
+    </AnimationContainer>
+  );
+};
 DeletedProject.propTypes = {
   id: PropTypes.string.isRequired,
   domain: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
+};
+DeletedProject.defaultProps = {
+  onClick: null,
 };
 
 export const DeletedProjectsList = ({ deletedProjects, undelete }) => {
   const undeleteTracked = useTrackedFunc(undelete, 'Undelete clicked');
-
   return (
     <Grid items={deletedProjects} className={styles.deletedProjectsContainer}>
-      {({ id, domain }) => <DeletedProject id={id} domain={domain} onClick={() => undeleteTracked(id)} />}
+      {({ id, domain, permission }) => {
+        const canUndelete = permission && permission.accessLevel === 30 && undelete;
+        const onClick = canUndelete ? () => undeleteTracked(id) : null;
+
+        return <DeletedProject id={id} domain={domain} onClick={onClick} />;
+      }}
     </Grid>
   );
 };
 
 DeletedProjectsList.propTypes = {
   deletedProjects: PropTypes.array.isRequired,
-  undelete: PropTypes.func.isRequired,
+  undelete: PropTypes.func,
 };
-
-const ViewOnlyDeletedProjectsList = ({ deletedProjects }) => (
-  <Grid items={deletedProjects} className={styles.deletedProjectsContainer}>
-    {({ id, domain }) => (
-      <div>
-        <img className={styles.avatar} src={getAvatarUrl(id)} alt="" />
-        <div className={styles.projectName}>{domain}</div>
-      </div>
-    )}
-  </Grid>
-);
-ViewOnlyDeletedProjectsList.propTypes = {
-  deletedProjects: PropTypes.array.isRequired,
+DeletedProjectsList.defaultProps = {
+  undelete: null,
 };
 
 function DeletedProjects({ deletedProjects, setDeletedProjects, undelete, user }) {
@@ -102,11 +120,7 @@ function DeletedProjects({ deletedProjects, setDeletedProjects, undelete, user }
   }
   return (
     <>
-      {
-        undelete
-          ? <DeletedProjectsList deletedProjects={deletedProjects} undelete={undelete} />
-          : <ViewOnlyDeletedProjectsList deletedProjects={deletedProjects} />
-      }
+      <DeletedProjectsList deletedProjects={deletedProjects} undelete={undelete} />
       <Button type="tertiary" onClick={clickHide}>
         Hide Deleted Projects
       </Button>

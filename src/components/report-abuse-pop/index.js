@@ -7,6 +7,7 @@ import axios from 'axios';
 import TextArea from 'Components/inputs/text-area';
 import Loader from 'Components/loader';
 import TextInput from 'Components/inputs/text-input';
+import Notification from 'Components/notification';
 import Button from 'Components/buttons/button';
 import Emoji from 'Components/images/emoji';
 import { PopoverWithButton, PopoverDialog, PopoverInfo, PopoverActions, PopoverTitle, InfoDescription } from 'Components/popover';
@@ -49,7 +50,7 @@ const Success = () => (
   <>
     <PopoverTitle>Report Abuse</PopoverTitle>
     <PopoverActions>
-      <div className={`notification notifySuccess ${styles.successNotification}`}>Report Sent</div>
+      <Notification persistent type="success">Report Sent</Notification>
       <InfoDescription>
         Thanks for helping to keep Glitch a safe, friendly community <Emoji name="park" />
       </InfoDescription>

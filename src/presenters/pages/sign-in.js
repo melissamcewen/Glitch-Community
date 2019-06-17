@@ -11,9 +11,10 @@
 /* globals API_URL */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { captureException } from '../../utils/sentry';
-import { useAPI } from '../../state/api';
-import { useCurrentUser } from '../../state/current-user';
+import { captureException } from 'Utils/sentry';
+import { useAPI } from 'State/api';
+import { useCurrentUser } from 'State/current-user';
+import Notification from 'Components/notification';
 import { NestedPopover, NestedPopoverTitle } from '../pop-overs/popover-nested';
 
 class SignIn extends React.Component {
@@ -66,13 +67,13 @@ class SignIn extends React.Component {
               )}
               {this.state.done && !this.state.error && (
                 <>
-                  <div className="notification notifyPersistent notifySuccess">Almost Done</div>
+                  <Notification persistent inline type="success">Almost Done</Notification>
                   <div>Finish signing in from the email sent to {this.state.email}.</div>
                 </>
               )}
               {this.state.done && this.state.error && (
                 <>
-                  <div className="notification notifyPersistent notifyError">Error</div>
+                  <Notification persistent inline type="error">Error</Notification>
                   <div>Something went wrong, email not sent.</div>
                 </>
               )}
@@ -137,12 +138,12 @@ class SignInCodeHandler extends React.Component {
           )}
           {this.state.done && !this.state.error && (
             <>
-              <div className="notification notifyPersistent notifySuccess">Success!</div>
+              <Notification persistent type="success">Success!</Notification>
             </>
           )}
           {this.state.done && this.state.error && (
             <>
-              <div className="notification notifyPersistent notifyError">Error</div>
+              <Notification persistent type="error">Error</Notification>
               <div>Code not found or already used. Try signing in with email.</div>
             </>
           )}

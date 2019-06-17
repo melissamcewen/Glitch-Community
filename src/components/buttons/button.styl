@@ -11,21 +11,31 @@
   font-size: 14px
   font-weight: 600
   line-height: 14px
-  padding: 6px 12px
-  padding-bottom: 5px
+  // bottom padding = top padding - 2px to account for descenders in Benton Sans
+  // https://fogcreek.slack.com/archives/CB4EHAJ2J/p1560438878129400?thread_ts=1560436476.127600&cid=CB4EHAJ2J
+  padding: 7px 12px 5px 12px
   position: relative
   text-align: left
   text-decoration: none
   &.matchBackground
     background-color: inherit
-  &.hasEmoji
-    padding-top: 5px;
-    padding-bottom: 5px;
-  
+  &.hasImage
+    padding-right: 35px
+    &.padLeft
+      padding-left: 35px
+      padding-right: 12px
+  // we display the sunglasses wider than the other emoji, so we need to add extra padding
+  &.hasSunglassesEmoji
+    padding-right: 45px
+    &.padLeft
+      padding-left: 45px
+    .imageContainer img
+      width: auto
+      height: 15px
   &.dangerZone
     &:hover
       background-color: warning-background
-  &:hover
+  &:hover, &:focus
     background-color: secondary-background
     text-decoration: none
   &:active,
@@ -42,7 +52,6 @@
     color: primary
     background-color: cta
     box-shadow: 4px 4px 0 primary
-    margin-bottom: 2px
     &:hover
       background-color: cta
       box-shadow: 2px 2px 0 primary
@@ -52,11 +61,37 @@
       
   &.small
     font-size: 12px
-    padding: 5px 8px 3px
-    margin-bottom: 10px
-    &.hasEmoji
-      padding-top: 3px;
-      padding-bottom: 3px;
+    // bottom padding = top padding - 2px to account for descenders in Benton Sans
+    // https://fogcreek.slack.com/archives/CB4EHAJ2J/p1560438878129400?thread_ts=1560436476.127600&cid=CB4EHAJ2J
+    padding: 5px 8px 3px 8px
+    &.hasImage
+      padding-right: 28px
+      .imageContainer
+        right: 8px
+      &.alignLeft
+        padding-right: 8px
+        padding-left: 28px
+        .imageContainer
+          right: initial
+          left: 8px
+    // we display the sunglasses wider than the other emoji, so we need to add extra padding
+    &.hasSunglassesEmoji
+      padding-right: 38px
+      &.padLeft
+        padding-left: 38px
+      .imageContainer img
+        width: auto
+        height: 13px
+    &.hasNarrowEmoji
+      padding-right: 22px
+      .imageContainer
+        right: 5px
+      &.alignLeft
+        padding-right: 8px
+        padding-left: 22px
+        .imageContainer
+          right: initial
+          left: 5px
 
   &.tertiary
     color: tertiary
@@ -78,7 +113,8 @@
   text-align: inherit
   width: 100%
   
-button.transparentButton:hover
+button.transparentButton:hover,
+button.transparentButton:focus
   background: none
   
 .btn.unstyled,
@@ -88,8 +124,23 @@ button.transparentButton:hover
   border: none
   background: none
   font-weight: normal
+  
     
 // apply hover effects if decorative button is inside a link/button that's being hovered
 a:hover .btn.decorative,
 button:hover .btn.decorative
   background-color: secondary-background
+  
+.imageContainer
+  position: absolute
+  right: 12px
+  top: 0
+  height: 100%
+  display: flex
+  align-items: center
+  &.alignLeft
+    left: 12px
+    right: initial
+  &.up1
+    top: -1px
+  

@@ -1,3 +1,4 @@
+import { lightColors } from 'Models/user';
 /* globals CDN_URL */
 const cacheBuster = Math.floor(Math.random() * 1000);
 
@@ -30,11 +31,11 @@ export const getAvatarStyle = ({ id, hasAvatarImage, backgroundColor, cache, siz
 
 export const getCoverUrl = ({ id, hasCoverImage, cache = cacheBuster, size = 'large' }) => {
   const customImage = `${CDN_URL}/team-cover/${id}/${size}?${cache}`;
-  const defaultImage = 'https://cdn.glitch.com/55f8497b-3334-43ca-851e-6c9780082244%2Fdefault-cover-wide.svg?1503518400625';
+  const defaultImage = 'https://cdn.glitch.com/b065beeb-4c71-4a9c-a8aa-4548e266471f%2Fteam-cover-pattern.svg?v=1559853406967';
   return hasCoverImage ? customImage : defaultImage;
 };
 
-export const getProfileStyle = ({ id, hasCoverImage, coverColor, cache, size }) => {
+export const getProfileStyle = ({ id, hasCoverImage, cache, size }) => {
   const image = getCoverUrl({
     id,
     hasCoverImage,
@@ -42,7 +43,7 @@ export const getProfileStyle = ({ id, hasCoverImage, coverColor, cache, size }) 
     size,
   });
   return {
-    backgroundColor: coverColor,
+    backgroundColor: lightColors[id % 4],
     backgroundImage: `url('${image}')`,
   };
 };

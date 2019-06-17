@@ -1,4 +1,4 @@
-import { useNotifications } from './notifications';
+import { useNotifications } from 'State/notifications';
 
 function handleError(notify, error) {
   console.error(error);
@@ -16,17 +16,17 @@ function handleErrorForInput(notify, error) {
 function handleCustomError(notify, error) {
   console.error(error);
   if (error && error.response && error.response.data) {
-    notify(error.response.data.message, 'notifyError');
+    notify(error.response.data.message);
   }
   return Promise.reject(error);
 }
 
 const useErrorHandlers = () => {
-  const { createNotification, createErrorNotification } = useNotifications();
+  const { createErrorNotification } = useNotifications();
   return {
     handleError: (error) => handleError(createErrorNotification, error),
     handleErrorForInput: (error) => handleErrorForInput(createErrorNotification, error),
-    handleCustomError: (error) => handleCustomError(createNotification, error),
+    handleCustomError: (error) => handleCustomError(createErrorNotification, error),
   };
 };
 

@@ -7,7 +7,6 @@ import { kebabCase, partition } from 'lodash';
 
 import { isDarkColor, getLink, getOwnerLink } from 'Models/collection';
 import Button from 'Components/buttons/button';
-import Emoji from 'Components/images/emoji';
 import Text from 'Components/text/text';
 import Image from 'Components/images/image';
 import FeaturedProject from 'Components/project/featured-project';
@@ -38,6 +37,7 @@ function DeleteCollectionBtn({ collection, deleteCollection }) {
     <Button
       type="dangerZone"
       size="small"
+      emoji="bomb"
       onClick={() => {
         if (!window.confirm('Are you sure you want to delete your collection?')) {
           return;
@@ -46,7 +46,7 @@ function DeleteCollectionBtn({ collection, deleteCollection }) {
         setDone(true);
       }}
     >
-      Delete Collection <Emoji name="bomb" />
+      Delete Collection
     </Button>
   );
 }
@@ -78,7 +78,7 @@ const CollectionPageContents = ({
   unfeatureProject,
   ...props
 }) => {
-  const collectionHasProjects = !!collection && !!collection.projects;
+  const collectionHasProjects = !!collection && !!collection.projects && collection.projects.length > 0;
   let featuredProject = null;
   let { projects } = collection;
   if (collection.featuredProjectId) {
@@ -127,58 +127,62 @@ const CollectionPageContents = ({
 
             {currentUserIsAuthor && <EditCollectionColor update={updateColor} initialColor={collection.coverColor} />}
           </header>
-          {!collectionHasProjects && currentUserIsAuthor && (
-            <div className="empty-collection-hint">
-              <Image src="https://cdn.glitch.com/1afc1ac4-170b-48af-b596-78fe15838ad3%2Fpsst-pink.svg?1541086338934" alt="" />
-              <Text>You can add any project, created by any user</Text>
+          <div className="collection-contents">
+            <div className="collection-project-container-header">
+              {currentUserIsAuthor && <AddCollectionProject addProjectToCollection={addProjectToCollection} collection={collection} />}
             </div>
-          )}
-          {!collectionHasProjects && !currentUserIsAuthor && (
-            <div className="empty-collection-hint">No projects to see in this collection just yet.</div>
-          )}
-          {collectionHasProjects && (
-            <>
-              <div className="collection-contents">
-                <div className="collection-project-container-header">
-                  {currentUserIsAuthor && <AddCollectionProject addProjectToCollection={addProjectToCollection} collection={collection} />}
-                </div>
-                {featuredProject && (
-                  <FeaturedProject
-                    isAuthorized={currentUserIsAuthor}
-                    currentUser={currentUser}
-                    featuredProject={featuredProject}
-                    unfeatureProject={unfeatureProject}
-                    addProjectToCollection={addProjectToCollection}
-                    collection={collection}
-                    displayNewNote={displayNewNote}
-                    updateNote={updateNote}
-                    hideNote={hideNote}
-                  />
-                )}
-                <ProjectsList
-                  layout="gridCompact"
-                  {...props}
-                  projects={projects}
-                  collection={collection}
-                  enableSorting={currentUserIsAuthor}
-                  onReorder={updateProjectOrder}
-                  noteOptions={{
-                    hideNote,
-                    updateNote,
-                    isAuthorized: currentUserIsAuthor,
-                  }}
-                  projectOptions={{
-                    removeProjectFromCollection,
-                    addProjectToCollection,
-                    displayNewNote,
-                    featureProject,
-                    isAuthorized: currentUserIsAuthor,
-                  }}
-                  fetchMembers
-                />
+            {!collectionHasProjects && currentUserIsAuthor && (
+              <div className="empty-collection-hint">
+                <Image src="https://cdn.glitch.com/1afc1ac4-170b-48af-b596-78fe15838ad3%2Fpsst-pink.svg?1541086338934" alt="psst" width="" height="" />
+                <Text>You can add any project, created by any user</Text>
               </div>
-            </>
-          )}
+            )}
+            {!collectionHasProjects && !currentUserIsAuthor && (
+              <div className="empty-collection-hint">No projects to see in this collection just yet.</div>
+            )}
+            {featuredProject && (
+              <FeaturedProject
+                isAuthorized={currentUserIsAuthor}
+                currentUser={currentUser}
+                featuredProject={featuredProject}
+                unfeatureProject={unfeatureProject}
+                addProjectToCollection={addProjectToCollection}
+                collection={collection}
+                displayNewNote={displayNewNote}
+                updateNote={updateNote}
+                hideNote={hideNote}
+              />
+            )}
+            {collectionHasProjects && (
+              <ProjectsList
+                layout="gridCompact"
+                {...props}
+                projects={projects}
+                collection={collection}
+                enableSorting={currentUserIsAuthor && projects.length > 1}
+                onReorder={updateProjectOrder}
+                noteOptions={{
+                  hideNote,
+                  updateNote,
+                  isAuthorized: currentUserIsAuthor,
+                }}
+                projectOptions={{
+                  removeProjectFromCollection,
+                  addProjectToCollection,
+                  displayNewNote,
+                  featureProject,
+                  isAuthorized: currentUserIsAuthor,
+                }}
+                fetchMembers
+              />
+            )}
+            {currentUserIsAuthor && projects.length > 1 && (
+              <div>
+                Drag to reorder, or move focus to a project and press space.
+                Move it with the arrow keys and press space again to save.
+              </div>
+            )}
+          </div>
         </article>
         {!currentUserIsAuthor && <ReportButton reportedType="collection" reportedModel={collection} />}
       </main>

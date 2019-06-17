@@ -57,7 +57,7 @@ class CollectionEditor extends React.Component {
     const featuredIndex = this.state.projects.findIndex((p) => p.id === this.state.featuredProjectId);
     const index = (featuredIndex >= 0 && filteredIndex > featuredIndex) ? filteredIndex + 1 : filteredIndex;
     this.setState(({ projects }) => {
-      const sortedProjects = projects.filter((p) => p !== project);
+      const sortedProjects = projects.filter((p) => p.id !== project.id);
       sortedProjects.splice(index, 0, project);
       return { projects: sortedProjects };
     });

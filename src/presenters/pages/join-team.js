@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { captureException } from '../../utils/sentry';
 
-import { getLink } from '../../models/team';
-import { useAPI } from '../../state/api';
-import { useCurrentUser } from '../../state/current-user';
-import { useNotifications } from '../notifications';
+import { getLink } from 'Models/team';
+import { useAPI } from 'State/api';
+import { useCurrentUser } from 'State/current-user';
+import { useNotifications } from 'State/notifications';
+import { captureException } from 'Utils/sentry';
 
 class JoinTeamPageBase extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class JoinTeamPageBase extends React.Component {
       if (error && error.response.status !== 401) {
         captureException(error);
       }
-      this.props.createErrorNotification('Invite failed, try asking your teammate to resend the invite');
+      this.props.createNotification('Invite failed, try asking your teammate to resend the invite', { type: 'error' });
     }
     this.setState({ redirect: getLink({ url: this.props.teamUrl }) });
   }
@@ -47,7 +47,6 @@ JoinTeamPageBase.propTypes = {
   api: PropTypes.any.isRequired,
   teamUrl: PropTypes.string.isRequired,
   joinToken: PropTypes.string.isRequired,
-  createErrorNotification: PropTypes.func.isRequired,
   createNotification: PropTypes.func.isRequired,
   replaceCurrentUser: PropTypes.func.isRequired,
 };

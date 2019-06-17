@@ -1,12 +1,15 @@
 // transforms the individual data points (buckets) we get from the api into grouped 'bins' of data
 // each bin is then rendered as a point on the graph
 
-import React from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import _ from 'lodash';
+import { isEmpty } from 'lodash';
 import groupByTime from 'group-by-time';
-import * as d3Array from 'd3-array';
+import { histogram as d3Histogram } from 'd3-array';
+import { createAPIHook } from 'State/api';
+
+const useC3 = createAPIHook(async () => import(/* webpackChunkName: "c3-bundle" */ 'c3'));
 
 const createHistogram = (bins) => {
   const histogram = [];
@@ -33,7 +36,7 @@ const createHistogram = (bins) => {
   return histogram;
 };
 
-const groupByRegularIntervals = d3Array.histogram().value((data) => data['@timestamp']);
+const groupByRegularIntervals = d3Histogram().value((data) => data['@timestamp']);
 
 const createBins = (buckets, currentTimeFrame) => {
   if (currentTimeFrame === 'Last 24 Hours') {
@@ -69,7 +72,7 @@ const dateFormat = (currentTimeFrame) => {
 
 const renderChart = (activeFilter, c3, analytics, currentTimeFrame) => {
   let columns = [];
-  if (!_.isEmpty(analytics)) {
+  if (!isEmpty(analytics)) {
     columns = chartColumns(analytics, currentTimeFrame);
   }
 
@@ -119,26 +122,19 @@ const renderChart = (activeFilter, c3, analytics, currentTimeFrame) => {
   }
 };
 
-class TeamAnalyticsActivity extends React.Component {
-  componentDidUpdate(prevProps) {
-    const newFilter = prevProps.activeFilter !== this.props.activeFilter;
-    const stillGettingData = prevProps.isGettingData && !this.props.isGettingData;
-    if (newFilter || stillGettingData) {
-      renderChart(this.props.activeFilter, this.props.c3, this.props.analytics, this.props.currentTimeFrame);
-    }
-  }
-
-  render() {
-    return null;
-  }
+function TeamAnalyticsActivity({ activeFilter, analytics, currentTimeFrame }) {
+  const { value: c3 } = useC3();
+  useEffect(() => {
+    if (!c3) return;
+    renderChart(activeFilter, c3, analytics, currentTimeFrame);
+  }, [activeFilter, analytics, currentTimeFrame, c3]);
+  return null;
 }
 
 TeamAnalyticsActivity.propTypes = {
   activeFilter: PropTypes.string.isRequired,
-  c3: PropTypes.object.isRequired,
   analytics: PropTypes.object.isRequired,
   currentTimeFrame: PropTypes.string.isRequired,
-  isGettingData: PropTypes.bool.isRequired,
 };
 
 export default TeamAnalyticsActivity;

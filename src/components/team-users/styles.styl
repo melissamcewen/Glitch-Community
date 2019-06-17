@@ -1,3 +1,5 @@
+@import '../constants.styl'
+
 .container
   margin: 0
   padding: 0
@@ -5,13 +7,15 @@
   display: flex
   flex-flow: row wrap
   align-items: center
+  li:last-of-type
+    margin-left: 10px
   
-.teamMember
+.teamMember, .invitedMember
   margin-right: -7px
 
 .teamMember + li
   margin-left: 10px
-.teamMember + li.teamMember
+.teamMember + li.teamMember, .invitedMember + li.invitedMember
   margin-left: 0
   
 .whitelistedDomainIconWrap
@@ -19,11 +23,87 @@
   text-align: center
   
 .whitelistedDomain,
-.invitedMember,
 .addButtonWrap,
 .joinButtonWrap
   margin: 0 3px
   
 .invitedMember img
   opacity: 0.5
+
+.invitedMember .avatar 
+  display: inline-block
+  vertical-align: middle
+  img
+    width: 44px
+    height: 44px
   
+.nameLoginWrap
+  display: inline-block
+  vertical-align: middle
+  padding-left: 10px
+
+.name,
+.userLogin
+  margin: 0
+.name
+  font-weight: bold
+.userLogin
+  font-weight: 600
+  color: text-on-secondary-background
+  
+.projectsList
+  label
+    display: flex
+    align-items: center
+    margin-bottom: 10px
+    cursor: pointer
+    user-select: none
+  input
+    width: auto
+    margin: 0
+    margin-right: 5px
+    cursor: pointer
+  .projectAvatarWrap
+    vertical-align: middle
+    margin-right: 5px
+
+  // shrink avatars if there are more than 10 projects
+  label:nth-last-child(n+10) // every label at least ten from the end
+    &, & ~ label // will style itself and all following labels
+      .projectAvatarWrap img
+        width: 20px
+        height: 20px
+        
+.tinyAvatar img
+  width: 18px
+  height: 18px
+  
+.statusBadge
+  font-weight: 600
+  font-size: 12px
+  line-height: 14px
+  vertical-align: middle
+  margin: 0
+.adminStatus
+  padding-top: 2px
+  padding-bottom: 0px
+  border-radius: 5px
+  padding-left: 5px
+  padding-right: 5px
+  display: inline-block
+  margin-top: 2px
+  background-color: admin
+
+.userProfile
+  display: flex
+  img
+    width: 44px
+    height: 44px
+.userInfo
+  padding-left: 8px
+.userName
+  font-weight: bold
+.userLogin
+  font-weight: bold
+  color: text-on-secondary-background
+  padding-top: 4px

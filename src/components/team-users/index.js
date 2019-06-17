@@ -7,17 +7,87 @@ import WhitelistedDomainIcon from 'Components/whitelisted-domain';
 import { userIsTeamAdmin, userIsOnTeam, userCanJoinTeam } from 'Models/team';
 import { getDisplayName } from 'Models/user';
 import { useCurrentUser } from 'State/current-user';
-import { createAPIHook } from 'State/api';
+import { useAPI, createAPIHook } from 'State/api';
+import { useNotifications } from 'State/notifications';
 import { PopoverContainer, PopoverDialog, PopoverInfo, PopoverActions, InfoDescription } from 'Components/popover';
 import AddTeamUserPop from 'Components/team-users/add-team-user';
-import Emoji from 'Components/images/emoji';
 import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
-import { ProfileItem } from 'Components/profile-list';
+import { UserAvatar } from 'Components/images/avatar';
+import { UserLink } from 'Components/link';
 import { captureException } from 'Utils/sentry';
 
-import TeamUserPop from '../../presenters/pop-overs/team-user-info-pop';
+import TeamUserPop from './team-user-info';
 import styles from './styles.styl';
+
+// Invited user icon and pop
+
+function InvitedUser(props) {
+  const api = useAPI();
+  const { createNotification } = useNotifications();
+
+  // resend the invite
+  const resendInvite = async () => {
+    try {
+      await api.post(`/teams/${props.teamId}/sendJoinTeamEmail`, { userId: props.user.id });
+      createNotification(`Resent invite to ${props.user.name}!`, { type: 'success' });
+    } catch (error) {
+      captureException(error);
+      createNotification('Invite not sent, try again later', { type: 'error' });
+    }
+  };
+
+  return (
+    <PopoverContainer>
+      {({ visible, togglePopover }) => (
+        <div style={{ position: 'relative' }}>
+          <TransparentButton onClick={togglePopover}>
+            <UserAvatar user={props.user} />
+          </TransparentButton>
+
+          {visible && (
+            <PopoverDialog align="left">
+              <PopoverInfo>
+                <div className={styles.avatar}>
+                  <UserLink user={props.user}>
+                    <UserAvatar user={props.user} />
+                  </UserLink>
+                </div>
+                <div className={styles.nameLoginWrap}>
+                  <h3 className={styles.name} title={props.user.name}>
+                    {props.user.name || 'Anonymous'}
+                  </h3>
+                  {props.user.login && (
+                    <p className={styles.userLogin} title={props.user.login}>
+                      @{props.user.login}
+                    </p>
+                  )}
+                </div>
+              </PopoverInfo>
+
+              <PopoverActions>
+                <Button onClick={resendInvite} type="tertiary" size="small" emoji="herb">
+                  Resend invite
+                </Button>
+              </PopoverActions>
+
+              <PopoverActions type="dangerZone">
+                <Button onClick={props.onRevokeInvite} type="dangerZone" emoji="wave">
+                  Remove
+                </Button>
+              </PopoverActions>
+            </PopoverDialog>
+          )}
+        </div>
+      )}
+    </PopoverContainer>
+  );
+}
+
+InvitedUser.propTypes = {
+  user: PropTypes.object.isRequired,
+  teamId: PropTypes.number.isRequired,
+};
 
 // Whitelisted domain icon
 
@@ -44,8 +114,8 @@ const WhitelistedDomain = ({ domain, setDomain }) => (
             </PopoverInfo>
             {!!setDomain && (
               <PopoverActions type="dangerZone">
-                <Button type="dangerZone" size="small" onClick={() => setDomain(null)}>
-                  Remove {domain} <Emoji name="bomb" />
+                <Button type="dangerZone" size="small" emoji="bomb" onClick={() => setDomain(null)}>
+                  Remove {domain}
                 </Button>
               </PopoverActions>
             )}
@@ -68,9 +138,9 @@ WhitelistedDomain.defaultProps = {
 // Join Team
 
 const JoinTeam = ({ onClick }) => (
-  <button className="button button-small button-cta join-team-button" onClick={onClick}>
+  <Button size="small" type="cta" onClick={onClick}>
     Join Team
-  </button>
+  </Button>
 );
 
 const useInvitees = createAPIHook(async (api, team, currentUserIsOnTeam) => {
@@ -92,14 +162,16 @@ const useInvitees = createAPIHook(async (api, team, currentUserIsOnTeam) => {
 
 const TeamUserContainer = ({ team, removeUserFromTeam, updateUserPermissions, updateWhitelistedDomain, inviteEmail, inviteUser, joinTeam }) => {
   const { currentUser } = useCurrentUser();
-  const [invitee, setInvitee] = useState('');
   const [newlyInvited, setNewlyInvited] = useState([]);
+  const [removedInvitees, setRemovedInvitee] = useState([]);
+  const api = useAPI();
+  const { createNotification } = useNotifications();
 
   const currentUserIsOnTeam = userIsOnTeam({ team, user: currentUser });
   const currentUserIsTeamAdmin = userIsTeamAdmin({ team, user: currentUser });
   const currentUserCanJoinTeam = userCanJoinTeam({ team, user: currentUser });
   const { value } = useInvitees(team, currentUserIsOnTeam);
-  const invitees = (value || []).concat(newlyInvited);
+  const invitees = (value || []).concat(newlyInvited).filter((el) => (!removedInvitees.includes(el)));
 
   const members = uniq([...team.users, ...invitees].map((user) => user.id));
 
@@ -107,24 +179,22 @@ const TeamUserContainer = ({ team, removeUserFromTeam, updateUserPermissions, up
     setNewlyInvited((invited) => [...invited, user]);
     try {
       await inviteUser(user);
-      setInvitee(getDisplayName(user));
+      createNotification(`Invited ${getDisplayName(user)}!`, { type: 'success' });
     } catch (error) {
       setNewlyInvited((invited) => invited.filter((u) => u.id !== user.id));
       captureException(error);
+      createNotification(`Couldn't invite ${getDisplayName(user)}, Try again later`, { type: 'error' });
     }
   };
 
   const onInviteEmail = async (email) => {
-    setInvitee(email);
     try {
       await inviteEmail(email);
+      createNotification(`Invited ${email}!`, { type: 'success' });
     } catch (error) {
       captureException(error);
+      createNotification(`Couldn't invite ${email}, Try again later`, { type: 'error' });
     }
-  };
-
-  const removeNotifyInvited = () => {
-    setInvitee('');
   };
 
   return (
@@ -141,7 +211,20 @@ const TeamUserContainer = ({ team, removeUserFromTeam, updateUserPermissions, up
       )}
       {invitees.map((user) => (
         <li key={user.id} className={styles.invitedMember}>
-          <ProfileItem user={user} />
+          <InvitedUser
+            user={user}
+            teamId={team.id}
+            onRevokeInvite={async () => {
+              setRemovedInvitee((removed) => [...removed, user]);
+              try {
+                await api.post(`/teams/${team.id}/revokeTeamJoinToken/${user.id}`);
+                createNotification(`Removed ${user.name} from team`);
+              } catch (error) {
+                captureException(error);
+                createNotification("Couldn't revoke invite, Try again later", { type: 'error' });
+              }
+            }}
+          />
         </li>
       ))}
       {currentUserIsOnTeam && (
@@ -158,14 +241,6 @@ const TeamUserContainer = ({ team, removeUserFromTeam, updateUserPermissions, up
       {currentUserCanJoinTeam && (
         <li className={styles.joinButtonWrap}>
           <JoinTeam onClick={joinTeam} />
-        </li>
-      )}
-
-      {!!invitee && (
-        <li>
-          <div className="notification notifySuccess inline-notification" onAnimationEnd={removeNotifyInvited}>
-            Invited {invitee}
-          </div>
         </li>
       )}
     </ul>

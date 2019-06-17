@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button, { SIZES } from 'Components/buttons/button';
-import Emoji from 'Components/images/emoji';
 import { getShowUrl, getEditorUrl, getRemixUrl } from '../../models/project';
 
 export const ShowButton = ({ name, size }) => (
-  <Button href={getShowUrl(name)} size={size}>
-    <Emoji name="sunglasses" /> Show
+  <Button href={getShowUrl(name)} size={size} emoji="sunglasses" emojiPosition="left">
+    Show
   </Button>
 );
+
 ShowButton.propTypes = {
   name: PropTypes.string.isRequired,
 };
@@ -31,8 +31,8 @@ EditButton.defaultProps = {
 };
 
 export const RemixButton = ({ name, isMember }) => (
-  <Button href={getRemixUrl(name)} size="small">
-    {isMember ? 'Remix This' : 'Remix your own'} <Emoji name="microphone" />
+  <Button href={getRemixUrl(name)} size="small" emoji="microphone">
+    {isMember ? 'Remix This' : 'Remix your own'}
   </Button>
 );
 RemixButton.propTypes = {

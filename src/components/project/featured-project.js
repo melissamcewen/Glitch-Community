@@ -14,7 +14,7 @@ const Top = ({ featuredProject, collection, updateNote, hideNote, isAuthorized, 
     <div className={styles.left}>
       <Heading tagName="h2">
         Featured Project
-        <Emoji name="clapper" />
+        <Emoji name="clapper" inTitle />
       </Heading>
       {collection && (
         <div className={styles.note}>

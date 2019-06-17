@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
-import { useNotifications } from '../presenters/notifications';
+import { useNotifications } from 'State/notifications';
 
-const PersistentNotification = ({ children, className }) => {
-  const { createPersistentNotification } = useNotifications();
+const PersistentNotification = ({ children }) => {
+  const { createNotification } = useNotifications();
 
-  useEffect(() => {
-    const { removeNotification } = createPersistentNotification(children, className);
-    return removeNotification;
-  }, [children, className]);
+  useEffect(
+    () => {
+      const { removeNotification } = createNotification(children, { type: 'error', persistent: true });
+      return removeNotification;
+    },
+    [children],
+  );
 
   return null;
 };
@@ -27,11 +30,7 @@ const OfflineNotice = () => {
   }, []);
 
   if (!online) {
-    return (
-      <PersistentNotification className="notifyError">
-        It looks like you're offline
-      </PersistentNotification>
-    );
+    return <PersistentNotification>It looks like you're offline</PersistentNotification>;
   }
   return null;
 };

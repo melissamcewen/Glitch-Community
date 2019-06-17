@@ -10,9 +10,10 @@ import { PopoverActions, PopoverInfo, PopoverSection, InfoDescription } from './
 function useActiveIndex(items, onSelect) {
   const inputRef = useRef();
   const [activeIndex, setActiveIndex] = useState(-1);
-  // reset activeIndex when items change
+  // reset activeIndex & focus when items change
   useEffect(() => {
     setActiveIndex(-1);
+    inputRef.current.focus();
   }, [items]);
 
   // focus input when there's no active index

@@ -5,7 +5,7 @@ import DefaultAvatar from 'Components/collection/defaultAvatar';
 
 /* eslint-disable no-bitwise */
 // from https://stackoverflow.com/a/21648508/1720985
-const hexToRgbA = (hex) => {
+export const hexToRgbA = (hex) => {
   if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
     let c = hex.substring(1).split('');
     if (c.length === 3) {
@@ -23,4 +23,5 @@ const CollectionAvatar = (props) => <DefaultAvatar backgroundFillColor={hexToRgb
 CollectionAvatar.propTypes = {
   color: PropTypes.string.isRequired,
 };
+
 export default CollectionAvatar;

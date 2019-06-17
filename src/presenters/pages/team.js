@@ -17,6 +17,8 @@ import ReportButton from 'Components/report-abuse-pop';
 import DeleteTeam from 'Components/team/delete-team-pop';
 import AddTeamProject from 'Components/team/add-team-project-pop';
 import TeamUsers from 'Components/team-users';
+import Button from 'Components/buttons/button';
+import TeamAnalytics from 'Components/team-analytics';
 import { getLink } from 'Models/team';
 import { AnalyticsContext } from 'State/segment-analytics';
 import { useAPI } from 'State/api';
@@ -28,8 +30,6 @@ import ErrorBoundary from '../includes/error-boundary';
 
 import NameConflictWarning from '../includes/name-conflict';
 import ProjectsLoader from '../projects-loader';
-import TeamAnalytics from '../includes/team-analytics';
-import { TeamMarketing } from '../includes/team-elements';
 import styles from './team.styl';
 
 function syncPageToUrl(team) {
@@ -63,6 +63,22 @@ const ProjectPals = () => (
       <div className="description">Add projects to share them with your team</div>
     </div>
   </aside>
+);
+
+const TeamMarketing = () => (
+  <section className={styles.teamMarketing}>
+    <Text>
+      <img
+        className={styles.forPlatformsIcon}
+        src="https://cdn.glitch.com/be1ad2d2-68ab-404a-82f4-6d8e98d28d93%2Ffor-platforms-icon.svg?1506442305188"
+        alt=""
+      />
+      Want your own team page, complete with detailed app analytics?
+    </Text>
+    <Button href="/teams" emoji="fishingPole">
+      About Teams
+    </Button>
+  </section>
 );
 
 // Team Page

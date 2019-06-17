@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { PopoverWithButton, PopoverDialog, PopoverSearch, PopoverInfo, InfoDescription } from 'Components/popover';
 import ProjectResultItem from 'Components/project/project-result-item';
-import Emoji from 'Components/images/emoji';
 import { useCurrentUser } from 'State/current-user';
 
 const filterProjects = (query, projects, teamProjects) => {
@@ -63,12 +62,8 @@ function AddTeamProjectPop({ teamProjects, addProject }) {
 
 const AddTeamProject = ({ addProject, teamProjects }) => (
   <PopoverWithButton
-    buttonProps={{ hasEmoji: true }}
-    buttonText={
-      <>
-        Add Project <Emoji name="bentoBox" />
-      </>
-    }
+    buttonText="Add Project"
+    buttonProps={{ emoji: 'bentoBox' }}
   >
     {({ togglePopover }) => (
       <AddTeamProjectPop

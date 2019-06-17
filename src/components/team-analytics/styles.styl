@@ -1,0 +1,129 @@
+@import '../constants.styl';
+analytics-app-views-color = #7460E1
+analytics-remix-color = #23d5e7
+
+.container
+  position: relative
+  
+.section
+  margin-left: 1
+
+.section + .section
+  margin-top: 1rem
+  
+.content
+  margin-left: 15px
+  
+.explanation p
+  max-width: 600px
+  font-size: 14px
+  color: tertiary
+  
+.placeholderMask
+  position: absolute
+  top: 25px
+  left: 0
+  right: 0
+  bottom: 0
+  background: linear-gradient(to bottom, rgba(255,255,255,0.2), white)
+  pointer-events: none
+  
+.inlineBanner
+  background-color: section-line
+  max-width: 325px
+  border-radius: 5px
+  padding: 12px
+  font-size: medium
+  font-weight: normal
+  display: inline
+  margin-left: 10px
+  padding: 5px 10px
+  border-radius: 3px
+
+.segmentedButtonsWrap
+  margin-bottom: 1rem
+  
+.options
+  margin-left: 15px
+  display: flex
+  :global .down-arrow
+    display: inline-block
+  & > *
+    margin-right: 8px
+    
+.allProjects
+  padding: 12px 6px
+
+.bentoBox
+  width: 32px
+  height: 32px
+  margin-left: 2px
+
+.projectDetails
+  font-size: 14px
+
+.projectDetailsTitle
+  margin-bottom: 1rem
+  
+.projectDetailsTable
+  border-collapse: collapse
+  margin-top: 0.5rem
+  th
+    text-align: left
+    font-weight: normal
+    padding-bottom: 3px
+    padding-left: 0
+    padding-right: 10px
+  td
+    padding-bottom: 3px
+
+.baseProjectAvatar img
+  width: 16px
+  height: 16px
+  margin-right: 3px
+  vertical-align: text-bottom
+
+.referrersContent
+  display: flex
+  @media (max-width: smallViewport)
+    display: block
+    
+.referrersColumn
+  width: calc(50% - 20px) // change to 33% when new col added
+  margin: 0
+  margin-right: 20px
+  progress
+    display: block
+    width: 100%
+    margin-top: 2px
+    margin-bottom: 0.5rem
+    height: 5px
+  &.requests    
+    progress
+      &::-webkit-progress-value
+        background-color: analytics-app-views-color
+      &::-moz-progress-bar
+        background-color: analytics-app-views-color
+  &.remixes
+    progress
+      &::-webkit-progress-value
+        background-color: analytics-remix-color
+      &::-moz-progress-bar
+        background-color: analytics-remix-color
+  @media (max-width: smallViewport)
+    width: 100%
+
+.referrersList
+  padding: 0
+  margin: 1rem
+  list-style-type: none
+  font-size: 14px
+    
+.summaryItem .total
+  border-radius: 3px
+  padding: 3px 5px
+  color: primary-background
+  &.requests    
+    background-color: analytics-app-views-color
+  &.remixes
+    background-color: analytics-remix-color

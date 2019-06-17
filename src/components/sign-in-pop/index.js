@@ -9,6 +9,7 @@ import Button from 'Components/buttons/button';
 import Emoji from 'Components/images/emoji';
 import TextInput from 'Components/inputs/text-input';
 import Link from 'Components/link';
+import Notification from 'Components/notification';
 import Loader from 'Components/loader';
 import { PopoverWithButton, MultiPopover, MultiPopoverTitle, PopoverDialog, PopoverActions, PopoverInfo } from 'Components/popover';
 import useLocalStorage from 'State/local-storage';
@@ -52,9 +53,11 @@ function slackAuthLink() {
 }
 
 const SignInPopButton = ({ company, emoji, href, onClick }) => (
-  <Button href={href} onClick={onClick} size="small">
-    Sign in with {company} <Emoji name={emoji} />
-  </Button>
+  <div style={{ marginBottom: '10px' }}>
+    <Button href={href} onClick={onClick} size="small" emoji={emoji}>
+      Sign in with {company}
+    </Button>
+  </div>
 );
 
 const SignInCodeSection = ({ onClick }) => (
@@ -84,7 +87,7 @@ function useEmail() {
   return [email, setEmail, validationError];
 }
 
-const EmailHandler = ({ showView }) => {
+const EmailHandler = ({ align, showView }) => {
   const api = useAPI();
   const [email, setEmail, validationError] = useEmail();
   const [isFocused, setIsFocused] = useState(true);
@@ -116,7 +119,7 @@ const EmailHandler = ({ showView }) => {
   }
 
   return (
-    <PopoverDialog align="right">
+    <PopoverDialog align={align}>
       <MultiPopoverTitle>
         Email Sign In <Emoji name="email" />
       </MultiPopoverTitle>
@@ -144,13 +147,17 @@ const EmailHandler = ({ showView }) => {
         {status === 'loading' && <Loader />}
         {status === 'done' && (
           <>
-            <div className="notification notifyPersistent notifySuccess">Almost Done</div>
+            <Notification persistent type="success">
+              Almost Done
+            </Notification>
             <div>Finish signing in from the email sent to {email}.</div>
           </>
         )}
         {status === 'error' && (
           <>
-            <div className="notification notifyPersistent notifyError">Error</div>
+            <Notification persistent type="error">
+              Error
+            </Notification>
             <div>{submitError}</div>
           </>
         )}
@@ -160,7 +167,7 @@ const EmailHandler = ({ showView }) => {
   );
 };
 
-const SignInWithCode = () => {
+const SignInWithCode = ({ align }) => {
   const { login } = useCurrentUser();
   const api = useAPI();
   const [code, setCode] = useState('');
@@ -183,7 +190,7 @@ const SignInWithCode = () => {
   }
 
   return (
-    <PopoverDialog align="right">
+    <PopoverDialog align={align}>
       <MultiPopoverTitle>Use a sign in code</MultiPopoverTitle>
       <PopoverActions>
         {status === 'ready' && (
@@ -197,10 +204,10 @@ const SignInWithCode = () => {
             </div>
           </form>
         )}
-        {status === 'done' && <div className="notification notifyPersistent notifySuccess">Success!</div>}
+        {status === 'done' && <Notification persistent type="success">Success!</Notification>}
         {status === 'error' && (
           <>
-            <div className="notification notifyPersistent notifyError">Error</div>
+            <Notification persistent type="error">Error</Notification>
             <div>Code not found or already used. Try signing in with email.</div>
           </>
         )}
@@ -209,7 +216,7 @@ const SignInWithCode = () => {
   );
 };
 
-const SignInPopBase = withRouter(({ location, align }) => {
+export const SignInPopBase = withRouter(({ location, align }) => {
   const slackAuthEnabled = useDevToggle('Slack Auth');
   const [, setDestination] = useLocalStorage('destinationAfterAuth');
   const onClick = () =>
@@ -231,8 +238,8 @@ const SignInPopBase = withRouter(({ location, align }) => {
   return (
     <MultiPopover
       views={{
-        email: (showView) => <EmailHandler showView={showView} />,
-        signInCode: () => <SignInWithCode />,
+        email: (showView) => <EmailHandler align={align} showView={showView} />,
+        signInCode: () => <SignInWithCode align={align} />,
       }}
     >
       {(showView) => (
@@ -251,8 +258,8 @@ const SignInPopBase = withRouter(({ location, align }) => {
             <SignInPopButton href={githubAuthLink()} company="GitHub" emoji="octocat" onClick={onClick} />
             <SignInPopButton href={googleAuthLink()} company="Google" emoji="google" onClick={onClick} />
             {slackAuthEnabled && <SignInPopButton href={slackAuthLink()} company="Slack" emoji="slack" onClick={onClick} />}
-            <Button size="small" onClick={setDestinationAnd(showView.email)}>
-              Sign in with Email <Emoji name="email" />
+            <Button size="small" emoji="email" onClick={setDestinationAnd(showView.email)}>
+              Sign in with Email
             </Button>
           </PopoverActions>
           <SignInCodeSection onClick={setDestinationAnd(showView.signInCode)} />

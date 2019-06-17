@@ -58,6 +58,7 @@ export const useTracker = (name, properties, context) => {
 
 export const useTrackedFunc = (func, name, properties, context) => {
   const track = useTracker(name, properties, context);
+  if (!func) return func;
   return (...funcArgs) => {
     track();
     return func(...funcArgs);

@@ -6,7 +6,7 @@ import Embed from 'Components/project/embed';
 import ReportButton from 'Components/report-abuse-pop';
 import { useTracker } from 'State/segment-analytics';
 import { EditButton, RemixButton } from '../../presenters/includes/project-actions';
-import AddProjectToCollection from '../../presenters/pop-overs/add-project-to-collection-pop';
+import AddProjectToCollection from './add-project-to-collection-pop';
 
 import styles from './project-embed.styl';
 
@@ -27,16 +27,11 @@ const ProjectEmbed = ({ project, top, isAuthorized, currentUser, addProjectToCol
 
   const BottomRight = () => (
     <>
-      {
-        currentUser.login && (
-          <AddProjectToCollection
-            project={project}
-            currentUser={currentUser}
-            addProjectToCollection={addProjectToCollection}
-            fromProject
-          />
-        )
-      }
+      {currentUser.login && (
+        <span className={styles.addToCollectionWrap}>
+          <AddProjectToCollection project={project} currentUser={currentUser} addProjectToCollection={addProjectToCollection} fromProject />
+        </span>
+      )}
       <RemixButton name={project.domain} isMember={isAuthorized} onClick={trackRemix} />
     </>
   );

@@ -6,13 +6,13 @@ import { getAllPages } from 'Shared/api';
 import { PopoverWithButton, PopoverDialog, PopoverSearch, PopoverInfo, InfoDescription } from 'Components/popover';
 import Emoji from 'Components/images/emoji';
 import ProjectResultItem from 'Components/project/project-result-item';
+import { AddProjectToCollectionMsg } from 'Components/notification';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { createAPIHook } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
 import { useAlgoliaSearch } from 'State/search';
-
-import useDebouncedValue from '../../hooks/use-debounced-value';
-import { useNotifications, AddProjectToCollectionMsg } from '../../presenters/notifications';
+import { useNotifications } from 'State/notifications';
+import useDebouncedValue from 'Hooks/use-debounced-value';
 
 function parseQuery(query) {
   query = query.trim();
@@ -61,23 +61,26 @@ function AddCollectionProjectPop({ collection, togglePopover, addProjectToCollec
       togglePopover();
       // add project to page if successful & show notification
       await addProjectToCollection(project, collection);
-      createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} />, 'notifySuccess');
+      createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} />, { type: 'success' });
     },
     'Project Added to Collection',
     { origin: 'Add Project collection' },
   );
 
   /* eslint-disable no-shadow */
-  const { visibleProjects, excludingExactMatch } = useMemo(() => {
-    const projects = parsedQuery.length ? uniqBy(topResults.concat(retrievedProjects), (p) => p.id) : initialProjects;
+  const { visibleProjects, excludingExactMatch } = useMemo(
+    () => {
+      const projects = parsedQuery.length ? uniqBy(topResults.concat(retrievedProjects), (p) => p.id) : initialProjects;
 
-    const idsOfProjectsInCollection = new Set(collection.projects.map((p) => p.id));
-    const [projectsAlreadyInCollection, newProjectsToAdd] = partition(projects, (project) => idsOfProjectsInCollection.has(project.id));
+      const idsOfProjectsInCollection = new Set(collection.projects.map((p) => p.id));
+      const [projectsAlreadyInCollection, newProjectsToAdd] = partition(projects, (project) => idsOfProjectsInCollection.has(project.id));
 
-    const visibleProjects = newProjectsToAdd.slice(0, 10);
-    const excludingExactMatch = projectsAlreadyInCollection.some((p) => p.domain === parsedQuery);
-    return { visibleProjects, excludingExactMatch };
-  }, [parsedQuery, initialProjects, topResults, retrievedProjects]);
+      const visibleProjects = newProjectsToAdd.slice(0, 10);
+      const excludingExactMatch = projectsAlreadyInCollection.some((p) => p.domain === parsedQuery);
+      return { visibleProjects, excludingExactMatch };
+    },
+    [parsedQuery, initialProjects, topResults, retrievedProjects],
+  );
 
   return (
     <PopoverDialog wide align="left">

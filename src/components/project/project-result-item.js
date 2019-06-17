@@ -6,12 +6,11 @@ import Markdown from 'Components/text/markdown';
 import ProfileList from 'Components/profile-list';
 import VisibilityContainer from 'Components/visibility-container';
 import { ResultItem, ResultInfo, ResultName, ResultDescription } from 'Components/containers/results-list';
-
+import { ProjectAvatar } from 'Components/images/avatar';
 import { getLink } from 'Models/project';
 import { createAPIHook } from 'State/api';
 import { getAllPages } from 'Shared/api';
 
-import ProjectAvatar from '../../presenters/includes/project-avatar';
 import styles from './project-result-item.styl';
 
 const useMembers = createAPIHook(async (api, project) => {
@@ -37,15 +36,16 @@ const ProfileListWrap = ({ project }) => (
   </div>
 );
 
-const ProjectResultItem = ({ project, active, onClick }) => (
+const ProjectResultItem = ({ project, selected, active, onClick }) => (
   <ResultItem
     className={classnames(project.private && styles.private)}
     href={getLink(project)}
     onClick={onClick}
     active={active}
+    selected={selected}
   >
     <div>
-      <ProjectAvatar {...project} />
+      <ProjectAvatar project={project} />
     </div>
     <ResultInfo>
       <ResultName>{project.domain}</ResultName>

@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import { orderBy } from 'lodash';
 import Heading from 'Components/text/heading';
-import Loader from 'Components/loader';
 import CollectionItem from 'Components/collection/collection-item';
 import Grid from 'Components/containers/grid';
-import Button from 'Components/buttons/button';
-import { getLink, createCollection } from 'Models/collection';
-import { useTrackedFunc } from 'State/segment-analytics';
+import CreateCollectionButton from 'Components/collection/create-collection-pop';
 import { useAPI } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
-import { useNotifications } from '../../presenters/notifications';
+
 import styles from './styles.styl';
 
 const CreateFirstCollection = () => (
@@ -21,56 +17,6 @@ const CreateFirstCollection = () => (
     <br />
   </div>
 );
-
-const collectionStates = {
-  ready: () => ({ type: 'ready' }),
-  loading: () => ({ type: 'loading' }),
-  newCollection: (url) => ({ type: 'newCollection', value: url }),
-};
-
-function CreateCollectionButton({ maybeTeam }) {
-  const api = useAPI();
-  const { currentUser } = useCurrentUser();
-  const { createNotification } = useNotifications();
-  const [state, setState] = useState(collectionStates.ready());
-
-  async function createCollectionOnClick() {
-    setState(collectionStates.loading());
-
-    const collectionResponse = await createCollection(api, null, maybeTeam ? maybeTeam.id : null, createNotification);
-    if (collectionResponse && collectionResponse.id) {
-      const collection = collectionResponse;
-      if (maybeTeam) {
-        collection.team = maybeTeam;
-      } else {
-        collection.user = currentUser;
-      }
-      const newCollectionUrl = getLink(collection);
-      setState(collectionStates.newCollection(newCollectionUrl));
-    } else {
-      // error messaging handled in createCollection
-      setState(collectionStates.ready());
-    }
-  }
-  const onClick = useTrackedFunc(createCollectionOnClick, 'Create Collection clicked');
-
-  if (state.type === 'newCollection') {
-    return <Redirect to={state.value} push />;
-  }
-  if (state.type === 'loading') {
-    return <Loader />;
-  }
-
-  return <Button onClick={onClick}>Create Collection</Button>;
-}
-
-CreateCollectionButton.propTypes = {
-  maybeTeam: PropTypes.object,
-};
-
-CreateCollectionButton.defaultProps = {
-  maybeTeam: undefined,
-};
 
 function CollectionsList({ collections: rawCollections, title, isAuthorized, maybeTeam, showCurator }) {
   const api = useAPI();
@@ -96,7 +42,7 @@ function CollectionsList({ collections: rawCollections, title, isAuthorized, may
       <Heading tagName="h2">{title}</Heading>
       {canMakeCollections && (
         <>
-          <CreateCollectionButton maybeTeam={maybeTeam} />
+          <CreateCollectionButton team={maybeTeam} />
           {!hasCollections && <CreateFirstCollection />}
         </>
       )}

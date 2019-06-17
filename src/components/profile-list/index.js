@@ -134,8 +134,8 @@ const PlaceholderList = ({ size }) => (
 
 const maybeList = (item) => (item ? [item] : []);
 
-export const ProfileItem = ({ user, team, glitchTeam }) => (
-  <ProfileList layout="block" users={maybeList(user)} teams={maybeList(team)} glitchTeam={glitchTeam} />
+export const ProfileItem = ({ user, team, glitchTeam, size }) => (
+  <ProfileList layout="block" users={maybeList(user)} teams={maybeList(team)} glitchTeam={glitchTeam} size={size} />
 );
 
 const ProfileList = ({ size, users, teams, layout, glitchTeam }) => {

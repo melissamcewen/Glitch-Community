@@ -12,7 +12,7 @@ import { captureException } from 'Utils/sentry';
 import { FALLBACK_AVATAR_URL, getAvatarUrl } from 'Models/project';
 import { getAllPages } from 'Shared/api';
 import { createAPIHook } from 'State/api';
-import ProjectOptionsPop from '../../presenters/pop-overs/project-options-pop';
+import ProjectOptionsPop from './project-options-pop';
 import styles from './project-item.styl';
 
 const PrivateIcon = () => <span className="project-badge private-project-badge" aria-label="private" />;
@@ -63,8 +63,8 @@ const ProjectItem = ({ project, projectOptions }) => {
                     </div>
                     <div className={styles.nameWrap}>
                       <div className={styles.itemButtonWrap}>
-                        <Button decorative>
-                          {project.private && <PrivateIcon />} <span className={styles.projectDomain}>{project.domain}</span>
+                        <Button decorative image={project.private ? <PrivateIcon /> : null} imagePosition="left">
+                          <span className={styles.projectDomain}>{project.domain}</span>
                         </Button>
                       </div>
                     </div>

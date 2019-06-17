@@ -40,6 +40,15 @@ const findTop = {
 const getTopResults = (resultsByType, query) =>
   [findTop.project(resultsByType.project, query), findTop.team(resultsByType.team, query), findTop.user(resultsByType.user, query)].filter(Boolean);
 
+const filterOutBadData = (payload) => {
+  const filteredData = { ...payload };
+  // sometimes search results are out of sync with db, ensures we don't show teams that don't exist)
+  if (filteredData.team) {
+    filteredData.team = filteredData.team.filter((t) => !!t.url);
+  }
+  return filteredData;
+};
+
 // search provider logic -- shared between algolia & legacy API
 function useSearchProvider(provider, query, params, deps) {
   const { handleError } = useErrorHandlers();
@@ -57,7 +66,7 @@ function useSearchProvider(provider, query, params, deps) {
       case 'loading':
         return { ...state, status: 'loading' };
       case 'ready': {
-        const resultsWithEmpties = { ...emptyResults, ...action.payload };
+        const resultsWithEmpties = { ...emptyResults, ...filterOutBadData(action.payload) };
         return {
           status: 'ready',
           totalHits: sumBy(Object.values(action.payload), (items) => items.length),
@@ -71,7 +80,7 @@ function useSearchProvider(provider, query, params, deps) {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
-    if (!query) {
+    if (!query && !params.allowEmptyQuery) {
       dispatch({ type: 'clearQuery' });
       return;
     }
@@ -146,6 +155,11 @@ function createSearchClient(api) {
   };
 }
 
+const buildCollectionFilters = ({ teamIDs = [], userIDs = [] }) => {
+  if (!teamIDs.length && !userIDs.length) return undefined;
+  return [...teamIDs.map((id) => `team=${id}`), ...userIDs.map((id) => `user=${id}`)].join(' OR ');
+};
+
 function createAlgoliaProvider(api) {
   const searchClient = createSearchClient(api);
   const searchIndices = {
@@ -154,8 +168,17 @@ function createAlgoliaProvider(api) {
     project: searchClient.initIndex('search_projects'),
     collection: searchClient.initIndex('search_collections'),
   };
+
   return {
     ...mapValues(searchIndices, (index, type) => (query) => index.search({ query, hitsPerPage: 100 }).then(formatAlgoliaResult(type))),
+    collection: (query, { teamIDs, userIDs }) =>
+      searchIndices.collection
+        .search({
+          query,
+          hitsPerPage: 100,
+          filters: buildCollectionFilters({ teamIDs, userIDs }),
+        })
+        .then(formatAlgoliaResult('collection')),
     project: (query, { notSafeForKids }) =>
       searchIndices.project
         .search({

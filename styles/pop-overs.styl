@@ -191,14 +191,6 @@ popover-secondary-background()
   .action-description
     margin-top: 0
 
-.sign-in-pop, .report-abuse-pop
-  .notification
-    display: inline-block
-    padding: 3px 5px
-    border-radius: 5px
-    margin-bottom: 5px
-    color: white
-
 .user-options-pop
   right: 0
   top: 25px
@@ -497,30 +489,6 @@ popover-secondary-background()
       transform: translate(0, 28px)
     @media (max-width: smallViewport)
       min-width: 320px
-    
-.team-user-remove-pop
-  .projects-list
-    label
-      display: flex
-      align-items: center
-      margin-bottom: 10px
-      cursor: pointer
-      user-select: none
-    input
-      width: auto
-      margin: 0
-      margin-right: 5px
-      cursor: pointer
-    .avatar
-      vertical-align: middle
-      margin-right: 5px
-
-    // shrink avatars if there are more than 10 projects
-    label:nth-last-child(n+10) // every label at least ten from the end
-      &, & ~ label // will style itself and all following labels
-        .avatar
-          width: 20px
-          height: 20px
 
 .featured-project-options-pop-btn
   display: block
