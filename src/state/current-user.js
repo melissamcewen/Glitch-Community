@@ -5,7 +5,7 @@ import { getSingleItem, getAllPages, allByKeys } from 'Shared/api';
 import { sortProjectsByLastAccess } from 'Models/project';
 import { configureScope, captureException, captureMessage, addBreadcrumb } from 'Utils/sentry';
 import useLocalStorage from './local-storage';
-import { getAPIForToken } from './api'; // eslint-disable-line
+import { getAPIForToken } from './api';
 
 export const Context = React.createContext();
 
