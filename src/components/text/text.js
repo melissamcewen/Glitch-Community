@@ -9,13 +9,12 @@ const cx = classNames.bind(styles);
  * Text Component
  */
 const Text = ({ children, className, defaultMargin }) => {
-  className = cx({
+  const textClassName = cx({
     p: true,
     defaultMargin,
-    {className,
   });
   
-  return <p className={className}>{children}</p>;
+  return <p className={`${className || ''} ${textClassName}`}>{children}</p>;
 };
 
 Text.propTypes = {
