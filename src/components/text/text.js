@@ -8,14 +8,14 @@ const cx = classNames.bind(styles);
 /**
  * Text Component
  */
-const Text = ({ children, className, fontSize, defaultMargin }) => {
+const Text = ({ children, className, size, weight, defaultMargin }) => {
   const textClassName = cx({
     p: true,
     defaultMargin,
   });
   
   // classNames(styles.projectsContainer, styles.empty)
-  return <p style={{ '--fontSize': fontSize }} className={`${className || ''} ${textClassName}`}>{children}</p>;
+  return <p style={{ '--size': size, '--weight': weight }} className={`${className || ''} ${textClassName}`}>{children}</p>;
 };
 
 Text.propTypes = {
@@ -26,7 +26,8 @@ Text.propTypes = {
 };
 
 Text.defaultProps = {
-  fontSize: 'inherit',
+  size: 'inherit',
+  weight: '400',
   defaultMargin: false,
 }
 

@@ -49,7 +49,7 @@ const Beta = () => (
     <img src="https://cdn.glitch.com/0c3ba0da-dac8-4904-bb5e-e1c7acc378a2%2Fbeta-flag.svg?1541448893958" alt="" />
     <div>
       <Heading tagName="h4">Teams are in beta</Heading>
-      <Text>Learn More</Text>
+      <Text fontSize="smaller">Learn More</Text>
     </div>
   </a>
 );

@@ -107,7 +107,7 @@ const CollectionPageContents = ({ collection: initialCollection }) => {
               />
             </div>
 
-            <Text className={styles.collectionProjectCount}>
+            <Text size="14px" weight="600" className={styles.collectionProjectCount}>
               <Pluralize count={collection.projects.length} singular="Project" />
             </Text>
 
