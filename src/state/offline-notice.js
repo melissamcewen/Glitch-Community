@@ -29,7 +29,7 @@ const OfflineNotice = () => {
     };
   }, []);
 
-  if (!online) {
+  if (online) {
     return <PersistentNotification>It looks like you're offline</PersistentNotification>;
   }
   return null;
