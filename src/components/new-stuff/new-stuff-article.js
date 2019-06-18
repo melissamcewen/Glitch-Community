@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Link from '../link';
-import Markdown from '../text/markdown';
-import Text from '../text/text';
+import Link from 'Components/link';
+import Markdown from 'Components/text/markdown';
+import Text from 'Components/text/text';
 
 import styles from './new-stuff-article.styl';
 
@@ -14,7 +14,7 @@ const NewStuffArticle = ({ title, body, link }) => (
       <Markdown>{body}</Markdown>
     </div>
     {!!link && (
-      <Text>
+      <Text defaultMargin>
         <Link to={link}>
           Read the blog post →
         </Link>
