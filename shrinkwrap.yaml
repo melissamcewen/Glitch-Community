@@ -13,7 +13,7 @@ dependencies:
   '@storybook/react': 5.0.5
   algoliasearch: 3.33.0
   autoprefixer-stylus: 0.14.0
-  axios: 0.19.0
+  axios: 0.18.1
   babel-eslint: 10.0.1
   babel-loader: 8.0.5
   babel-plugin-lodash: 3.3.4
@@ -3882,13 +3882,13 @@ packages:
     dev: false
     resolution:
       integrity: sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=
-  /axios/0.19.0:
+  /axios/0.18.1:
     dependencies:
       follow-redirects: 1.5.10
       is-buffer: 2.0.3
     dev: false
     resolution:
-      integrity: sha512-1uvKqKQta3KBxIz14F2v06AEHZ/dIoeKfbTRkK1E5oqjDnuEerLmYTgJB5AiQZHJcljpg1TuRzdjDR06qNk0DQ==
+      integrity: sha512-0BfJq4NSfQXd+SkFdrvFbG7addhYSBA2mQwISr46pD6E5iqkWg02RAs8vyTT/j0RTnoYmeXauBuSv1qKwR179g==
   /axobject-query/2.0.2:
     dependencies:
       ast-types-flow: 0.0.7
@@ -14135,7 +14135,7 @@ specifiers:
   '@storybook/react': ^5.0.0
   algoliasearch: ^3.33.0
   autoprefixer-stylus: ^0.14.0
-  axios: ^0.19.0
+  axios: ^0.18.0
   babel-eslint: ^10.0.1
   babel-loader: ^8.0.5
   babel-plugin-lodash: ^3.3.4
