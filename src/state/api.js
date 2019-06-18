@@ -5,6 +5,7 @@ import { memoize } from 'lodash';
 import useCurrentUser from './current-user'; // eslint-disable-line
 import { captureException } from '../utils/sentry';
 
+
 export const Context = createContext();
 
 export const getAPIForToken = memoize((persistentToken) => {
