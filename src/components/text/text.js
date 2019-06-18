@@ -15,7 +15,8 @@ const Text = ({ children, className, size, weight, defaultMargin }) => {
   });
   
   // classNames(styles.projectsContainer, styles.empty)
-  return <p style={{ '--size': size, '--weight': weight }} className={`${className || ''} ${textClassName}`}>{children}</p>;
+  // `${className || ''} ${textClassName}`
+  return <p style={{ '--size': size, '--weight': weight }} className={classNames(textClassName, className)}>{children}</p>;
 };
 
 Text.propTypes = {
