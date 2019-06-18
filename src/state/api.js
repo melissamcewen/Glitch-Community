@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext, useRef, createContext } from 'react';
 import axios from 'axios';
 import { memoize } from 'lodash';
-import useCurrentUser from './current-user'; // eslint-disable-line
+import { useCurrentUser } from './current-user'; // eslint-disable-line
 import { captureException } from '../utils/sentry';
 
 
