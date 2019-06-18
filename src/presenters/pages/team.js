@@ -65,7 +65,7 @@ const ProjectPals = () => (
 
 const TeamMarketing = () => (
   <section className={styles.teamMarketing}>
-    <Text>
+    <Text defaultMargin>
       <img
         className={styles.forPlatformsIcon}
         src="https://cdn.glitch.com/be1ad2d2-68ab-404a-82f4-6d8e98d28d93%2Ffor-platforms-icon.svg?1506442305188"
@@ -99,7 +99,7 @@ const useTeamNameConflictWarning = (team) => {
   const { currentUser } = useCurrentUser();
   const { createNotification } = useNotifications();
   useEffect(() => {
-    if (teamConflictsWithUser(team, currentUser)) {
+    if (!teamConflictsWithUser(team, currentUser)) {
       const notification = createNotification(<NameConflictWarning id={currentUser.id} />, { persistent: true });
       return () => {
         notification.removeNotification();
