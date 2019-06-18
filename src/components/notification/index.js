@@ -38,7 +38,7 @@ Notification.defaultProps = {
 
 export const AddProjectToCollectionMsg = ({ projectDomain, collectionName, url }) => (
   <>
-    <Text fontSize='12px'>
+    <Text fontSize="12px">
       {`Added ${projectDomain} `}
       {collectionName && `to collection ${collectionName}`}
     </Text>

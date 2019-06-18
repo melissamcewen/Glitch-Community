@@ -13,15 +13,21 @@ const Text = ({ children, className, size, weight, defaultMargin }) => {
     p: true,
     defaultMargin,
   });
-  
-  // classNames(styles.projectsContainer, styles.empty)
-  // `${className || ''} ${textClassName}`
-  return <p style={{ '--size': size, '--weight': weight }} className={classNames(textClassName, className)}>{children}</p>;
+
+  return (
+    <p style={{ '--size': size, '--weight': weight }} className={classNames(textClassName, className)}>
+      {children}
+    </p>
+  );
 };
 
 Text.propTypes = {
   /** element(s) to display in the tag */
   children: PropTypes.node.isRequired,
+  /** font-size */
+  size: PropTypes.string,
+  /** font-weight */
+  weight: PropTypes.string,
   /** use the browser-defined paragraph margins? */
   defaultMargin: PropTypes.bool,
 };
@@ -30,6 +36,6 @@ Text.defaultProps = {
   size: 'inherit',
   weight: '400',
   defaultMargin: false,
-}
+};
 
 export default Text;
