@@ -28,7 +28,7 @@ const VSCodeAuth = ({ insiders, openProject }) => {
 
   return (
     <div className={styles.content}>
-      <Text>{isSignedIn ? redirectMessage : signInMessage}</Text>
+      <Text defaultMargin>{isSignedIn ? redirectMessage : signInMessage}</Text>
       {!isSignedIn &&
         <PopoverContainer>
           {() => <SignInPop align="none" />}

@@ -5,7 +5,7 @@ import styles from './text.styl';
 /**
  * Text Component
  */
-const Text = ({ children }) => <p className={styles.p}>{children}</p>;
+const Text = ({ children, defaultMargin }) => <p className={styles.p}>{children}</p>;
 
 Text.propTypes = {
   /** element(s) to display in the tag */
