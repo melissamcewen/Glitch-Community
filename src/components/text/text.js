@@ -8,10 +8,11 @@ const cx = classNames.bind(styles);
 /**
  * Text Component
  */
-const Text = ({ children, defaultMargin }) => {
-  const className = cx({
+const Text = ({ children, className, defaultMargin }) => {
+  className = cx({
     p: true,
     defaultMargin,
+    {className,
   });
   
   return <p className={className}>{children}</p>;

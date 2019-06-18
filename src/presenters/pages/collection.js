@@ -27,6 +27,8 @@ import { useCurrentUser } from 'State/current-user';
 import { useCollectionEditor, userOrTeamIsAuthor } from 'State/collection';
 import { getSingleItem, getAllPages } from 'Shared/api';
 
+import styles from 'Components/collection/collection.styl';
+
 function DeleteCollectionBtn({ collection, deleteCollection }) {
   const [done, setDone] = useState(false);
   if (done) {
@@ -105,11 +107,9 @@ const CollectionPageContents = ({ collection: initialCollection }) => {
               />
             </div>
 
-            <div className="collection-project-count">
-              <Text>
-                <Pluralize count={collection.projects.length} singular="Project" />
-              </Text>
-            </div>
+            <Text className={styles.collectionProjectCount}>
+              <Pluralize count={collection.projects.length} singular="Project" />
+            </Text>
 
             {currentUserIsAuthor && <EditCollectionColor update={funcs.updateColor} initialColor={collection.coverColor} />}
           </header>
