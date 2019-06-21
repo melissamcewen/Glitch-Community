@@ -13,7 +13,7 @@ const NewStuffArticle = ({ title, body, link }) => (
     <div className={styles.body}>
       <Markdown>{body}</Markdown>
     </div>
-    {!link && (
+    {!!link && (
       <Text defaultMargin>
         <Link to={link}>
           Read the blog post →
