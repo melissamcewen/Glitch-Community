@@ -82,7 +82,7 @@ const CollectionCurator = ({ collection }) => {
   return <ProfileItem {...curator} />;
 };
 
-const CollectionCuratorLoader = ({ collection }) => (
+export const CollectionCuratorLoader = ({ collection }) => (
   <VisibilityContainer>
     {({ wasEverVisible }) => (wasEverVisible ? <CollectionCurator collection={collection} /> : <ProfileItem />)}
   </VisibilityContainer>

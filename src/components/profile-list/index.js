@@ -92,7 +92,6 @@ const RowContainer = ({ size, users, teams }) => {
 };
 
 const BlockContainer = ({ size, users, teams }) => {
-  console.log("user in blockContainer", users)
   return (
   <>
     {teams.length > 0 && (
