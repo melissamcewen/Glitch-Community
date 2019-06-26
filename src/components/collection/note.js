@@ -15,6 +15,7 @@ const cx = classNames.bind(styles);
  * Note Component
  */
 const Note = ({ collection, project, updateNote, hideNote, isAuthorized }) => {
+  console.log("collection.user", collection.user)
   function hideEmptyNote(event) {
     let description = event.target.value || '';
     description = _.trim(description);

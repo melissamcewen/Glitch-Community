@@ -91,7 +91,9 @@ const RowContainer = ({ size, users, teams }) => {
   );
 };
 
-const BlockContainer = ({ size, users, teams }) => (
+const BlockContainer = ({ size, users, teams }) => {
+  console.log("user in blockContainer", users)
+  return (
   <>
     {teams.length > 0 && (
       <ul className={classnames(styles.container, styles[size])}>
@@ -112,7 +114,7 @@ const BlockContainer = ({ size, users, teams }) => (
       </ul>
     )}
   </>
-);
+)};
 
 const GLITCH_TEAM_AVATAR = 'https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fglitch-team-avatar.svg?1489266029267';
 

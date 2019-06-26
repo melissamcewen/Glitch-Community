@@ -29,7 +29,8 @@ export function getAvatarUrl({ login, avatarUrl }) {
   return ANON_AVATAR_URL;
 }
 
-export function getAvatarThumbnailUrl({ login, avatarThumbnailUrl }) {
+export function getAvatarThumbnailUrl({ login, avatarThumbnailUrl, ...props }) {
+  console.log(login, avatarThumbnailUrl, props)
   if (login && avatarThumbnailUrl) {
     return avatarThumbnailUrl;
   }
