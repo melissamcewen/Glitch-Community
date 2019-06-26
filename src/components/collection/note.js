@@ -4,9 +4,8 @@ import classNames from 'classnames/bind';
 import _ from 'lodash';
 
 import { isDarkColor } from 'Models/collection';
-import { ProfileItem } from 'Components/profile-list';
 import AuthDescription from 'Components/fields/auth-description';
-import { CollectionCuratorLoader } from 'Components/collection/collection-item'
+import { CollectionCuratorLoader } from 'Components/collection/collection-item';
 import styles from './note.styl';
 
 const cx = classNames.bind(styles);
@@ -15,7 +14,6 @@ const cx = classNames.bind(styles);
  * Note Component
  */
 const Note = ({ collection, project, updateNote, hideNote, isAuthorized }) => {
-  console.log("collection.user", collection.user)
   function hideEmptyNote(event) {
     let description = event.target.value || '';
     description = _.trim(description);
@@ -48,7 +46,6 @@ const Note = ({ collection, project, updateNote, hideNote, isAuthorized }) => {
       <div className={styles.user}>
         <CollectionCuratorLoader collection={collection} />
       </div>
-      
     </div>
   );
 };

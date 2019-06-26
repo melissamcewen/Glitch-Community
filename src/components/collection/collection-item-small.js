@@ -83,4 +83,3 @@ CollectionItemSmall.defaultProps = {
 };
 
 export default CollectionItemSmall;
-
