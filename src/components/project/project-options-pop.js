@@ -5,6 +5,7 @@ import { PopoverMenu, MultiPopover, PopoverDialog, PopoverActions, PopoverMenuBu
 import { CreateCollectionWithProject } from 'Components/collection/create-collection-pop';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
+import { addBreadcrumb, captureException } from 'Utils/sentry';
 
 import { AddProjectToCollectionBase } from './add-project-to-collection-pop';
 
@@ -33,8 +34,21 @@ const promptThenLeaveProject = ({ event, project, leaveProject, currentUser }) =
 
 const determineProjectOptionsFunctions = ({ currentUser, project, projectOptions }) => {
   const isAnon = !(currentUser && currentUser.login);
-  
-  const projectUserIds = project.permissions.map(({ userId }) => userId);
+  // for some reason project.permissions does not always exist and it's not clear why
+  // handling this edge case and logging project to sentry to better understand why.
+  // in the future this can be put back to just 
+  // const projectUserIds = project.permissions.map(({ userId }) => userId);
+  let projectUserIds;
+  try {
+    projectUserIds = project.permissions.map(({ userId }) => userId);
+  } catch (error) {
+    addBreadcrumb({
+      level: 'info',
+      message: `project: ${JSON.stringify(project)}`,
+    });
+    captureException(error);
+    projectUserIds = [];
+  }
   const isProjectMember = currentUser && projectUserIds.includes(currentUser.id);
   const currentUserProjectPermissions = currentUser && project.permissions.find((p) => p.userId === currentUser.id);
   const isProjectAdmin = currentUserProjectPermissions && currentUserProjectPermissions.accessLevel === 30;
