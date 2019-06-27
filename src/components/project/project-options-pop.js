@@ -36,7 +36,7 @@ const determineProjectOptionsFunctions = ({ currentUser, project, projectOptions
   const isAnon = !(currentUser && currentUser.login);
   // for some reason project.permissions does not always exist and it's not clear why
   // handling this edge case and logging project to sentry to better understand why.
-  // in the future this can be put back to just 
+  // in the future this can be put back to just
   // const projectUserIds = project.permissions.map(({ userId }) => userId);
   let projectUserIds;
   try {
