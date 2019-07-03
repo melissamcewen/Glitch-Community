@@ -5,9 +5,9 @@ import styles from './emoji.styl';
 
 const cx = classNames.bind(styles);
 
-const downArrow = `data:image/svg+xml;utf8,<svg viewBox="-2 -4 15 15" xmlns="http://www.w3.org/2000/svg"><path d="m172 21-4 4 4 4" fill="none" stroke="black" opacity="0.4" stroke-width="2" transform="matrix(0 -1 1 0 -20 173)"/></svg>`;
-const leftArrow = `data:image/svg+xml;utf8,<svg viewBox="2 -4 8 15" xmlns="http://www.w3.org/2000/svg"><path d="m5.4 1.156625-4 4 4 4" fill="none" opacity="0.4" stroke="black" stroke-width="2"/></svg>`
-const rightArrow = `data:image/svg+xml;utf8,<svg viewBox="2 -4 8 15" xmlns="http://www.w3.org/2000/svg"><path d="m5.4 1.156625-4 4 4 4" fill="none" opacity="0.4" stroke="black" stroke-width="2" transform="rotate(180)"/></svg>`
+const downArrow = 'data:image/svg+xml;utf8,<svg viewBox="-2 -4 15 15" xmlns="http://www.w3.org/2000/svg"><path d="m172 21-4 4 4 4" fill="none" stroke="black" opacity="0.4" stroke-width="2" transform="matrix(0 -1 1 0 -20 173)"/></svg>';
+const leftArrow = 'data:image/svg+xml;utf8,<svg viewBox="-2 -2 15 15" xmlns="http://www.w3.org/2000/svg"><path d="m5.4 1.156625-4 4 4 4" fill="none" opacity="0.4" stroke="black" stroke-width="2"/></svg>';
+const rightArrow = 'data:image/svg+xml;utf8,<svg viewBox="-2 -2 15 16" xmlns="http://www.w3.org/2000/svg"><path d="m5.4 1.156625-4 4 4 4" fill="none" opacity="0.4" stroke="black" stroke-width="2" transform="rotate(180,5,5.5)"/></svg>';
 
 const EMOJIS = {
   ambulance: 'https://cdn.glitch.com/cc880f8d-a84f-4909-b676-497522a8c625%2Fambulance.png',
