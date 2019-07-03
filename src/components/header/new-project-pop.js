@@ -99,7 +99,7 @@ function NewProjectPopButton() {
   const onOpen = useTracker('open new-project pop');
 
   return (
-    <PopoverWithButton onOpen={onOpen} buttonProps={{ size: 'small' }} buttonText="New Project">
+    <PopoverWithButton onOpen={onOpen} buttonProps={{ size: 'small', emoji: 'downArrow' }} buttonText="New Project">
       {() => <NewProjectPop projects={projects} />}
     </PopoverWithButton>
   );
