@@ -9,6 +9,7 @@ import Badge from 'Components/badges/badge';
 import TextInput from 'Components/inputs/text-input';
 import Heading from 'Components/text/heading';
 import Image from 'Components/images/image';
+import Emoji from 'Components/images/emoji';
 import ProjectItem from 'Components/project/project-item';
 import Note from 'Components/collection/note';
 import Grid from 'Components/containers/grid';
@@ -46,8 +47,6 @@ const ProjectsUL = ({ collection, projects, sortable, onReorder, noteOptions, la
     </Container>
   );
 };
-
-const arrowSrc = 'https://cdn.glitch.com/11efcb07-3386-43b6-bab0-b8dc7372cba8%2Fleft-arrow.svg?1553883919269';
 
 const paginationReducer = (oldState, action) => {
   switch (action.type) {
@@ -126,14 +125,14 @@ const PaginationController = ({ enabled, projects, projectsPerPage, children }) 
         <div className={styles.viewControls}>
           <div className={styles.paginationControls}>
             <Button ref={prevButtonRef} type="tertiary" disabled={state.page === 1} onClick={onPreviousButtonClick}>
-              <Image alt="Previous" className={styles.paginationArrow} src={arrowSrc} />
+              <Emoji name="leftArrow" alt="Previous" />
             </Button>
             {state.announce && <LiveMessage message={state.announce} aria-live="assertive" />}
             <div data-cy="page-numbers" className={styles.pageNumbers}>
               {state.page} / {numPages}
             </div>
             <Button ref={nextButtonRef} type="tertiary" disabled={state.page === numPages} onClick={onNextButtonClick}>
-              <Image alt="Next" className={classNames(styles.paginationArrow, styles.next)} src={arrowSrc} />
+              <Emoji name="rightArrow" alt="Next" />
             </Button>
           </div>
           <Button data-cy="show-all" type="tertiary" onClick={() => dispatchState({ type: 'expand' })}>

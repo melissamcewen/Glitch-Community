@@ -6,6 +6,8 @@ import styles from './emoji.styl';
 const cx = classNames.bind(styles);
 
 const downArrow = `data:image/svg+xml;utf8,<svg viewBox="-2 -4 15 15" xmlns="http://www.w3.org/2000/svg"><path d="m172 21-4 4 4 4" fill="none" stroke="black" opacity="0.4" stroke-width="2" transform="matrix(0 -1 1 0 -20 173)"/></svg>`;
+const leftArrow = `data:image/svg+xml;utf8,<svg viewBox="2 -4 8 15" xmlns="http://www.w3.org/2000/svg"><path d="m5.4 1.156625-4 4 4 4" fill="none" opacity="0.4" stroke="black" stroke-width="2"/></svg>`
+const rightArrow = `data:image/svg+xml;utf8,<svg viewBox="2 -4 8 15" xmlns="http://www.w3.org/2000/svg"><path d="m5.4 1.156625-4 4 4 4" fill="none" opacity="0.4" stroke="black" stroke-width="2" transform="rotate(180)"/></svg>`
 
 const EMOJIS = {
   ambulance: 'https://cdn.glitch.com/cc880f8d-a84f-4909-b676-497522a8c625%2Fambulance.png',
@@ -34,6 +36,7 @@ const EMOJIS = {
   google: 'https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2FgoogleLogo.png',
   herb: 'https://cdn.glitch.com/c53fd895-ee00-4295-b111-7e024967a033%2Fherb.png',
   key: 'https://cdn.glitch.com/006d6bcf-f2b7-4a29-b55d-c097b491e09c%2Fkey.png?1555429359426',
+  leftArrow,
   mailboxOpen: 'https://cdn.glitch.com/006d6bcf-f2b7-4a29-b55d-c097b491e09c%2Fopen-mailbox.png?1555429351403',
   horizontalTrafficLight: 'https://cdn.glitch.com/d1106f7a-2623-4461-8326-5945e5b97d8b%2Fhorizontal-traffic-light_1f6a5.png',
   index: 'https://cdn.glitch.com/997e1260-f54f-47ad-936b-1eca8e555a51%2Findex.png?1555620428434',
@@ -45,6 +48,7 @@ const EMOJIS = {
   policeOfficer: 'https://cdn.glitch.com/d1106f7a-2623-4461-8326-5945e5b97d8b%2Fpolice-officer_1f46e.png',
   pushpin: 'https://cdn.glitch.com/55f8497b-3334-43ca-851e-6c9780082244%2Fpushpin.png',
   rainbow: 'https://cdn.glitch.com/e5154318-7816-4ec9-a72a-a0e767031e99%2Frainbow.png',
+  rightArrow,
   scales: 'https://cdn.glitch.com/6c8c1a17-f6e4-41c4-8861-378c4fad4c22%2Fscales_64.png',
   sick: 'https://cdn.glitch.com/4f4a169a-9b63-4daa-8b6a-0e50d5c06e25%2Fface-with-thermometer_1f912.png',
   slack: 'https://cdn.glitch.com/1eaf9cb4-5150-4c24-bb91-28623c3b9da4%2Fslack.svg',
