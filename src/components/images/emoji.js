@@ -5,7 +5,7 @@ import styles from './emoji.styl';
 
 const cx = classNames.bind(styles);
 
-const downArrow = () 
+const downArrow = `data:image/svg+xml;utf8,<svg viewBox="-2 -4 15 15" xmlns="http://www.w3.org/2000/svg"><path d="m172 21-4 4 4 4" fill="none" stroke="black" opacity="0.4" stroke-width="2" transform="matrix(0 -1 1 0 -20 173)"/></svg>`;
 
 const EMOJIS = {
   ambulance: 'https://cdn.glitch.com/cc880f8d-a84f-4909-b676-497522a8c625%2Fambulance.png',
@@ -21,7 +21,7 @@ const EMOJIS = {
   crystalBall: 'https://cdn.glitch.com/d1106f7a-2623-4461-8326-5945e5b97d8b%2Fcrystal-ball_1f52e.png',
   diamondSmall: 'https://cdn.glitch.com/180b5e22-4649-4c71-9a21-2482eb557c8c%2Fdiamond-small.svg',
   dogFace: 'https://cdn.glitch.com/03736932-82dc-40e8-8dc7-93330c933143%2Fdog-face.png',
-  downArrow: 'https://cdn.glitch.com/e3d100c3-3c8c-479a-b266-560149d7a604%2Fdown-arrow.svg',
+  downArrow,
   email: 'https://cdn.glitch.com/aebac4f9-ae14-4d54-aa60-de46dac3b603%2Femail.png',
   eyes: 'https://cdn.glitch.com/9c72d8a2-2546-4c4c-9e97-2e6450752c11%2Feyes.png',
   facebook: 'https://cdn.gomix.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Ffacebook-logo.png',
