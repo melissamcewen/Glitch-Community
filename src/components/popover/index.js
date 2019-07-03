@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { mapValues } from 'lodash';
 import TransparentButton from 'Components/buttons/transparent-button';
 import Button from 'Components/buttons/button';
+import Emoji from 'Components/images/emoji';
 
 import PopoverContainer from './container';
 import PopoverDialog from './dialog';
@@ -107,7 +108,7 @@ export const PopoverMenu = ({ label, children: renderChildren, onOpen }) => (
           <div className={styles.buttonWrap}>
             <TransparentButton onClick={popoverProps.togglePopover}>
               <div className={styles.arrowPadding}>
-                <div className={styles.downArrow} />
+                <Emoji name="downArrow" />
               </div>
               <div className={globalStyles.visuallyHidden}>{label}</div>
             </TransparentButton>

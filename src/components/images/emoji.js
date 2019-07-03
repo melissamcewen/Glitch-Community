@@ -5,6 +5,8 @@ import styles from './emoji.styl';
 
 const cx = classNames.bind(styles);
 
+const downArrow = () 
+
 const EMOJIS = {
   ambulance: 'https://cdn.glitch.com/cc880f8d-a84f-4909-b676-497522a8c625%2Fambulance.png',
   arrowDown: 'https://cdn.glitch.com/20b03a49-e2c4-45fb-b411-c56cf5a734d4%2Farrow-down.png',
