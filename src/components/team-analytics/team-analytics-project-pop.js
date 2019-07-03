@@ -6,7 +6,6 @@ import { PopoverWithButton, PopoverDialog, PopoverSearch } from 'Components/popo
 
 import styles from './styles.styl';
 
-
 const AllProjectsItem = ({ active, selected, onClick }) => (
   <ResultItem onClick={onClick} active={active} selected={selected} className={styles.allProjects}>
     <img src="https://cdn.glitch.com/55f8497b-3334-43ca-851e-6c9780082244%2Fbento-box.png?1502469566743" alt="" className={styles.bentoBox} />
@@ -54,22 +53,10 @@ const ProjectSearch = ({ projects, updateProjectDomain, currentProjectDomain }) 
   );
 };
 
-const Dropdown = () => <div className="down-arrow" aria-label="options" />;
-
 const TeamAnalyticsProjectPop = ({ projects, updateProjectDomain, currentProjectDomain }) => (
   <PopoverWithButton
-    buttonProps={{ size: 'small', type: 'tertiary' }}
-    buttonText={
-      currentProjectDomain ? (
-        <>
-          Project: {currentProjectDomain} <Dropdown />
-        </>
-      ) : (
-        <>
-          All Projects <Dropdown />
-        </>
-      )
-    }
+    buttonProps={{ size: 'small', type: 'tertiary', emoji: 'downArrow' }}
+    buttonText={currentProjectDomain ? `Project: ${currentProjectDomain}` : 'All Projects'}
   >
     {({ toggleAndCall }) => (
       <ProjectSearch projects={projects} updateProjectDomain={toggleAndCall(updateProjectDomain)} currentProjectDomain={currentProjectDomain} />
