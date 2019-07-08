@@ -55,7 +55,7 @@ function Banner() {
         <div className={styles.bannerText}>
           <Heading className={styles.bannerTagline} tagName="h1">
             <Mark color="#fbf2b8">Create</Mark>
-            <Unmarked>the app of your dreams</Unmarked>
+            <Unmarked> the app of your dreams</Unmarked>
           </Heading>
           <Text>Whether you're new to code or an experienced developer, Glitch is the fastest tool for turning your ideas into web apps.</Text>
           <div className={styles.bannerRemixBtn}>
@@ -164,12 +164,12 @@ const FrameworkStarterItem = (app) => (
     <span className={styles.frameworkLogo}>
       <Image src={app.logo} alt="" />
     </span>
-    <span>
+    <div>
       <Heading tagName="h4">{app.name}</Heading>
       <RemixButton app={app} size="small">
         Remix {app.name} starter
       </RemixButton>
-    </span>
+    </div>
   </div>
 );
 
