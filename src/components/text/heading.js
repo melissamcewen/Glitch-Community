@@ -10,13 +10,13 @@ export const TAGS = ['h1', 'h2', 'h3', 'h4'];
 /**
  * Heading Component
  */
-const Heading = ({ children, className, tagName: TagName }) => {
+const Heading = ({ children, className, tagName: TagName, ariaLabel }) => {
   const headingClassNameObj = {
     heading: true,
   };
 
   headingClassNameObj[TagName] = true;
-  return <TagName className={classNames(cx(headingClassNameObj), className)}>{children}</TagName>;
+  return <TagName aria-label={ariaLabel} className={classNames(cx(headingClassNameObj), className)}>{children}</TagName>;
 };
 
 Heading.propTypes = {
@@ -24,6 +24,11 @@ Heading.propTypes = {
   children: PropTypes.node.isRequired,
   /** heading tag to be rendered */
   tagName: PropTypes.oneOf(TAGS).isRequired,
+  ariaLabel: PropTypes.string,
 };
+
+Heading.defaultProps = {
+  ariaLabel: null,
+}
 
 export default Heading;
