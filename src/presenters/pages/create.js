@@ -477,7 +477,7 @@ function Remix() {
             <Mark color="#FBF2B8">Remix any app to get started</Mark>
           </Heading>
 
-          <LazyLoader delay={wasEverVisible ? 0 : 2000}>
+          <LazyLoader delay={wasEverVisible ? 0 : 3000}>
             <Tabs forceRenderTabPanel selectedIndex={currentTab} onSelect={(tabIndex) => setCurrentTab(tabIndex)}>
               <TabList className={styles.remixAppTabs}>
                 {apps.map((app) => (
