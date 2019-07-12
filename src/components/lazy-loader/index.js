@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 function LazyLoader({ children, delay }) {
   const [shouldLoad, setShouldLoad] = useState(false);
-  
-  useEffect(() => {
-    const timer = window.setTimeout(() => setShouldLoad(true), delay);
-    return () => window.clearTimeout(timer);
-  }, []);
-  
+  useEffect(
+    () => {
+      const timer = window.setTimeout(() => setShouldLoad(true), delay);
+      return () => window.clearTimeout(timer);
+    },
+    [delay],
+  );
+
   return shouldLoad ? children : null;
 }
 
