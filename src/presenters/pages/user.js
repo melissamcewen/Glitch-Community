@@ -15,8 +15,6 @@ import CollectionsList from 'Components/collections-list';
 import DeletedProjects from 'Components/deleted-projects';
 import ReportButton from 'Components/report-abuse-pop';
 import AuthDescription from 'Components/fields/auth-description';
-import VisibilityContainer from 'Components/visibility-container';
-import LazyLoader from 'Components/lazy-loader';
 import { getLink } from 'Models/user';
 import { AnalyticsContext } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
@@ -164,23 +162,17 @@ const UserPage = ({ user: initialUser }) => {
       )}
 
       {/* Recent Projects */}
-      <VisibilityContainer>
-        {({ wasEverVisible }) => (
-          <LazyLoader delay={wasEverVisible ? 0 : 3000}>
-            {recentProjects.length > 0 && (
-              <ProjectsList
-                dataCy="recent-projects"
-                layout="grid"
-                title="Recent Projects"
-                projects={recentProjects}
-                enablePagination
-                enableFiltering={recentProjects.length > 6}
-                projectOptions={projectOptions}
-              />
-            )}
-          </LazyLoader>
-        )}
-      </VisibilityContainer>
+      {recentProjects.length > 0 && (
+        <ProjectsList
+          dataCy="recent-projects"
+          layout="grid"
+          title="Recent Projects"
+          projects={recentProjects}
+          enablePagination
+          enableFiltering={recentProjects.length > 6}
+          projectOptions={projectOptions}
+        />
+      )}
 
       {(isAuthorized || isSupport) && (
         <article data-cy="deleted-projects">
