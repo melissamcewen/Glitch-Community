@@ -15,6 +15,7 @@ import WistiaVideo from 'Components/wistia-video';
 import Layout from 'Components/layout';
 import Loader from 'Components/loader';
 import VisibilityContainer from 'Components/visibility-container';
+import LazyLoader from 'Components/lazy-loader';
 import { useAPI } from 'State/api';
 import { useTracker } from 'State/segment-analytics';
 import { getRemixUrl } from 'Models/project';
@@ -475,8 +476,8 @@ function Remix() {
       </Heading>
 
       <VisibilityContainer>
-        {({ wasEverVisible }) =>
-          wasEverVisible && (
+        {({ wasEverVisible }) => (
+          <LazyLoader delay={wasEverVisible ? 0 : 5000}>
             <Tabs forceRenderTabPanel selectedIndex={currentTab} onSelect={(tabIndex) => setCurrentTab(tabIndex)}>
               <TabList className={styles.remixAppTabs}>
                 {apps.map((app) => (
@@ -500,8 +501,8 @@ function Remix() {
                 </TabPanel>
               ))}
             </Tabs>
-          )
-        }
+          </LazyLoader>
+        )}
       </VisibilityContainer>
     </section>
   );
