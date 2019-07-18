@@ -213,15 +213,17 @@ function ProjectsList({
   noteOptions,
   projectOptions,
   dataCy,
+  nextSectionId,
+  sectionId,
 }) {
   return (
     <FilterController enabled={enableFiltering} placeholder={placeholder} projects={projects}>
       {({ filterInput, renderProjects }) => (
-        <article className={classNames(styles.projectsContainer)} data-cy={dataCy}>
+        <article id={sectionId} className={classNames(styles.projectsContainer)} data-cy={dataCy}>
           <div className={styles.header}>
             {title && <Heading tagName="h2">{title}</Heading>}
             {filterInput}
-            <Button onClick= className={styles.visibleOnFocus}>Skip to Next Section</Button>
+            <Button href={`#${nextSectionId}`} className={styles.visibleOnFocus}>Skip to Next Section</Button>
           </div>
           {renderProjects((filteredProjects) => (
             <PaginationController enabled={enablePagination} projects={filteredProjects} projectsPerPage={projectsPerPage}>
@@ -247,6 +249,7 @@ function ProjectsList({
 ProjectsList.propTypes = {
   projects: PropTypes.array.isRequired,
   layout: PropTypes.oneOf(['row', 'grid', 'gridCompact']).isRequired,
+  sectionId: PropTypes.string.isRequired,
   title: PropTypes.node,
   placeholder: PropTypes.node,
   enableFiltering: PropTypes.bool,
@@ -257,6 +260,7 @@ ProjectsList.propTypes = {
   noteOptions: PropTypes.object,
   projectOptions: PropTypes.object,
   dataCy: PropTypes.string,
+  nextSectionId: PropTypes.string,
 };
 
 ProjectsList.defaultProps = {
@@ -270,6 +274,7 @@ ProjectsList.defaultProps = {
   noteOptions: {},
   projectOptions: {},
   dataCy: null,
+  nextSectionId: '',
 };
 
 export default ProjectsList;

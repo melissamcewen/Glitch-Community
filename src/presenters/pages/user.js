@@ -97,6 +97,25 @@ const UserPage = ({ user: initialUser }) => {
   const [pinnedProjects, recentProjects] = partition(sortedProjects.filter(({ id }) => id !== featuredProjectId), ({ id }) => pinnedSet.has(id));
   const featuredProject = user.projects.find(({ id }) => id === featuredProjectId);
 
+  let sectionAfterPinnedProjects;
+  if (!!user.login && user.collections.length > 0) {
+    sectionAfterPinnedProjects = 'collections-list';
+  } else if (recentProjects.length > 0) {
+    sectionAfterPinnedProjects = 'recent-projects';
+  } else if (isAuthorized || isSupport) {
+    sectionAfterPinnedProjects = 'deleted-projects';
+  } else if (!isAuthorized) {
+    sectionAfterPinnedProjects = 'report';
+  }
+
+  let sectionAfterRecentProjects;
+  if (isAuthorized || isSupport) {
+    sectionAfterRecentProjects = 'deleted-projects';
+  } else if (!isAuthorized) {
+    sectionAfterRecentProjects = 'report';
+  }
+
+
   return (
     <main id="main" className={styles.container}>
       <section>
@@ -149,6 +168,7 @@ const UserPage = ({ user: initialUser }) => {
           }
           projects={pinnedProjects}
           projectOptions={projectOptions}
+          nextSectionId={sectionAfterPinnedProjects}
         />
       )}
 
@@ -167,6 +187,7 @@ const UserPage = ({ user: initialUser }) => {
       {/* Recent Projects */}
       {recentProjects.length > 0 && (
         <ProjectsList
+          sectionId='recent-projects'
           dataCy="recent-projects"
           layout="grid"
           title="Recent Projects"
@@ -174,11 +195,12 @@ const UserPage = ({ user: initialUser }) => {
           enablePagination
           enableFiltering={recentProjects.length > 6}
           projectOptions={projectOptions}
+          nextSectionId={sectionAfterRecentProjects}
         />
       )}
 
       {(isAuthorized || isSupport) && (
-        <article data-cy="deleted-projects">
+        <article id='deleted-projects' data-cy="deleted-projects">
           <Heading tagName="h2">
             Deleted Projects
             <Emoji inTitle name="bomb" />
@@ -191,7 +213,7 @@ const UserPage = ({ user: initialUser }) => {
           />
         </article>
       )}
-      {!isAuthorized && <ReportButton reportedType="user" reportedModel={user} />}
+      {!isAuthorized && <div id="report"><h3><ReportButton reportedType="user" reportedModel={user} /></h3></div>}
     </main>
   );
 };

@@ -38,7 +38,7 @@ function CollectionsList({ collections: rawCollections, title, isAuthorized, may
     return null;
   }
   return (
-    <article data-cy="collections" className={styles.collections}>
+    <article id="collections-list" data-cy="collections" className={styles.collections}>
       <Heading tagName="h2">{title}</Heading>
       {canMakeCollections && (
         <>
