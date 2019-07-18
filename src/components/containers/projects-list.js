@@ -213,7 +213,6 @@ function ProjectsList({
   noteOptions,
   projectOptions,
   dataCy,
-  nextSectionHeaderId
 }) {
   return (
     <FilterController enabled={enableFiltering} placeholder={placeholder} projects={projects}>
@@ -222,7 +221,7 @@ function ProjectsList({
           <div className={styles.header}>
             {title && <Heading tagName="h2">{title}</Heading>}
             {filterInput}
-            <Button href={`#${nextSectionHeaderId}`} className={styles.visibleOnFocus}>Skip to Next Section</Button>
+            <Button onClick= className={styles.visibleOnFocus}>Skip to Next Section</Button>
           </div>
           {renderProjects((filteredProjects) => (
             <PaginationController enabled={enablePagination} projects={filteredProjects} projectsPerPage={projectsPerPage}>
@@ -247,7 +246,6 @@ function ProjectsList({
 
 ProjectsList.propTypes = {
   projects: PropTypes.array.isRequired,
-  nextSectionHeaderId: PropTypes.string.isRequired,
   layout: PropTypes.oneOf(['row', 'grid', 'gridCompact']).isRequired,
   title: PropTypes.node,
   placeholder: PropTypes.node,
