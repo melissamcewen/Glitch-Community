@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
+
 import PropTypes from 'prop-types';
 
 import Helmet from 'react-helmet';
@@ -31,7 +33,6 @@ import { addBreadcrumb } from 'Utils/sentry';
 import { getAllPages } from 'Shared/api';
 import useFocusFirst from 'Hooks/use-focus-first';
 
-
 import styles from './project.styl';
 
 function syncPageToDomain(domain) {
@@ -61,15 +62,19 @@ const ReadmeError = (error) =>
   ) : (
     <>We couldn{"'"}t load the readme. Try refreshing?</>
   );
-const ReadmeLoader = ({ domain }) => (
+const ReadmeLoader = withRouter(({ domain, location }) => (
   <DataLoader get={(api) => api.get(`projects/${domain}/readme`)} renderError={ReadmeError}>
-    {({ data }) => (
-      <Expander height={250}>
-        <Markdown>{data.toString()}</Markdown>
-      </Expander>
-    )}
+    {({ data }) =>
+      location.hash ? (
+        <Markdown linkifyHeadings>{data.toString()}</Markdown>
+      ) : (
+        <Expander height={location.hash ? Infinity : 250}>
+          <Markdown linkifyHeadings>{data.toString()}</Markdown>
+        </Expander>
+      )
+    }
   </DataLoader>
-);
+));
 
 ReadmeLoader.propTypes = {
   domain: PropTypes.string.isRequired,
@@ -80,11 +85,14 @@ function DeleteProjectPopover({ projectDomain, deleteProject }) {
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (done) {
-      window.location = getUserLink(currentUser);
-    }
-  }, [done, currentUser]);
+  useEffect(
+    () => {
+      if (done) {
+        window.location = getUserLink(currentUser);
+      }
+    },
+    [done, currentUser],
+  );
 
   return (
     <section>
@@ -126,9 +134,7 @@ DeleteProjectPopover.propTypes = {
 };
 
 const ProjectPage = ({ project: initialProject }) => {
-  const [project, { updateDomain, updateDescription, updatePrivate, deleteProject, uploadAvatar }] = useProjectEditor(
-    initialProject,
-  );
+  const [project, { updateDomain, updateDescription, updatePrivate, deleteProject, uploadAvatar }] = useProjectEditor(initialProject);
   useFocusFirst();
   const { currentUser } = useCurrentUser();
   const isAuthorized = userIsProjectMember({ project, user: currentUser });

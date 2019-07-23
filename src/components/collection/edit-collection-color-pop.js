@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import randomColor from 'randomcolor';
 import { throttle } from 'lodash';
 
-import { getContrastWithDarkText, getContrastWithLightText } from 'Utils/color';
+import { isGoodColorContrast, pickRandomColor } from 'Utils/color';
 import TextInput from 'Components/inputs/text-input';
 import ColorInput from 'Components/inputs/color';
 import Button from 'Components/buttons/button';
@@ -28,8 +27,6 @@ const formatAndValidateHex = (hex) => {
   return null;
 };
 
-const isGoodColorContrast = (hex) => getContrastWithDarkText(hex) >= 4.5 || getContrastWithLightText(hex) >= 4.5;
-
 function EditCollectionColorPop({ initialColor, updateColor, togglePopover }) {
   const [color, setColor] = useState(initialColor);
   const [hex, setHex] = useState(initialColor);
@@ -42,12 +39,7 @@ function EditCollectionColorPop({ initialColor, updateColor, togglePopover }) {
   };
 
   const setRandomColor = () => {
-    const newColor = randomColor({ luminosity: 'light' });
-    if (isGoodColorContrast(newColor)) {
-      changeColor(newColor);
-      return;
-    }
-    setRandomColor();
+    changeColor(pickRandomColor());
   };
 
   const onChangeColorPicker = useMemo(() => throttle(changeColor, 100), []);

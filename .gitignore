@@ -15,6 +15,7 @@ node_modules/*
 .eslintcache
 .forever
 .vscode
+.gitconfig
 .log
 .data
 .env

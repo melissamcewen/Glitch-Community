@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-
 import { Overlay, OverlaySection, OverlayTitle, OverlayBackground } from 'Components/overlays';
 import CheckboxButton from 'Components/buttons/checkbox-button';
 import Button from 'Components/buttons/button';
@@ -35,10 +34,13 @@ function usePreventTabOut() {
     }
   };
 
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [first, last]);
+  useEffect(
+    () => {
+      document.addEventListener('keydown', onKeyDown);
+      return () => document.removeEventListener('keydown', onKeyDown);
+    },
+    [first, last],
+  );
 
   return { first, last };
 }

@@ -28,12 +28,15 @@ addDecorator(
   }),
 );
 
+function requireAll(requireContext) {
+  return requireContext.keys().map(requireContext);
+}
+
 function loadStories() {
   require('../stories/index.js');
   require('../stories/inputs.js');
-  require('Components/overlays/story');
-  require('Components/new-stuff/story');
-
+  // pulls in all nested stories, ex: src/components/buttons/story.js
+  requireAll(require.context("../src/", true, /story.js/));
   // You can require as many stories as you need.
 }
 

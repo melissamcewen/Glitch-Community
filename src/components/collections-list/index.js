@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 import Heading from 'Components/text/heading';
-import CollectionItem from 'Components/collection/collection-item';
+import CollectionItem, { MyStuffItem } from 'Components/collection/collection-item';
 import Grid from 'Components/containers/grid';
+import PaginationController from 'Components/pagination-controller';
+import FilterController from 'Components/filter-controller';
 import CreateCollectionButton from 'Components/collection/create-collection-pop';
 import { useAPIHandlers } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
+import { useCollectionProjects } from 'State/collection';
+import useDevToggle from 'State/dev-toggles';
 
 import styles from './styles.styl';
 
@@ -18,7 +22,17 @@ const CreateFirstCollection = () => (
   </div>
 );
 
-function CollectionsList({ collections: rawCollections, title, isAuthorized, maybeTeam, showCurator }) {
+function CollectionsList({
+  collections: rawCollections,
+  title,
+  isAuthorized,
+  maybeTeam,
+  showCurator,
+  enableFiltering,
+  enablePagination,
+  collectionsPerPage,
+  placeholder,
+}) {
   const { deleteItem } = useAPIHandlers();
   const { currentUser } = useCurrentUser();
   const [deletedCollectionIds, setDeletedCollectionIds] = useState([]);
@@ -34,29 +48,67 @@ function CollectionsList({ collections: rawCollections, title, isAuthorized, may
 
   const orderedCollections = orderBy(collections, (collection) => collection.updatedAt, 'desc');
 
+  const myStuffEnabled = useDevToggle('My Stuff');
+
   if (!hasCollections && !canMakeCollections) {
     return null;
   }
+
+  const matchFn = (collection, filter) => collection.name.toLowerCase().includes(filter) || collection.description.toLowerCase().includes(filter);
   return (
-    <article id="collections-list" data-cy="collections" className={styles.collections}>
-      <Heading tagName="h2">{title}</Heading>
-      {canMakeCollections && (
+    <FilterController
+      matchFn={matchFn}
+      searchPrompt="find a collection"
+      label="collection search"
+      enabled={enableFiltering}
+      placeholder={placeholder}
+      items={orderedCollections}
+    >
+      {({ filterInput, filterHeaderStyles, renderItems }) => (
         <>
-          <CreateCollectionButton team={maybeTeam} />
-          {!hasCollections && <CreateFirstCollection />}
+          <article data-cy="collections" className={styles.collections}>
+            <div className={filterHeaderStyles}>
+              <Heading tagName="h2">{title}</Heading>
+              {filterInput}
+            </div>
+
+            {canMakeCollections && (
+              <>
+                <CreateCollectionButton team={maybeTeam} />
+                {!hasCollections && <CreateFirstCollection />}
+              </>
+            )}
+
+            {renderItems((filteredProjects) => (
+              <PaginationController
+                enabled={enablePagination}
+                items={filteredProjects}
+                itemsPerPage={collectionsPerPage}
+                fetchDataOptimistically={useCollectionProjects}
+              >
+                {(paginatedCollections, isExpanded) => (
+                  <Grid items={paginatedCollections}>
+                    {(collection) =>
+                      myStuffEnabled && collection.isBookmarkCollection ? (
+                        <MyStuffItem collection={collection} />
+                      ) : (
+                        <CollectionItem
+                          collection={collection}
+                          isAuthorized={isAuthorized}
+                          deleteCollection={() => deleteCollection(collection)}
+                          showCurator={showCurator}
+                          showLoader={isExpanded}
+                        />
+                      )
+                    }
+                  </Grid>
+                )}
+              </PaginationController>
+            ))}
+          </article>
         </>
       )}
-      <Grid items={orderedCollections}>
-        {(collection) => (
-          <CollectionItem
-            collection={collection}
-            isAuthorized={isAuthorized}
-            deleteCollection={() => deleteCollection(collection)}
-            showCurator={showCurator}
-          />
-        )}
-      </Grid>
-    </article>
+    </FilterController>
   );
 }
 
@@ -66,12 +118,16 @@ CollectionsList.propTypes = {
   title: PropTypes.node.isRequired,
   isAuthorized: PropTypes.bool,
   showCurator: PropTypes.bool,
+  collectionsPerPage: PropTypes.number,
+  placeholder: PropTypes.node,
 };
 
 CollectionsList.defaultProps = {
   maybeTeam: undefined,
   isAuthorized: false,
   showCurator: false,
+  collectionsPerPage: 6,
+  placeholder: null,
 };
 
 export default CollectionsList;

@@ -6,12 +6,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const AutoprefixerStylus = require('autoprefixer-stylus');
 const StatsPlugin = require('stats-webpack-plugin');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const aliases = require('./shared/aliases');
 
 const BUILD = path.resolve(__dirname, 'build');
 const SRC = path.resolve(__dirname, 'src');
 const SHARED = path.resolve(__dirname, 'shared');
+const SERVER = path.resolve(__dirname, 'server');
 const STYLES = path.resolve(__dirname, 'styles');
 const NODE_MODULES = path.resolve(__dirname, 'node_modules');
 const STYLE_BUNDLE_NAME = 'styles';
@@ -82,7 +83,7 @@ module.exports = smp.wrap({
       {
         enforce: 'pre',
         test: /\.js$/,
-        include: SRC,
+        include: [SRC, SHARED, SERVER],
         loader: 'eslint-loader',
         options: {
           fix: false, //mode === 'development', // Only change source files in development
@@ -112,8 +113,9 @@ module.exports = smp.wrap({
                 loader: 'css-loader?modules',
                 options: {
                   sourceMap: mode !== 'production', // no css source maps in production
-                  modules: true,
-                  localIdentName: '[name]__[local]___[hash:base64:5]',
+                  modules: {
+                    localIdentName: '[name]__[local]___[hash:base64:5]',
+                  }
                 },
               },
               {

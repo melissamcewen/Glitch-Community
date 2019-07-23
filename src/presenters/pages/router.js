@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import punycode from 'punycode';
 
@@ -58,11 +58,24 @@ const PageChangeHandler = withRouter(({ location }) => {
         window.scrollTo(0, 0);
         reload();
       }
+
       isUpdate.current = true;
       track();
     },
     [location.key],
   );
+
+  const [scrolledToLinkedEl, setScrolledToLinkedEl] = useState(false);
+  let linkedEl = null;
+  useEffect(() => {
+    if (!linkedEl && location.hash) {
+      linkedEl = document.getElementById(location.hash.substr(1));
+      if (linkedEl && !scrolledToLinkedEl) {
+        linkedEl.scrollIntoView();
+        setScrolledToLinkedEl(true);
+      }
+    }
+  });
   return null;
 });
 
@@ -127,11 +140,7 @@ const Router = () => (
 
       <Route path="/@:name" exact render={({ location, match }) => <TeamOrUserPage key={location.key} name={match.params.name} />} />
 
-      <Route
-        path="/@:owner/:name"
-        exact
-        render={({ match }) => <CollectionPage owner={match.params.owner} name={match.params.name} />}
-      />
+      <Route path="/@:owner/:name" exact render={({ match }) => <CollectionPage owner={match.params.owner} name={match.params.name} />} />
 
       <Route
         path="/user/:id(\d+)"
@@ -152,11 +161,7 @@ const Router = () => (
         }}
       />
 
-      <Route
-        path="/create"
-        exact
-        render={({ location }) => <CreatePage key={location.key} />}
-      />
+      <Route path="/create" exact render={({ location }) => <CreatePage key={location.key} />} />
 
       {categories.map((category) => (
         <Route
@@ -169,13 +174,7 @@ const Router = () => (
 
       <Route path="/secret" exact render={({ location }) => <SecretPage key={location.key} />} />
 
-      <Route
-        path="/vscode-auth"
-        exact
-        render={({ location }) => (
-          <VSCodeAuth key={location.key} scheme={parse(location.search, 'scheme')} />
-        )}
-      />
+      <Route path="/vscode-auth" exact render={({ location }) => <VSCodeAuth key={location.key} scheme={parse(location.search, 'scheme')} />} />
 
       {EXTERNAL_ROUTES.map((route) => (
         <Route key={route} path={route} render={({ location }) => <ExternalPageReloader key={location.key} />} />

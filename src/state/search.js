@@ -1,4 +1,3 @@
-/* eslint-disable prefer-default-export */
 import algoliasearch from 'algoliasearch/lite';
 import { useEffect, useReducer, useMemo } from 'react';
 import { mapValues, sumBy, pick } from 'lodash';

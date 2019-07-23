@@ -24,7 +24,7 @@ export const NotificationsProvider = (props) => {
     setNotifications((prevNotifications) => [...prevNotifications, notification]);
     if (notification.persistent) {
       const updateNotification = (updatedContent) => {
-        setNotifications((prevNotifications) => prevNotifications.map((n) => (n.id === notification.id ? { ...n, updatedContent } : n)));
+        setNotifications((prevNotifications) => prevNotifications.map((n) => (n.id === notification.id ? { ...n, content: updatedContent } : n)));
       };
       const removeNotification = () => {
         remove(notification.id);
