@@ -83,7 +83,7 @@ module.exports = smp.wrap({
       {
         enforce: 'pre',
         test: /\.js$/,
-        include: [SRC, SHARED, SERVER],
+        include: [SRC, SERVER],
         loader: 'eslint-loader',
         options: {
           fix: false, //mode === 'development', // Only change source files in development
