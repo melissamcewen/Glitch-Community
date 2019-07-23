@@ -12,6 +12,7 @@ const aliases = require('./shared/aliases');
 const BUILD = path.resolve(__dirname, 'build');
 const SRC = path.resolve(__dirname, 'src');
 const SHARED = path.resolve(__dirname, 'shared');
+const SERVER = path.resolve(__dirname, 'server');
 const STYLES = path.resolve(__dirname, 'styles');
 const NODE_MODULES = path.resolve(__dirname, 'node_modules');
 const STYLE_BUNDLE_NAME = 'styles';
@@ -82,7 +83,7 @@ module.exports = smp.wrap({
       {
         enforce: 'pre',
         test: /\.js$/,
-        include: SRC,
+        include: [SRC, SHARED, SERVER],
         loader: 'eslint-loader',
         options: {
           fix: false, //mode === 'development', // Only change source files in development
