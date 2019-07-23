@@ -21,13 +21,12 @@ PrivateIcon.defaultProps = {
 };
 
 export const PrivateBadge = () => (
-  <TooltipContainer type="info" id="private-project-badge-tooltip" tooltip={privateText} target={<PrivateIcon isPrivate label={privateText} />} />
+  <TooltipContainer type="info" tooltip={privateText} target={<PrivateIcon isPrivate label={privateText} />} />
 );
 
 export const PrivateToggle = ({ isPrivate, setPrivate }) => (
   <TooltipContainer
     type="action"
-    id="toggle-private-button-tooltip"
     tooltip={isPrivate ? privateText : publicText}
     target={
       <HiddenCheckbox value={isPrivate} onChange={setPrivate}>

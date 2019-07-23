@@ -7,7 +7,7 @@ const image = 'https://cdn.glitch.com/55f8497b-3334-43ca-851e-6c9780082244%2Fver
 const tooltip = 'Verified to be supportive, helpful people';
 
 const VerifiedBadge = () => (
-  <TooltipContainer id="verified-team-tooltip" type="info" tooltip={tooltip} target={<Image className={styles.verified} src={image} alt={tooltip} />} />
+  <TooltipContainer type="info" tooltip={tooltip} target={<Image className={styles.verified} src={image} alt={tooltip} />} />
 );
 
 export default VerifiedBadge;

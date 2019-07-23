@@ -15,19 +15,11 @@ import styles from './avatar.styl';
 
 export const Avatar = ({ name, src, color, srcFallback, type, hideTooltip, withinButton }) => {
   const contents = (
-    <Image
-      width="32px"
-      height="32px"
-      src={src}
-      defaultSrc={srcFallback}
-      alt={name}
-      backgroundColor={color}
-      className={styles[type]}
-    />
+    <Image width="32px" height="32px" src={src} defaultSrc={srcFallback} alt={name} backgroundColor={color} className={styles[type]} />
   );
 
   if (!hideTooltip) {
-    return <TooltipContainer tooltip={name} target={contents} type="action" id={`avatar-tooltip-${name}`} align={['left']} fallback={withinButton} />;
+    return <TooltipContainer tooltip={name} target={contents} type="action" align={['left']} fallback={withinButton} />;
   }
   return contents;
 };
@@ -49,13 +41,7 @@ Avatar.defaultProps = {
 };
 
 export const TeamAvatar = ({ team, size, hideTooltip }) => (
-  <Avatar
-    name={team.name}
-    src={getTeamAvatarUrl({ ...team, size })}
-    srcFallback={DEFAULT_TEAM_AVATAR}
-    type="team"
-    hideTooltip={hideTooltip}
-  />
+  <Avatar name={team.name} src={getTeamAvatarUrl({ ...team, size })} srcFallback={DEFAULT_TEAM_AVATAR} type="team" hideTooltip={hideTooltip} />
 );
 TeamAvatar.propTypes = {
   team: PropTypes.shape({
@@ -102,13 +88,7 @@ UserAvatar.defaultProps = {
 };
 
 export const ProjectAvatar = ({ project, hasAlt }) => (
-  <Avatar
-    name={hasAlt ? project.domain : ''}
-    src={getProjectAvatarUrl(project.id)}
-    srcFallback={FALLBACK_AVATAR_URL}
-    type="team"
-    hideTooltip
-  />
+  <Avatar name={hasAlt ? project.domain : ''} src={getProjectAvatarUrl(project.id)} srcFallback={FALLBACK_AVATAR_URL} type="team" hideTooltip />
 );
 
 ProjectAvatar.propTypes = {
@@ -130,3 +110,15 @@ CollectionAvatar.propTypes = {
     coverColor: PropTypes.string.isRequired,
   }).isRequired,
 };
+
+export const BookmarkAvatar = () => (
+  <>
+    <Image height="50%" src="https://cdn.glitch.com/6d94a2b0-1c44-4a6e-8b57-417c8e6e93e7%2Fhalo.svg?v=1563303181396" alt="" />
+    <Image
+      height="50%"
+      className={styles.bookmark}
+      src="https://cdn.glitch.com/6d94a2b0-1c44-4a6e-8b57-417c8e6e93e7%2Fatms-btn-filled.svg?v=1563294366084"
+      alt=""
+    />
+  </>
+);

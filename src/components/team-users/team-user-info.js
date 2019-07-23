@@ -61,7 +61,6 @@ const ProjectsList = ({ options, value, onChange }) => (
 const AdminBadge = () => (
   <div className={styles.statusBadge}>
     <TooltipContainer
-      id="admin-badge-tooltip"
       type="info"
       target={<span className={styles.adminStatus}>Team Admin</span>}
       tooltip="Can edit team info and billing"

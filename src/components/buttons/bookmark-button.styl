@@ -1,0 +1,136 @@
+.bookmarkButton {
+  padding: 20px 15px 0 15px;
+  border: none;
+}
+
+.halo {
+  position: absolute;
+  left: 10px;
+  top: 12px;
+  display: none;
+}
+
+.check {
+  position: absolute;
+  left: 30px;
+  top: 35px;
+  display: none;
+}
+
+.checkAnimated {
+  display: inline-block;
+  animation: scale cubic-bezier(0, 0, 0.2, 1) 0.5s 1;
+}
+
+@keyframes scale{
+  0%{
+    transform: scale(0);
+  }
+  100%{
+    transform: scale(1.0);
+  }
+}
+
+
+.haloAnimated {
+  display: inline;
+}
+
+
+.halo1{
+  opacity: 0;
+  animation: halo-1 cubic-bezier(0, 0, 0.2, 1) 1.2s 1;
+}
+
+.halo2{
+  opacity: 0;
+  animation: halo-2 cubic-bezier(0, 0, 0.2, 1) 1.2s 1;
+}
+
+.halo3{
+  opacity: 0;
+  animation: halo-3 cubic-bezier(0, 0, 0.2, 1) 1.2s 1;
+}
+
+.halo4{
+  opacity: 0;
+  animation: halo-4 cubic-bezier(0, 0, 0.2, 1) 1.2s 1;
+}
+
+.halo5 {
+  opacity: 0;
+  animation: halo-5 cubic-bezier(0, 0, 0.2, 1) 1.2s 1;
+}
+
+
+@keyframes halo-1{
+  0%{
+    opacity: 0;
+  }
+  4%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+@keyframes halo-2{
+  0%{
+    opacity: 0;
+  }
+  4%{
+    opacity: 0;
+  }
+  8%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+@keyframes halo-3{
+  0%{
+    opacity: 0;
+  }
+  8%{
+    opacity: 0;
+  }
+  12%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+@keyframes halo-4{
+  0%{
+    opacity: 0;
+  }
+  12%{
+    opacity: 0;
+  }
+  16%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 1;
+  }  
+}
+
+@keyframes halo-5{
+  0%{
+    opacity: 0;
+  }
+  16%{
+    opacity: 0;
+  }
+  20%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 1;
+  }
+}

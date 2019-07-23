@@ -1,4 +1,4 @@
-import ProgressPromise from './progress-promise';
+import { captureException } from 'Utils/sentry';
 
 /* eslint-disable */
 
@@ -94,7 +94,7 @@ export default function(credentials) {
       const namespacedKey = `${namespace}${key}`;
       const url = urlFor(key);
 
-      return sendForm(
+      const [promise, progress] = sendForm(
         bucketUrl,
         objectToForm({
           key: namespacedKey,
@@ -107,7 +107,8 @@ export default function(credentials) {
           signature,
           file: blob,
         }),
-      ).then(() => `${bucketUrl}/${encodeURIComponent(namespacedKey)}`);
+      );
+      return [promise.then(() => `${bucketUrl}/${encodeURIComponent(namespacedKey)}`), progress];
     },
   };
 }
@@ -142,14 +143,21 @@ var extractPolicyData = function(policy) {
 
 const isSuccess = (request) => request.status.toString()[0] === '2';
 
-var sendForm = (url, formData) =>
-  new ProgressPromise(function(resolve, reject, notify) {
+var sendForm = (url, formData) => {
+  const progressHandlers = [];
+  const promise = new Promise(function(resolve, reject) {
     const request = new XMLHttpRequest();
 
     request.open('POST', url, true);
 
     if (request.upload != null) {
-      request.upload.onprogress = notify;
+      request.upload.onprogress = (event) => progressHandlers.forEach((handler) => {
+        try {
+          handler(event);
+        } catch (error) {
+          captureException(error);
+        }
+      });
     }
 
     request.onreadystatechange = function(e) {
@@ -163,6 +171,8 @@ var sendForm = (url, formData) =>
 
     return request.send(formData);
   });
+  return [promise, (handler) => progressHandlers.push(handler)];
+};
 var objectToForm = function(data) {
   let formData;
   return (formData = Object.keys(data).reduce(function(formData, key) {

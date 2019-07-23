@@ -98,7 +98,6 @@ const WhitelistedDomain = ({ domain, setDomain }) => (
       <div style={{ position: 'relative' }}>
         <TransparentButton onClick={togglePopover}>
           <TooltipContainer
-            id="whitelisted-domain-tooltip"
             type="action"
             tooltip={visible ? null : `Anyone with an @${domain} email can join`}
             target={

@@ -1,19 +1,14 @@
-import React, { useEffect, useState, useRef, useReducer } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
-import classNames from 'classnames/bind';
 
-import Text from 'Components/text/text';
-import Button from 'Components/buttons/button';
-import Badge from 'Components/badges/badge';
-import TextInput from 'Components/inputs/text-input';
 import Heading from 'Components/text/heading';
-import Image from 'Components/images/image';
+import PaginationController from 'Components/pagination-controller';
+import FilterController from 'Components/filter-controller';
 import ProjectItem from 'Components/project/project-item';
 import Note from 'Components/collection/note';
 import Grid from 'Components/containers/grid';
 import Row from 'Components/containers/row';
-import { LiveMessage } from 'react-aria-live';
+import classNames from 'classnames/bind';
 
 import styles from './projects-list.styl';
 
@@ -47,158 +42,6 @@ const ProjectsUL = ({ collection, projects, sortable, onReorder, noteOptions, la
   );
 };
 
-const arrowSrc = 'https://cdn.glitch.com/11efcb07-3386-43b6-bab0-b8dc7372cba8%2Fleft-arrow.svg?1553883919269';
-
-const paginationReducer = (oldState, action) => {
-  switch (action.type) {
-    case 'next':
-      return {
-        page: oldState.page + 1,
-        totalPages: oldState.totalPages,
-        announce: `Showing page ${oldState.page + 1} of ${oldState.totalPages}`,
-      };
-    case 'previous':
-      return {
-        page: oldState.page - 1,
-        totalPages: oldState.totalPages,
-        announce: `Showing page ${oldState.page - 1} of ${oldState.totalPages}`,
-      };
-    case 'expand':
-      return {
-        expanded: true,
-        totalPages: oldState.totalPages,
-        announce: 'Showing all pages',
-      };
-    case 'restart':
-      return {
-        ...oldState,
-        page: 1,
-        announce: `Showing page 1 of ${action.totalPages}`,
-      };
-    default:
-      return {};
-  }
-};
-
-const PaginationController = ({ enabled, projects, projectsPerPage, children }) => {
-  const numProjects = projects.length;
-  const numPages = Math.ceil(projects.length / projectsPerPage);
-
-  const [state, dispatchState] = useReducer(paginationReducer, {
-    page: 1,
-    totalPages: numPages,
-    announce: '',
-  });
-  const prevButtonRef = useRef();
-  const nextButtonRef = useRef();
-
-  const canPaginate = enabled && !state.expanded && projectsPerPage < numProjects;
-
-  const onNextButtonClick = () => {
-    if (state.page + 1 === numPages) {
-      prevButtonRef.current.focus();
-    }
-
-    dispatchState({ type: 'next' });
-  };
-
-  const onPreviousButtonClick = () => {
-    if (state.page - 1 === 1) {
-      nextButtonRef.current.focus();
-    }
-
-    dispatchState({ type: 'previous' });
-  };
-
-  if (canPaginate) {
-    const startIdx = (state.page - 1) * projectsPerPage;
-    projects = projects.slice(startIdx, startIdx + projectsPerPage);
-  }
-
-  useEffect(() => {
-    dispatchState({ type: 'restart', totalPages: numPages });
-  }, [numProjects]);
-
-  return (
-    <>
-      {children(projects)}
-      {canPaginate && (
-        <div className={styles.viewControls}>
-          <div className={styles.paginationControls}>
-            <Button ref={prevButtonRef} type="tertiary" disabled={state.page === 1} onClick={onPreviousButtonClick}>
-              <Image alt="Previous" className={styles.paginationArrow} src={arrowSrc} />
-            </Button>
-            {state.announce && <LiveMessage message={state.announce} aria-live="assertive" />}
-            <div data-cy="page-numbers" className={styles.pageNumbers}>
-              {state.page} / {numPages}
-            </div>
-            <Button ref={nextButtonRef} type="tertiary" disabled={state.page === numPages} onClick={onNextButtonClick}>
-              <Image alt="Next" className={classNames(styles.paginationArrow, styles.next)} src={arrowSrc} />
-            </Button>
-          </div>
-          <Button data-cy="show-all" type="tertiary" onClick={() => dispatchState({ type: 'expand' })}>
-            Show all <Badge>{numProjects}</Badge>
-          </Button>
-        </div>
-      )}
-    </>
-  );
-};
-
-const FilterController = ({ enabled, placeholder, projects, children }) => {
-  const [filter, setFilter] = useState('');
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const [isDoneFiltering, setIsDoneFiltering] = useState(false);
-
-  const validFilter = filter.length > 1;
-
-  function filterProjects() {
-    setIsDoneFiltering(false);
-    if (validFilter) {
-      const lowercaseFilter = filter.toLowerCase();
-      setFilteredProjects(projects.filter((p) => p.domain.includes(lowercaseFilter) || p.description.toLowerCase().includes(lowercaseFilter)));
-      setIsDoneFiltering(true);
-    } else {
-      setFilteredProjects([]);
-    }
-  }
-
-  useEffect(() => filterProjects(), [projects]);
-  useEffect(() => debounce(filterProjects, 400)(), [filter]);
-
-  const filtering = validFilter && isDoneFiltering;
-  const displayedProjects = filtering ? filteredProjects : projects;
-
-  return children({
-    filterInput: enabled && (
-      <TextInput
-        data-cy="projects-filter"
-        className={styles.headerSearch}
-        name="filter"
-        onChange={setFilter}
-        opaque
-        placeholder="find a project"
-        labelText="project search"
-        type="search"
-        value={filter}
-      />
-    ),
-    renderProjects: (renderFn) => {
-      if (displayedProjects.length) return renderFn(displayedProjects);
-
-      if (filtering) {
-        return (
-          <div className={styles.filterResultsPlaceholder}>
-            <Image alt="" src="https://cdn.glitch.com/c117d5df-3b8d-4389-9e6b-eb049bcefcd6%2Fcompass-not-found.svg?1554146070630" />
-            <Text>No projects found</Text>
-          </div>
-        );
-      }
-      return placeholder;
-    },
-  });
-};
-
 function ProjectsList({
   projects,
   layout,
@@ -214,17 +57,22 @@ function ProjectsList({
   projectOptions,
   dataCy,
 }) {
+  const matchFn = (project, filter) => project.domain.includes(filter) || project.description.toLowerCase().includes(filter);
   return (
-    <FilterController enabled={enableFiltering} placeholder={placeholder} projects={projects}>
-      {({ filterInput, renderProjects }) => (
+    <FilterController matchFn={matchFn} enabled={enableFiltering} placeholder={placeholder} searchPrompt="find a project" label="project search" items={projects}>
+      {({ filterInput, filterHeaderStyles, renderItems }) => (
         <article className={classNames(styles.projectsContainer)} data-cy={dataCy}>
-          <div className={styles.header}>
+          <div className={filterHeaderStyles}>
             {title && <Heading tagName="h2">{title}</Heading>}
             {filterInput}
             <Button onClick= className={styles.visibleOnFocus}>Skip to Next Section</Button>
           </div>
-          {renderProjects((filteredProjects) => (
-            <PaginationController enabled={enablePagination} projects={filteredProjects} projectsPerPage={projectsPerPage}>
+          {renderItems((filteredProjects) => (
+            <PaginationController
+              enabled={enablePagination}
+              items={filteredProjects}
+              itemsPerPage={projectsPerPage}
+            >
               {(paginatedProjects) => (
                 <ProjectsUL
                   projects={paginatedProjects}

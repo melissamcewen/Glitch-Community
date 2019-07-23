@@ -80,7 +80,6 @@ const ProjectDetails = ({ projectDetails }) => (
 const ProjectRemixItem = ({ remix }) => (
   <ProjectLink project={remix}>
     <TooltipContainer
-      id={`project-remix-tooltip-${remix.domain}`}
       target={<ProjectAvatar project={remix} hasAlt />}
       align={['left']}
       type="action"

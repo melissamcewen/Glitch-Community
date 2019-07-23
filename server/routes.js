@@ -23,7 +23,10 @@ const DEFAULT_PROJECT_DESCRIPTION = (domain) => `Check out ~${domain} on Glitch,
 module.exports = function(external) {
   const app = express.Router();
 
-  app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  // don't enforce HTTPS if building the site locally, not on glitch.com
+  if (!process.env.RUNNING_LOCALLY) {
+    app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  }
 
   // CORS - Allow pages from any domain to make requests to our API
   app.use(function(request, response, next) {
@@ -47,13 +50,18 @@ module.exports = function(external) {
   const readFilePromise = util.promisify(fs.readFile);
   const imageDefault = 'https://cdn.gomix.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fsocial-card%402x.png';
 
-  async function render(res, { title, description, image = imageDefault, socialTitle, canonicalUrl = APP_URL }) {
+  async function render(res, { title, description, image = imageDefault, socialTitle, canonicalUrl = APP_URL, wistiaVideoId }) {
     let built = true;
 
     const [zine, homeContent] = await Promise.all([getZine(), getHomeData()]);
 
     let scripts = [];
     let styles = [];
+
+    if (wistiaVideoId) {
+      scripts.push('//fast.wistia.com/assets/external/E-v1.js');
+      scripts.push(`//fast.wistia.com/embed/medias/${wistiaVideoId}.jsonp`);
+    }
 
     try {
       const stats = JSON.parse(await readFilePromise('build/stats.json'));
@@ -208,7 +216,7 @@ module.exports = function(external) {
       RUNNING_ON: process.env.RUNNING_ON,
     });
   });
-  
+
   app.get('/api/home', async (req, res) => {
     const data = await getHomeData();
     res.send(data);
@@ -226,14 +234,22 @@ module.exports = function(external) {
     }
   });
 
+  app.get('/', async (req, res) => {
+    const socialTitle = 'Glitch: The friendly community where everyone builds the web';
+    const description = 'Simple, powerful, free tools to create and use millions of apps.';
+    const image = `${CDN_URL}/0aa2fffe-82eb-4b72-a5e9-444d4b7ce805%2Fsocial-banner.png?v=1562683795781`;
+    await render(res, { title: 'Glitch', socialTitle, description, image, wistiaVideoId: 'z2ksbcs34d' });
+  });
+
   app.get('/create', async (req, res) => {
     const title = 'Glitch - Create';
     const socialTitle = 'Get Started Creating on Glitch';
     const description = 'Glitch is a collaborative programming environment that lives in your browser and deploys code as you type.';
     const image = `${CDN_URL}/50f784d9-9995-4fa4-a185-b4b1ea6e77c0/create-illustration.png?v=1562612212463`;
     const canonicalUrl = `${APP_URL}/create`;
-    await render(res, { title, description, image, socialTitle, canonicalUrl });
+    await render(res, { title, socialTitle, description, image, canonicalUrl, wistiaVideoId: '2vcr60pnx9' });
   });
+  
 
   app.get('*', async (req, res) => {
     const title = 'Glitch';

@@ -12,11 +12,15 @@ const NewStuffPrompt = ({ onClick }) => (
   <div className={styles.footer}>
     <TooltipContainer
       align={['top']}
-      id="new-stuff-tooltip"
       persistent
-      target={<TransparentButton onClick={onClick}><NewStuffPup /></TransparentButton>}
+      target={
+        <TransparentButton onClick={onClick}>
+          <NewStuffPup />
+        </TransparentButton>
+      }
       tooltip="New"
       type="info"
+      newStuff
     />
   </div>
 );

@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const AutoprefixerStylus = require('autoprefixer-stylus');
 const StatsPlugin = require('stats-webpack-plugin');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const aliases = require('./shared/aliases');
 
 const BUILD = path.resolve(__dirname, 'build');
@@ -112,8 +112,9 @@ module.exports = smp.wrap({
                 loader: 'css-loader?modules',
                 options: {
                   sourceMap: mode !== 'production', // no css source maps in production
-                  modules: true,
-                  localIdentName: '[name]__[local]___[hash:base64:5]',
+                  modules: {
+                    localIdentName: '[name]__[local]___[hash:base64:5]',
+                  }
                 },
               },
               {

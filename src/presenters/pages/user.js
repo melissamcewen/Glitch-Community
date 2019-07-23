@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { orderBy, partition } from 'lodash';
+import { orderBy, partition, remove } from 'lodash';
 
 import Heading from 'Components/text/heading';
 import Emoji from 'Components/images/emoji';
@@ -19,9 +19,21 @@ import { getLink } from 'Models/user';
 import { AnalyticsContext } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
 import { useUserEditor } from 'State/user';
+import useDevToggle from 'State/dev-toggles';
+import { useCollectionProjects } from 'State/collection';
+import { pickRandomColor } from 'Utils/color';
 import useFocusFirst from 'Hooks/use-focus-first';
 
 import styles from './user.styl';
+
+const nullMyStuffCollection = {
+  isBookmarkCollection: true,
+  name: 'My Stuff',
+  description: 'My place to save cool finds',
+  coverColor: pickRandomColor(),
+  projects: [],
+  id: 'My Stuff',
+};
 
 function syncPageToLogin(login) {
   history.replaceState(null, null, getLink({ login }));
@@ -67,6 +79,51 @@ NameAndLogin.defaultProps = {
   name: '',
   login: '',
 };
+
+function MyStuffCollectionLoader({ collections, myStuffCollection, isAuthorized, children }) {
+  const { value: projects } = useCollectionProjects(myStuffCollection);
+
+  React.useEffect(() => {
+    if (projects && (projects.length > 0 || isAuthorized)) {
+      if (collections[0].isBookmarkCollection) {
+        collections[0].projects = projects;
+      } else {
+        myStuffCollection.projects = projects;
+        collections.unshift(myStuffCollection);
+      }
+    }
+  }, [projects]);
+
+  return children(collections);
+}
+
+function CollectionsListWithMyStuff({ collections, ...props }) {
+  const myStuffCollection = remove(collections, (collection) => collection.isBookmarkCollection);
+
+  if (myStuffCollection[0]) {
+    return (
+      <MyStuffCollectionLoader myStuffCollection={myStuffCollection[0]} collections={collections} {...props}>
+        {(collectionsWithMyStuff) => <CollectionsList collections={collectionsWithMyStuff} {...props} />}
+      </MyStuffCollectionLoader>
+    );
+  }
+
+  if (!props.isAuthorized) {
+    return <CollectionsList collections={collections} {...props} />;
+  }
+
+  if (props.isAuthorized) {
+    collections.unshift(nullMyStuffCollection);
+    return <CollectionsList collections={collections} {...props} />;
+  }
+}
+
+// TODO: in the future we can delete this
+function CollectionsListWithDevToggle(props) {
+  const myStuffEnabled = useDevToggle('My Stuff');
+  return myStuffEnabled ? <CollectionsListWithMyStuff {...props} /> : <CollectionsList {...props} />;
+}
+
 
 const UserPage = ({ user: initialUser }) => {
   const [user, funcs] = useUserEditor(initialUser);
@@ -153,13 +210,15 @@ const UserPage = ({ user: initialUser }) => {
       )}
 
       {!!user.login && (
-        <CollectionsList
+        <CollectionsListWithDevToggle
           title="Collections"
           collections={user.collections.map((collection) => ({
             ...collection,
             user,
           }))}
           isAuthorized={isAuthorized}
+          enablePagination
+          enableFiltering={user.collections.length > 6}
           maybeCurrentUser={maybeCurrentUser}
         />
       )}

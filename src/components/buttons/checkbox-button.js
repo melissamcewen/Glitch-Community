@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import useUniqueId from '../../hooks/use-unique-id';
+import useUniqueId from 'Hooks/use-unique-id';
 
 import styles from './button.styl';
 import checkboxStyles from './checkbox-button.styl';

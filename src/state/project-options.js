@@ -43,7 +43,7 @@ const useDefaultProjectOptions = () => {
 export async function getProjectPermissions(api, domain) {
   try {
     const project = await getSingleItem(api, `v1/projects/by/domain?domain=${domain}`, domain);
-    return project.permissions;
+    return project ? project.permissions : [];
   } catch (error) {
     captureException(error);
     return [];

@@ -3,11 +3,8 @@ import { mapValues, sumBy, memoize } from 'lodash';
 import { storiesOf } from '@storybook/react';
 import 'Components/global.styl';
 import Button from 'Components/buttons/button';
-import CheckboxButton from 'Components/buttons/checkbox-button';
 import Emoji from 'Components/images/emoji';
 import TooltipContainer from 'Components/tooltips/tooltip-container';
-import Image from 'Components/images/image';
-import MaskImage from 'Components/images/mask-image';
 import Text from 'Components/text/text';
 import Heading from 'Components/text/heading';
 import Markdown from 'Components/text/markdown';
@@ -46,61 +43,6 @@ import 'Components/deleted-projects/story';
 import { users, teams, projects, collections } from './data';
 import { withState, provideContext } from './util';
 
-const helloAlert = () => {
-  alert('hello');
-};
-
-storiesOf('Button', module)
-  .add('regular', () => <Button onClick={helloAlert}>Hello Button</Button>)
-  .add('cta', () => (
-    <Button type="cta" onClick={helloAlert}>
-      CTA Button
-    </Button>
-  ))
-  .add('small', () => (
-    <Button size="small" onClick={helloAlert}>
-      Small Button
-    </Button>
-  ))
-  .add('tertiary', () => (
-    <Button type="tertiary" size="small" onClick={helloAlert}>
-      Tertiary (Small) Button
-    </Button>
-  ))
-  .add('danger zone (red on hover)', () => (
-    <Button type="dangerZone" size="small" onClick={helloAlert}>
-      Destructive Action
-    </Button>
-  ))
-  .add('link (click to a different page)', () => <Button href="https://support.glitch.com">Support</Button>)
-  .add('with emoji', () => (
-    <Button emoji="sunglasses" imagePosition="left">
-      Show
-    </Button>
-  ))
-  .add('with an image', () => <Button image={<Image width={16} height={16} src="https://cdn.glitch.com/team-avatar/74/small?689" alt="" />}>Glitch</Button>)
-  .add(`match background`, () => (
-    <div style={{ width: '100%', height: '100%', backgroundColor: '#F5F5F5' }}>
-      <Button onClick={helloAlert} matchBackground={true}>
-        Support <Emoji name="ambulance" />
-      </Button>
-    </div>
-  ))
-  .add(
-    `checkbox`,
-    withState(false, ({ state, setState }) => (
-      <>
-        <CheckboxButton value={state} onChange={setState}>
-          Click to toggle!
-        </CheckboxButton>
-        <p>
-          <label>
-            <input type="checkbox" checked={state} onChange={(evt) => setState(evt.target.checked)} />← linked state
-          </label>
-        </p>
-      </>
-    )),
-  );
 
 storiesOf('Emoji', module)
   .add('standard', () => <Emoji name="herb" />)
@@ -109,14 +51,13 @@ storiesOf('Emoji', module)
 storiesOf('TooltipContainer', module)
   .add('action', () => (
     <div style={{ margin: '70px' }}>
-      <TooltipContainer type="action" id="a-unique-id" target={<Button>Hover or focus me</Button>} tooltip="I'm an action tooltip" />
+      <TooltipContainer type="action" target={<Button>Hover or focus me</Button>} tooltip="I'm an action tooltip" />
     </div>
   ))
   .add('info', () => (
     <div style={{ margin: '70px' }}>
       <TooltipContainer
         type="info"
-        id="a-unique-id"
         target={<img width="32" height="32" src="https://favicon-fetcher.glitch.me/img/glitch.com" />}
         tooltip="I'm an info tooltip"
       />
@@ -126,7 +67,6 @@ storiesOf('TooltipContainer', module)
     <div style={{ margin: '70px' }}>
       <TooltipContainer
         type="info"
-        id="a-unique-id"
         target={<img width="32" height="32" src="https://favicon-fetcher.glitch.me/img/glitch.com" />}
         tooltip="I'm a persistent tooltip"
         persistent
@@ -135,37 +75,11 @@ storiesOf('TooltipContainer', module)
   ))
   .add('left and top aligned', () => (
     <div style={{ margin: '70px' }}>
-      <TooltipContainer type="action" id="a-unique-id" target={<Button>Hover or focus me</Button>} tooltip="I'm a tooltip" align={['top', 'left']} />
+      <TooltipContainer type="action" target={<Button>Hover or focus me</Button>} tooltip="I'm a tooltip" align={['top', 'left']} />
     </div>
   ));
 
-storiesOf('Image', module)
-  .add('regular', () => <Image src="https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-day.svg" alt="Glitch Logo" />)
-  .add('background Image', () => (
-    <Image backgroundImage={true} src="https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-day.svg" alt="Glitch Logo" />
-  ))
-  .add('srcSet', () => (
-    <Image
-      src="https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-day.svg"
-      srcSet={[
-        'https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-day.svg?x=2 1000w',
-        'https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-night.svg?x=1 2000w',
-      ]}
-      alt="Glitch Logo"
-    />
-  ))
-  .add('width & height', () => (
-    <Image src="https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-day.svg" alt="Glitch Logo" width="200" height="200" />
-  ))
-  .add('width & height with background image', () => (
-    <Image
-      src="https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-night.svg"
-      backgroundImage
-      alt="Glitch Logo"
-      width="200px"
-      height="200px"
-    />
-  ));
+
 storiesOf('Heading', module)
   .add('h1 ', () => <Heading tagName="h1">H1, 22px</Heading>)
   .add('h2', () => <Heading tagName="h2">H2, 18px</Heading>)
@@ -348,23 +262,6 @@ storiesOf('SearchResults', module).add(
     )),
   ),
 );
-
-storiesOf('MaskImage', module)
-  .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
-  .add(
-    'select mask',
-    withState('mask1', ({ state, setState }) => (
-      <div>
-        <MaskImage maskClass={state} src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />
-        <select value={state} onChange={(e) => setState(e.target.value)}>
-          <option value="mask1">Mask 1</option>
-          <option value="mask2">Mask 2</option>
-          <option value="mask3">Mask 3</option>
-          <option value="mask4">Mask 4</option>
-        </select>
-      </div>
-    )),
-  );
 
 storiesOf('StarterKit', module).add('react', () => (
   <StarterKitResult
