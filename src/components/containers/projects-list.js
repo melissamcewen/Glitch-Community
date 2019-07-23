@@ -65,7 +65,6 @@ function ProjectsList({
           <div className={filterHeaderStyles}>
             {title && <Heading tagName="h2">{title}</Heading>}
             {filterInput}
-            <Button onClick= className={styles.visibleOnFocus}>Skip to Next Section</Button>
           </div>
           {renderItems((filteredProjects) => (
             <PaginationController
