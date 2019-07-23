@@ -16,9 +16,11 @@ module.exports = async ({ config, mode }) => {
         loader: 'css-loader?modules',
         options: {
           sourceMap: true,
-          modules: true,
-          localIdentName: '[name]__[local]___[hash:base64:5]',
+          modules: {
+            localIdentName: '[name]__[local]___[hash:base64:5]',
+          }
         },
+
       },
       {
         loader: 'stylus-loader',
