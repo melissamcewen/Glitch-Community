@@ -37,6 +37,7 @@ function loadStories() {
   require('../stories/inputs.js');
   // pulls in all nested stories, ex: src/components/buttons/story.js
   requireAll(require.context("../src/", true, /story.js/));
+  // You can require as many stories as you need.
 }
 
 configure(loadStories, module);
