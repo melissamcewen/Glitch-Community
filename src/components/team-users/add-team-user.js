@@ -26,7 +26,7 @@ const WhitelistEmailDomain = ({ result: domain, active, onClick }) => (
 
 const UserResult = ({ result: user, active, onClick }) => (
   <ResultItem onClick={onClick} active={active}>
-    <UserAvatar user={user} />
+    <UserAvatar user={user} hideTooltip />
     <ResultInfo>
       <ResultName>{getDisplayName(user)}</ResultName>
       {!!user.name && <ResultDescription>@{user.login}</ResultDescription>}
@@ -39,7 +39,7 @@ const InviteByEmail = ({ result: email, active, onClick }) => {
   const { current: color } = useRef(randomColor({ luminosity: 'light' }));
   return (
     <ResultItem onClick={onClick} active={active}>
-      <UserAvatar user={{ color }} />
+      <UserAvatar user={{ color }} hideTooltip />
       <ResultInfo>
         <ResultName>Invite {email}</ResultName>
       </ResultInfo>

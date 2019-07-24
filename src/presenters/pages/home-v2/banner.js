@@ -105,7 +105,7 @@ const Banner = () => (
         <br />
         <Unmarked>where everyone</Unmarked>
         <br />
-        <Mark color="#16A76D">builds the web</Mark>
+        <Mark color="#2EA073">builds the web</Mark>
       </h1>
       <div className={styles.bannerCopyAndButtons}>
         <p>Simple, powerful, free tools to create and use millions of apps.</p>

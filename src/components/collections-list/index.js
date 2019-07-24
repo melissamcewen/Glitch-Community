@@ -7,6 +7,7 @@ import Grid from 'Components/containers/grid';
 import PaginationController from 'Components/pagination-controller';
 import FilterController from 'Components/filter-controller';
 import CreateCollectionButton from 'Components/collection/create-collection-pop';
+import SkipSectionButtons from 'Components/containers/skip-section-buttons';
 import { useAPIHandlers } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
 import { useCollectionProjects } from 'State/collection';
@@ -78,33 +79,34 @@ function CollectionsList({
                 {!hasCollections && <CreateFirstCollection />}
               </>
             )}
-
-            {renderItems((filteredProjects) => (
-              <PaginationController
-                enabled={enablePagination}
-                items={filteredProjects}
-                itemsPerPage={collectionsPerPage}
-                fetchDataOptimistically={useCollectionProjects}
-              >
-                {(paginatedCollections, isExpanded) => (
-                  <Grid items={paginatedCollections}>
-                    {(collection) =>
-                      myStuffEnabled && collection.isBookmarkCollection ? (
-                        <MyStuffItem collection={collection} />
-                      ) : (
-                        <CollectionItem
-                          collection={collection}
-                          isAuthorized={isAuthorized}
-                          deleteCollection={() => deleteCollection(collection)}
-                          showCurator={showCurator}
-                          showLoader={isExpanded}
-                        />
-                      )
-                    }
-                  </Grid>
-                )}
-              </PaginationController>
-            ))}
+            <SkipSectionButtons sectionName="Collections">
+              {renderItems((filteredProjects) => (
+                <PaginationController
+                  enabled={enablePagination}
+                  items={filteredProjects}
+                  itemsPerPage={collectionsPerPage}
+                  fetchDataOptimistically={useCollectionProjects}
+                >
+                  {(paginatedCollections, isExpanded) => (
+                    <Grid items={paginatedCollections}>
+                      {(collection) =>
+                        myStuffEnabled && collection.isBookmarkCollection ? (
+                          <MyStuffItem collection={collection} />
+                        ) : (
+                          <CollectionItem
+                            collection={collection}
+                            isAuthorized={isAuthorized}
+                            deleteCollection={() => deleteCollection(collection)}
+                            showCurator={showCurator}
+                            showLoader={isExpanded}
+                          />
+                        )
+                      }
+                    </Grid>
+                  )}
+                </PaginationController>
+              ))}
+            </SkipSectionButtons>
           </article>
         </>
       )}

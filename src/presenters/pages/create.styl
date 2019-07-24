@@ -8,6 +8,8 @@ u3 = 16px
 u4 = 32px
 u5 = 50px
 
+focusYellow = #fff25c
+
 .main
   max-width: 1100px
   margin: auto
@@ -143,7 +145,7 @@ u5 = 50px
   a:focus,
   button:focus
     outline: none
-    box-shadow: 0 0 8px 4px orange
+    box-shadow: 0 0 1px 4px focusYellow
 
 // what is glitch
 .whatIsGlitch
@@ -471,3 +473,5 @@ u5 = 50px
     height: 100%
     border-radius: u1
     overflow: hidden
+    .w-focus-outline
+      box-shadow: 0px 0px 2px 5px #fff25c inset !important

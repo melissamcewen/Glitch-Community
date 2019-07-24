@@ -1,0 +1,19 @@
+.visibleOnFocus
+  position: absolute
+  left: -1000px
+  top: -1000px
+  width: 1px
+  height: 1px
+  text-align: left 
+  overflow: hidden
+  z-index: 1
+
+.visibleOnFocus:focus, .visibleOnFocus:active
+  position: relative
+  top: unset;
+  left: unset;  
+  width: auto
+  height: auto
+  overflow: visible
+  margin: 8px
+  

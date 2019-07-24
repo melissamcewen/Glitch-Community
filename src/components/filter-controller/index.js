@@ -45,7 +45,7 @@ function FilterController({ matchFn, enabled, placeholder, items, children, sear
         value={filter}
       />
     ),
-    filterHeaderStyles: enabled && styles.header,
+    filterHeaderStyles: enabled ? styles.header : undefined,
     renderItems: (renderFn) => {
       if (displayedItems.length) return renderFn(displayedItems);
 
