@@ -50,7 +50,7 @@ function InvitedUser({ user, team, onRevokeInvite }) {
               <PopoverInfo>
                 <div className={styles.avatar}>
                   <UserLink user={user}>
-                    <UserAvatar user={user} />
+                    <UserAvatar user={user} hideTooltip />
                   </UserLink>
                 </div>
                 <div className={styles.nameLoginWrap}>

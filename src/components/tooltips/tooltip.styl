@@ -5,7 +5,7 @@ tooltip-background = rgba(0,0,0,0.95)
 .touch .tooltip
   display: none
     
-.tooltip-container
+.tooltipContainer
   position: relative
   box-sizing: border-box
   display: inline-block
@@ -14,7 +14,6 @@ tooltip-background = rgba(0,0,0,0.95)
   border: none
   box-sizing: inherit
   display: inline-block
-  pointer-events: none
   position: absolute
   z-index: 9
   transform: translateX(50%)
@@ -36,6 +35,8 @@ tooltip-background = rgba(0,0,0,0.95)
   color: primary-background
   white-space: pre
   word-wrap: break-word
+  cursor: text
+  user-select: text;
 
 .tooltip::before
   position: absolute
@@ -50,8 +51,9 @@ tooltip-background = rgba(0,0,0,0.95)
   border-bottom-color: tooltip-background
 
 .tooltip.top
-  margin-top: -12px
+  top: 0
   transform: translateX(50%) translateY(-100%)
+  margin-top: -6px
   
 .tooltip.top::before
   border-top-color: tooltip-background
@@ -84,15 +86,12 @@ tooltip-background = rgba(0,0,0,0.95)
   transform: translateX(0) translateY(-100%)
   &::before
     transform: translateX(0) translateY(100%)
-
-.tooltip.persistent
-  font-weight: bold
   
 // custom tooltips
 .tooltip.newStuff
   background-color: notification
   right: 32px
-  top: 10%
+  font-weight: bold
 
 .tooltip.newStuff::before
   border-top-color: notification
@@ -103,8 +102,8 @@ tooltip-background = rgba(0,0,0,0.95)
 .fallback.tooltip::after
   opacity: 0
 
-.tooltip-container:hover,
-.tooltip-container-button:hover
+.tooltipContainer:hover,
+.tooltipContainer-button:hover
   .fallback.tooltip::before,
   .fallback.tooltip::after
     opacity: 1
@@ -186,3 +185,18 @@ tooltip-background = rgba(0,0,0,0.95)
 
 .fallback.tooltip.persistent::after
   font-weight: bold
+  
+.invisibleHoverTarget
+  position: absolute
+  left: 0
+  transform: translateY(-7px)
+  display: block
+  width: 100%
+  height: 100%
+  opacity: 0
+  // don't show pointer
+  cursor: default
+  &.top
+    top: 0
+  &.persistent
+    display: none

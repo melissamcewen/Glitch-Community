@@ -9,13 +9,13 @@ import { UserLink, TeamLink } from 'Components/link';
 import styles from './profile-list.styl';
 
 const UserItem = ({ user }) => (
-  <UserLink user={user}>
+  <UserLink user={user} draggable={false}>
     <UserAvatar user={user} />
   </UserLink>
 );
 
 const TeamItem = ({ team }) => (
-  <TeamLink team={team}>
+  <TeamLink team={team} draggable={false}>
     <TeamAvatar team={team} />
   </TeamLink>
 );

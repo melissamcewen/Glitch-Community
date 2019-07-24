@@ -9,6 +9,8 @@ import Note from 'Components/collection/note';
 import Grid from 'Components/containers/grid';
 import Row from 'Components/containers/row';
 import classNames from 'classnames/bind';
+import SkipSectionButtons from 'Components/containers/skip-section-buttons';
+import Emoji from 'Components/images/emoji';
 
 import styles from './projects-list.styl';
 
@@ -46,6 +48,7 @@ function ProjectsList({
   projects,
   layout,
   title,
+  titleEmoji,
   placeholder,
   enableFiltering,
   enablePagination,
@@ -58,33 +61,50 @@ function ProjectsList({
   dataCy,
 }) {
   const matchFn = (project, filter) => project.domain.includes(filter) || project.description.toLowerCase().includes(filter);
+
+  const makeTitle = () => {
+    if (!titleEmoji) {
+      return title;
+    }
+    return (
+      <>
+        {title} <Emoji inTitle name={titleEmoji} />
+      </>
+    );
+  };
+
   return (
-    <FilterController matchFn={matchFn} enabled={enableFiltering} placeholder={placeholder} searchPrompt="find a project" label="project search" items={projects}>
+    <FilterController
+      matchFn={matchFn}
+      enabled={enableFiltering}
+      placeholder={placeholder}
+      searchPrompt="find a project"
+      label="project search"
+      items={projects}
+    >
       {({ filterInput, filterHeaderStyles, renderItems }) => (
         <article className={classNames(styles.projectsContainer)} data-cy={dataCy}>
           <div className={filterHeaderStyles}>
-            {title && <Heading tagName="h2">{title}</Heading>}
+            {title && <Heading tagName="h2">{makeTitle()}</Heading>}
             {filterInput}
           </div>
-          {renderItems((filteredProjects) => (
-            <PaginationController
-              enabled={enablePagination}
-              items={filteredProjects}
-              itemsPerPage={projectsPerPage}
-            >
-              {(paginatedProjects) => (
-                <ProjectsUL
-                  projects={paginatedProjects}
-                  collection={collection}
-                  noteOptions={noteOptions}
-                  layout={layout}
-                  sortable={enableSorting && paginatedProjects.length === projects.length}
-                  onReorder={onReorder}
-                  projectOptions={projectOptions}
-                />
-              )}
-            </PaginationController>
-          ))}
+          <SkipSectionButtons sectionName={title}>
+            {renderItems((filteredProjects) => (
+              <PaginationController enabled={enablePagination} items={filteredProjects} itemsPerPage={projectsPerPage}>
+                {(paginatedProjects) => (
+                  <ProjectsUL
+                    projects={paginatedProjects}
+                    collection={collection}
+                    noteOptions={noteOptions}
+                    layout={layout}
+                    sortable={enableSorting && paginatedProjects.length === projects.length}
+                    onReorder={onReorder}
+                    projectOptions={projectOptions}
+                  />
+                )}
+              </PaginationController>
+            ))}
+          </SkipSectionButtons>
         </article>
       )}
     </FilterController>
@@ -94,7 +114,8 @@ function ProjectsList({
 ProjectsList.propTypes = {
   projects: PropTypes.array.isRequired,
   layout: PropTypes.oneOf(['row', 'grid', 'gridCompact']).isRequired,
-  title: PropTypes.node,
+  title: PropTypes.string,
+  titleEmoji: PropTypes.string,
   placeholder: PropTypes.node,
   enableFiltering: PropTypes.bool,
   enablePagination: PropTypes.bool,
@@ -107,7 +128,8 @@ ProjectsList.propTypes = {
 };
 
 ProjectsList.defaultProps = {
-  title: null,
+  title: undefined,
+  titleEmoji: undefined,
   placeholder: null,
   enableFiltering: false,
   enablePagination: false,

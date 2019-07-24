@@ -124,7 +124,6 @@ function CollectionsListWithDevToggle(props) {
   return myStuffEnabled ? <CollectionsListWithMyStuff {...props} /> : <CollectionsList {...props} />;
 }
 
-
 const UserPage = ({ user: initialUser }) => {
   const [user, funcs] = useUserEditor(initialUser);
   const {
@@ -199,11 +198,8 @@ const UserPage = ({ user: initialUser }) => {
         <ProjectsList
           dataCy="pinned-projects"
           layout="grid"
-          title={
-            <>
-              Pinned Projects <Emoji inTitle name="pushpin" />
-            </>
-          }
+          title="Pinned Projects"
+          titleEmoji="pushpin"
           projects={pinnedProjects}
           projectOptions={projectOptions}
         />

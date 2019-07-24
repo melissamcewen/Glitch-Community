@@ -7,15 +7,7 @@ import TooltipContainer from 'Components/tooltips/tooltip-container';
 import { UserAvatar, ProjectAvatar } from 'Components/images/avatar';
 import { UserLink } from 'Components/link';
 import Thanks from 'Components/thanks';
-import {
-  PopoverContainer,
-  PopoverDialog,
-  PopoverActions,
-  PopoverInfo,
-  MultiPopover,
-  MultiPopoverTitle,
-  ActionDescription,
-} from 'Components/popover';
+import { PopoverContainer, PopoverDialog, PopoverActions, PopoverInfo, MultiPopover, MultiPopoverTitle, ActionDescription } from 'Components/popover';
 import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
 import Loader from 'Components/loader';
@@ -60,11 +52,7 @@ const ProjectsList = ({ options, value, onChange }) => (
 
 const AdminBadge = () => (
   <div className={styles.statusBadge}>
-    <TooltipContainer
-      type="info"
-      target={<span className={styles.adminStatus}>Team Admin</span>}
-      tooltip="Can edit team info and billing"
-    />
+    <TooltipContainer type="info" target={<span className={styles.adminStatus}>Team Admin</span>} tooltip="Can edit team info and billing" />
   </div>
 );
 
@@ -113,7 +101,7 @@ function TeamUserRemovePop({ user, onRemoveUser, userTeamProjects }) {
         <Button type="dangerZone" onClick={() => onRemoveUser(projectsToRemove)}>
           Remove{' '}
           <span className={styles.tinyAvatar}>
-            <UserAvatar user={user} />
+            <UserAvatar user={user} withinButton />
           </span>
         </Button>
       </PopoverActions>
@@ -138,7 +126,7 @@ const TeamUserInfo = ({ user, team, onMakeAdmin, onRemoveAdmin, onRemoveUser }) 
       <PopoverInfo>
         <div className={styles.userProfile}>
           <UserLink user={user}>
-            <UserAvatar user={user} />
+            <UserAvatar user={user} hideTooltip />
           </UserLink>
           <div className={styles.userInfo}>
             <div className={styles.userName}>{user.name || 'Anonymous'}</div>
