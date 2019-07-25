@@ -17,6 +17,7 @@
     "./src/polyfills.js"
   ],
   "scripts": {
+    "lint": "eslint --config server/.eslintrc.server.js server shared webpack.config.js",
     "prestart": "nodemon --watch server --watch shared --exec 'eslint --config server/.eslintrc.server.js server shared webpack.config.js' &",
     "start": "nodemon --watch server --watch shared --watch views --exec 'forever --minUptime 5000 --spinSleepTime 5000' ./server/server.js",
     "storybook": "build-storybook -c storybook-config -o build/storybook"
