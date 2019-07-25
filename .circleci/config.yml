@@ -28,7 +28,7 @@ jobs:
           command: npm run lint
       - run:
           name: integration tests
-          command: npm ci:cy
+          command: npm run ci:cy
           environment:
             CYPRESS_SCREENSHOTS_FOLDER: /tmp/circleci-artifacts/screenshots
             CYPRESS_VIDEOS_FOLDER: /tmp/circleci-artifacts/videos
