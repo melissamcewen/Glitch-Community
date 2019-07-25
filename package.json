@@ -20,7 +20,9 @@
     "lint": "eslint --config server/.eslintrc.server.js server shared webpack.config.js",
     "prestart": "nodemon --watch server --watch shared --exec 'eslint --config server/.eslintrc.server.js server shared webpack.config.js' &",
     "start": "nodemon --watch server --watch shared --watch views --exec 'forever --minUptime 5000 --spinSleepTime 5000' ./server/server.js",
-    "storybook": "build-storybook -c storybook-config -o build/storybook"
+    "storybook": "build-storybook -c storybook-config -o build/storybook",
+    "cy:run": "bash ./sh/cypress-ci.sh",
+    "ci:cy": "start-server-and-test start http://localhost:8000 cy:run"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
@@ -112,7 +114,8 @@
     "webpack": "^4.35.0",
     "webpack-cli": "^3.3.5",
     "webpack-dev-middleware": "^3.7.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "start-server-and-test": "^1.9.1"
   },
   "engines": {
     "node": "10.x"
