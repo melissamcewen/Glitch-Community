@@ -18,12 +18,11 @@
   ],
   "scripts": {
     "lint": "eslint --config server/.eslintrc.server.js server shared webpack.config.js",
-    "prestart": "nodemon --watch server --watch shared --exec 'npm run lint' &",
+    "prestart": "nodemon --watch server --watch shared --exec 'eslint --config server/.eslintrc.server.js server shared webpack.config.js' &",
     "start": "nodemon --watch server --watch shared --watch views --exec 'forever --minUptime 5000 --spinSleepTime 5000' ./server/server.js",
     "storybook": "build-storybook -c storybook-config -o build/storybook",
-    "cypress:ci": "bash ./sh/cypress-ci.sh",
-    "ci:start": "nodemon --watch server --watch shared --watch views --exec 'forever --minUptime 5000 --spinSleepTime 5000' ./server/server.js",
-    "ci:start-and-cypress": "start-server-and-test ci:start http://localhost:8000 cypress:ci"
+    "cy:run": "bash ./sh/cypress-ci.sh",
+    "ci:cy": "start-server-and-test start http://localhost:8000 cy:run"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
@@ -39,7 +38,7 @@
     "algoliasearch": "^3.33.0",
     "autoprefixer-stylus": "^0.14.0",
     "axios": "^0.19.0",
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^7.2.3",
     "babel-loader": "^8.0.5",
     "babel-plugin-lodash": "^3.3.4",
     "babel-preset-modern-browsers": "^14.0.0",
