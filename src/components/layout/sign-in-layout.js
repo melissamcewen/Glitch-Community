@@ -50,7 +50,7 @@ const SignInLayout = () => {
         </section>
         <section className={styles.content}>
           {page === 'main' && (
-            <>
+            <React.Fragment>
               <div className={styles.oAuth}>
                 <div>
                   <div className={styles.signInButtons}>
@@ -73,10 +73,10 @@ const SignInLayout = () => {
               <div className={styles.passwordAuth}>
                 <Image src={keyImageUrl} alt="Door and key illustration" width={200} />
               </div>
-            </>
+            </React.Fragment>
           )}
           {page === 'magic' && (
-            <>
+            <React.Fragment>
               <div className={styles.getCode}>
                 <GetMagicCode />
                 <TermsAndConditions />
@@ -84,7 +84,7 @@ const SignInLayout = () => {
               <div className={styles.useCode}>
                 <UseMagicCode />
               </div>
-            </>
+            </React.Fragment>
           )}
         </section>
       </div>

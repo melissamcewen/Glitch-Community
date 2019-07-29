@@ -63,12 +63,12 @@ function RelatedProjects({ project }) {
           <DataLoader get={(api) => getProjects(api, { type: 'team', id: team.id, ignoreProjectId })}>
             {(projects) =>
               projects && projects.length > 0 && (
-                <>
+                <React.Fragment>
                   <h2>
                     <TeamLink team={team}>More by {team.name} <Arrow /></TeamLink>
                   </h2>
                   <RelatedProjectsBody projects={projects} type="team" item={team} />
-                </>
+                </React.Fragment>
               )
             }
           </DataLoader>
@@ -79,12 +79,12 @@ function RelatedProjects({ project }) {
           <DataLoader get={(api) => getProjects(api, { type: 'user', id: user.id, ignoreProjectId })}>
             {(projects) =>
               projects && projects.length > 0 && (
-                <>
+                <React.Fragment>
                   <h2>
                     <UserLink user={user}>More by {getDisplayName(user)} <Arrow /></UserLink>
                   </h2>
                   <RelatedProjectsBody projects={projects} type="user" item={user} />
-                </>
+                </React.Fragment>
               )
             }
           </DataLoader>

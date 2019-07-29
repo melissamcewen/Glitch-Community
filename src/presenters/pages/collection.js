@@ -35,7 +35,7 @@ const CollectionPageContents = withRouter(({ history, collection: initialCollect
     },
   };
   return (
-    <>
+    <React.Fragment>
       <Helmet title={collection.name} />
       <main id="main">
         <CollectionContainer collection={collection} showFeaturedProject isAuthorized={currentUserIsAuthor} funcs={funcs} />
@@ -47,7 +47,7 @@ const CollectionPageContents = withRouter(({ history, collection: initialCollect
         }
       </main>
       <MoreCollectionsContainer collection={collection} />
-    </>
+    </React.Fragment>
   );
 });
 

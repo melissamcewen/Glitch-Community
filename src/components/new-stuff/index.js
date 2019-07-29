@@ -104,11 +104,11 @@ const NewStuff = ({ children }) => {
     };
 
     return (
-      <>
+      <React.Fragment>
         {children(show)}
         {pupVisible && <NewStuffPrompt onClick={show} />}
         {visible && <OverlayBackground />}
-      </>
+      </React.Fragment>
     );
   };
 

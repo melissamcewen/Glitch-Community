@@ -23,7 +23,7 @@ function truncateTag(tag) {
 }
 
 const QuestionItem = ({ colorOuter, colorInner, domain, question, tags, userAvatar, userColor, userLogin, path, line, character }) => (
-  <>
+  <React.Fragment>
     <Image className={styles.helpIcon} src={iconHelp} alt="Help icon" />
     <Link
       to={getEditorUrl(domain, path, line, character)}
@@ -50,7 +50,7 @@ const QuestionItem = ({ colorOuter, colorInner, domain, question, tags, userAvat
         </div>
       </div>
     </Link>
-  </>
+  </React.Fragment>
 );
 QuestionItem.propTypes = {
   colorOuter: PropTypes.string.isRequired,

@@ -99,7 +99,7 @@ function TeamAnalyticsProjectDetails({ activeFilter, id, currentProjectDomain })
 
   const projectRemixes = projectDetails.remixes.slice(0, RECENT_REMIXES_COUNT);
   return (
-    <>
+    <React.Fragment>
       <ProjectDetails projectDetails={projectDetails} />
       {activeFilter === 'remixes' && (
         <article>
@@ -110,7 +110,7 @@ function TeamAnalyticsProjectDetails({ activeFilter, id, currentProjectDomain })
           ))}
         </article>
       )}
-    </>
+    </React.Fragment>
   );
 }
 

@@ -14,12 +14,12 @@ const ProfileAvatar = ({ user }) => <Image className={styles.avatar} src={getAva
 
 const NameAndLogin = ({ user }) =>
   user.name ? (
-    <>
+    <React.Fragment>
       <div className={styles.itemButtonWrap}>
         <Button decorative>{user.name}</Button>
       </div>
       <div className={styles.login}>@{user.login}</div>
-    </>
+    </React.Fragment>
   ) : (
     <div className={styles.itemButtonWrap}>
       <Button decorative>@{user.login}</Button>

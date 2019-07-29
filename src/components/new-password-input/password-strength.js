@@ -8,10 +8,10 @@ import styles from './password-strength.styl';
 
 const PasswordStrength = ({ strength }) => {
   const labels = {
-    0: <><Emoji name="faceExpressionless" /> weak</>,
-    1: <><Emoji name="faceSlightlySmiling" /> okay</>,
-    2: <><Emoji name="faceSlightlySmiling" /> okay</>,
-    3: <><Emoji name="bicep" /> strong</>,
+    0: <React.Fragment><Emoji name="faceExpressionless" /> weak</React.Fragment>,
+    1: <React.Fragment><Emoji name="faceSlightlySmiling" /> okay</React.Fragment>,
+    2: <React.Fragment><Emoji name="faceSlightlySmiling" /> okay</React.Fragment>,
+    3: <React.Fragment><Emoji name="bicep" /> strong</React.Fragment>,
   };
   return (
     <div className={styles.container}>

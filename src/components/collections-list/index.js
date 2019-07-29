@@ -65,7 +65,7 @@ function CollectionsList({
       items={orderedCollections}
     >
       {({ filterInput, filterHeaderStyles, renderItems }) => (
-        <>
+        <React.Fragment>
           <article data-cy="collections" className={styles.collections}>
             <div className={filterHeaderStyles}>
               <Heading tagName="h2">{title}</Heading>
@@ -73,10 +73,10 @@ function CollectionsList({
             </div>
 
             {canMakeCollections && (
-              <>
+              <React.Fragment>
                 <CreateCollectionButton team={maybeTeam} />
                 {!hasCollections && <CreateFirstCollection />}
-              </>
+              </React.Fragment>
             )}
 
             {renderItems((filteredProjects) => (
@@ -106,7 +106,7 @@ function CollectionsList({
               </PaginationController>
             ))}
           </article>
-        </>
+        </React.Fragment>
       )}
     </FilterController>
   );

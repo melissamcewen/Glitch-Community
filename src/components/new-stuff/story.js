@@ -30,8 +30,8 @@ story.add('Many Articles', () => (
 ));
 
 story.add('Update Pup', () => (
-  <>
+  <React.Fragment>
     <NewStuffPup />
     <NewStuffPrompt onClick={() => alert('woof')} />
-  </>
+  </React.Fragment>
 ));

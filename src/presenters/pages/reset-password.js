@@ -67,10 +67,10 @@ const ResetPasswordForm = ({ resetPasswordToken }) => {
     <AuthLayout>
       <Text>Enter a new password</Text>
       {state.error ? (
-        <>
+        <React.Fragment>
           <Notification type="error" persistent>Error</Notification>
           <Text>{state.error}</Text>
-        </>
+        </React.Fragment>
       ) : (
         <form onSubmit={onSubmit}>
           <NewPasswordInput disabled={state.working} onChange={setPassword} />

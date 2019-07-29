@@ -89,17 +89,17 @@ const TwoFactorSettings = () => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Heading tagName="h2">Two-Factor Authentication</Heading>
       <Text>Protect your account with an additional layer of security.</Text>
       {twoFactorEnabled ? (
-        <>
+        <React.Fragment>
           {done && <Notification type="success" persistent>Successfully enabled two-factor authentication</Notification>}
           <Button type="tertiary" size="small" disabled={working} onClick={disableTwoFactor}>Disable Authenticator App</Button>
           <Heading tagName="h3">Backup Codes</Heading>
           <Text>Keep these somewhere safe in case you lose your authenticator</Text>
           {backupCodes ? (
-            <>
+            <React.Fragment>
               {backupCodes.length > 0 && (
                 <ul className={styles.backupCodes}>
                   {backupCodes.map((backupCode) => (
@@ -110,11 +110,11 @@ const TwoFactorSettings = () => {
                 </ul>
               )}
               <Button type="tertiary" size="small" onClick={resetBackupCodes}>Generate New Codes</Button>
-            </>
+            </React.Fragment>
           ) : <Loader />}
-        </>
+        </React.Fragment>
       ) : (
-        <>
+        <React.Fragment>
           {done && <Notification type="success" persistent>Successfully disabled two-factor authentication</Notification>}
           <Button type="tertiary" size="small" disabled={!!secret || working} onClick={generateSecret}>Enable Authenticator App</Button>
           {secret &&
@@ -124,9 +124,9 @@ const TwoFactorSettings = () => {
               <Button type="tertiary" size="small" disabled={code.length < 6 || working} submit>Verify Initial Code</Button>
             </form>
           }
-        </>
+        </React.Fragment>
       )}
-    </>
+    </React.Fragment>
   );
 };
 

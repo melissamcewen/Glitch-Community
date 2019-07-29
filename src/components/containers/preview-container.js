@@ -12,7 +12,7 @@ const PreviewContainer = ({ children, get, onPublish, previewMessage }) => {
   return (
     <DataLoader get={get}>
       {(data) => (
-        <>
+        <React.Fragment>
           <div className={styles.previewBanner}>
             <div className={styles.previewBannerMessage}>
               {previewMessage}
@@ -28,7 +28,7 @@ const PreviewContainer = ({ children, get, onPublish, previewMessage }) => {
             )}
           </div>
           {children(data)}
-        </>
+        </React.Fragment>
       )}
     </DataLoader>
   );

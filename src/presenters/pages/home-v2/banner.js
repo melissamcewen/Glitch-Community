@@ -29,12 +29,12 @@ const OverlayVideo = () => {
       togglePopover();
     };
     return (
-      <>
+      <React.Fragment>
         <Button onClick={onClick} emoji="playButton">
           Watch Video
         </Button>
         {visible && <OverlayBackground />}
-      </>
+      </React.Fragment>
     );
   };
 
@@ -59,14 +59,14 @@ const InlineVideo = () => {
       {showVideo ? (
         <WistiaVideo videoId="z2ksbcs34d" />
       ) : (
-        <>
+        <React.Fragment>
           <div className={styles.bannerVideoPoster} onClick={onClick} aria-hidden="true" />
           <span className={styles.bannerVideoButton}>
             <Button onClick={onClick} emoji="playButton">
               Watch Video
             </Button>
           </span>
-        </>
+        </React.Fragment>
       )}
     </div>
   );

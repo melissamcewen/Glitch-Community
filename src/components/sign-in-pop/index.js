@@ -74,20 +74,20 @@ const ForgotPasswordHandler = ({ align }) => {
           </form>
         )}
         {isDone && !errorMessage && (
-          <>
+          <React.Fragment>
             <Notification type="success" persistent>
               Almost Done
             </Notification>
             <div>Reset your password by clicking the link sent to {email}.</div>
-          </>
+          </React.Fragment>
         )}
         {isDone && errorMessage && (
-          <>
+          <React.Fragment>
             <Notification type="error" persistent>
               Error
             </Notification>
             <div>{errorMessage}</div>
-          </>
+          </React.Fragment>
         )}
       </PopoverActions>
     </PopoverDialog>
@@ -154,20 +154,20 @@ const EmailHandler = ({ align, showView }) => {
         )}
         {status === 'loading' && <Loader />}
         {status === 'done' && (
-          <>
+          <React.Fragment>
             <Notification persistent type="success">
               Almost Done
             </Notification>
             <div>Finish signing in from the email sent to {email}.</div>
-          </>
+          </React.Fragment>
         )}
         {status === 'error' && (
-          <>
+          <React.Fragment>
             <Notification persistent type="error">
               Error
             </Notification>
             <div>{submitError}</div>
-          </>
+          </React.Fragment>
         )}
       </PopoverActions>
       {status === 'done' && <SignInCodeSection onClick={showView.signInCode} />}
@@ -231,12 +231,12 @@ const SignInWithCode = ({ align, showTwoFactor }) => {
           </Notification>
         )}
         {status === 'error' && (
-          <>
+          <React.Fragment>
             <Notification persistent type="error">
               Error
             </Notification>
             <div>Code not found or already used. Try signing in with email.</div>
-          </>
+          </React.Fragment>
         )}
       </PopoverActions>
     </PopoverDialog>

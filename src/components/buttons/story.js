@@ -52,7 +52,7 @@ storiesOf('Button', module)
   .add(
     `checkbox`,
     withState(false, ({ state, setState }) => (
-      <>
+      <React.Fragment>
         <CheckboxButton value={state} onChange={setState}>
           Click to toggle!
         </CheckboxButton>
@@ -61,7 +61,7 @@ storiesOf('Button', module)
             <input type="checkbox" checked={state} onChange={(evt) => setState(evt.target.checked)} />← linked state
           </label>
         </p>
-      </>
+      </React.Fragment>
     )),
   )
   .add('BookmarkButton', () => (

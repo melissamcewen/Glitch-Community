@@ -304,7 +304,7 @@ function ScreencapSection({ title, description, video, smallVideos, blob, image,
   );
 
   const Info = () => (
-    <>
+    <React.Fragment>
       <Heading className={styles.h2} tagName="h2">
         <Mark color={markColor}>{title}</Mark>
       </Heading>
@@ -312,7 +312,7 @@ function ScreencapSection({ title, description, video, smallVideos, blob, image,
       <Text className={classNames(styles.sectionDescription, styles.screencapDescription)} size="16px">
         {description}
       </Text>
-    </>
+    </React.Fragment>
   );
 
   return (

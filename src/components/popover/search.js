@@ -88,7 +88,7 @@ function PopoverSearch({
 }) {
   const { inputRef, activeIndex } = useActiveIndex(results, onSubmit);
   return (
-    <>
+    <React.Fragment>
       <PopoverInfo>
         <TextInput
           ref={inputRef}
@@ -111,7 +111,7 @@ function PopoverSearch({
       {status === 'loading' && value.length > 0 && results.length === 0 && renderLoader()}
       {status === 'ready' && value.length > 0 && results.length === 0 && renderNoResults()}
       {status === 'error' && renderError()}
-    </>
+    </React.Fragment>
   );
 }
 

@@ -57,23 +57,23 @@ const MoreCollections = ({ currentCollection, collections }) => {
   const isUserCollection = currentCollection.teamId === -1;
   const type = isUserCollection ? 'user' : 'team';
   return (
-    <>
+    <React.Fragment>
       <div className={styles.moreByLinkWrap}>
         <Heading tagName="h2">
           {curator.status === 'ready' ? (
-            <>
+            <React.Fragment>
               {curator.value.user && <UserLink user={curator.value.user}>More by {getDisplayName(curator.value.user)} <Arrow /></UserLink>}
               {curator.value.team && <TeamLink team={curator.value.team}>More from {curator.value.team.name} <Arrow /></TeamLink>}
-            </>
+            </React.Fragment>
           ) : (
-            <>More collections</>
+            <React.Fragment>More collections</React.Fragment>
           )}
         </Heading>
       </div>
       <CoverContainer type={type} item={currentCollection[type]}>
         <Row items={collectionsWithProjects}>{(collection) => <SmallCollectionItem key={collection.id} collection={collection} />}</Row>
       </CoverContainer>
-    </>
+    </React.Fragment>
   );
 };
 

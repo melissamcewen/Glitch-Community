@@ -75,13 +75,13 @@ const AlreadyInCollection = ({ project, collections }) => (
       ))
       .reduce((prev, curr) => [prev, ', ', curr])}
     {collections.length > 3 && (
-      <>
+      <React.Fragment>
         , and{' '}
         <div className={styles.moreCollectionsBadge}>
           <Badge>{collections.length - 3}</Badge>
         </div>{' '}
         <Pluralize count={collections.length - 3} singular="other" showCount={false} />
-      </>
+      </React.Fragment>
     )}
   </InfoDescription>
 );

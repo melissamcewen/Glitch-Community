@@ -69,12 +69,12 @@ const TeamMarketing = () => (
 );
 
 const NameConflictWarning = ({ id }) => (
-  <>
+  <React.Fragment>
     <Text>This team has your name. You should update your info to remain unique <Emoji name="sparkles" /></Text>
     <Button size="small" type="tertiary" href={`/user/${id}`}>
       Your Profile
     </Button>
-  </>
+  </React.Fragment>
 );
 
 const teamConflictsWithUser = (team, currentUser) => {
@@ -170,9 +170,9 @@ function TeamPage({ team: initialTeam }) {
         <ProjectsList
           layout="grid"
           title={
-            <>
+            <React.Fragment>
               Pinned Projects <Emoji inTitle name="pushpin" />
-            </>
+            </React.Fragment>
           }
           projects={pinnedProjects}
           isAuthorized={currentUserIsOnTeam}
@@ -220,10 +220,10 @@ function TeamPage({ team: initialTeam }) {
       {currentUserIsTeamAdmin && <DeleteTeam team={team} />}
 
       {!currentUserIsOnTeam && (
-        <>
+        <React.Fragment>
           <ReportButton reportedType="team" reportedModel={team} />
           <TeamMarketing />
-        </>
+        </React.Fragment>
       )}
     </main>
   );

@@ -79,7 +79,7 @@ const PageChangeHandler = withRouter(({ location }) => {
 });
 
 const Router = () => (
-  <>
+  <React.Fragment>
     <PageChangeHandler />
     <Switch>
       <Route path="/" exact render={({ location }) => <NewHomePage key={location.key} />} />
@@ -181,7 +181,7 @@ const Router = () => (
 
       <Route render={({ location }) => <NotFoundPage key={location.key} />} />
     </Switch>
-  </>
+  </React.Fragment>
 );
 
 export default Router;

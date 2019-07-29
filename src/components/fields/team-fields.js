@@ -27,21 +27,21 @@ const TeamFields = ({ team, updateName, updateUrl }) => {
   const { currentUser } = useCurrentUser();
   const isTeamAdmin = userIsTeamAdmin({ user: currentUser, team });
   return isTeamAdmin ? (
-    <>
+    <React.Fragment>
       <Heading tagName="h1">
         <TeamNameInput name={team.name} onChange={updateName} verified={team.isVerified} />
       </Heading>
       <p className={styles.teamUrl}>
         <TeamUrlInput url={team.url} onChange={(url) => updateUrl(url)} />
       </p>
-    </>
+    </React.Fragment>
   ) : (
-    <>
+    <React.Fragment>
       <Heading tagName="h1">
         {team.name} {team.isVerified && <VerifiedBadge />}
       </Heading>
       <p className={styles.teamUrl}>@{team.url}</p>
-    </>
+    </React.Fragment>
   );
 };
 

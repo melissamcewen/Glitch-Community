@@ -68,12 +68,12 @@ function Questions({ max }) {
             <Grid items={questions}>{(question) => <QuestionItem {...question} />}</Grid>
           </ErrorBoundary>
         ) : (
-          <>
+          <React.Fragment>
             {kaomoji} Looks like nobody is asking for help right now.{' '}
             <Link className={styles.link} to="/help/how-can-i-get-help-with-code-in-my-project/">
               Learn about helping
             </Link>
-          </>
+          </React.Fragment>
         )}
       </div>
     </section>

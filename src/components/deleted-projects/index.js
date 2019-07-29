@@ -120,12 +120,12 @@ function DeletedProjects({ deletedProjects, setDeletedProjects, undelete, user }
     return 'nothing found';
   }
   return (
-    <>
+    <React.Fragment>
       <DeletedProjectsList deletedProjects={deletedProjects} undelete={undelete} />
       <Button type="tertiary" onClick={clickHide}>
         Hide Deleted Projects
       </Button>
-    </>
+    </React.Fragment>
   );
 }
 

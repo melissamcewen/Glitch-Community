@@ -66,12 +66,12 @@ const UseMagicCode = () => {
         </Notification>
       )}
       {status === 'error' && (
-        <>
+        <React.Fragment>
           <Notification persistent type="error">
             Error
           </Notification>
           <Text>Code not found or already used. Try signing in with email.</Text>
-        </>
+        </React.Fragment>
       )}
     </div>
   );

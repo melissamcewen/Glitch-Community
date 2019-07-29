@@ -45,10 +45,10 @@ const IncludedInCollections = ({ projectId }) => (
   <DataLoader get={(api) => getAllPages(api, `/v1/projects/by/id/collections?id=${projectId}&limit=100`)} renderLoader={() => null}>
     {(collections) =>
       collections.length > 0 && (
-        <>
+        <React.Fragment>
           <Heading tagName="h2">Included in Collections</Heading>
           <Row items={filteredCollections(collections)}>{(collection) => <CollectionItem collection={collection} showCurator />}</Row>
-        </>
+        </React.Fragment>
       )
     }
   </DataLoader>
@@ -56,11 +56,11 @@ const IncludedInCollections = ({ projectId }) => (
 
 const ReadmeError = (error) =>
   error && error.response && error.response.status === 404 ? (
-    <>
+    <React.Fragment>
       This project would be even better with a <code>README.md</code>
-    </>
+    </React.Fragment>
   ) : (
-    <>We couldn{"'"}t load the readme. Try refreshing?</>
+    <React.Fragment>We couldn{"'"}t load the readme. Try refreshing?</React.Fragment>
   );
 const ReadmeLoader = withRouter(({ domain, location }) => (
   <DataLoader get={(api) => api.get(`projects/${domain}/readme`)} renderError={ReadmeError}>
@@ -234,10 +234,10 @@ const ProjectPageContainer = ({ name: domain }) => (
       <DataLoader get={(api) => getProjectByDomain(api, domain).then(addProjectBreadcrumb)} renderError={() => <NotFound name={domain} />}>
         {(project) =>
           project ? (
-            <>
+            <React.Fragment>
               <Helmet title={project.domain} />
               <ProjectPage project={project} />
-            </>
+            </React.Fragment>
           ) : (
             <NotFound name={domain} />
           )

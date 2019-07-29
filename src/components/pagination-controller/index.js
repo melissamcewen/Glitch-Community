@@ -94,7 +94,7 @@ function PaginationController({ enabled, items, itemsPerPage, fetchDataOptimisti
 
   return (
     (
-      <>
+      <React.Fragment>
         {children(items, state.expanded)}
         {canPaginate && (
           <div className={styles.controls}>
@@ -115,7 +115,7 @@ function PaginationController({ enabled, items, itemsPerPage, fetchDataOptimisti
             </Button>
           </div>
         )}
-      </>
+      </React.Fragment>
     )
   );
 }

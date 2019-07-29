@@ -49,22 +49,22 @@ const NameAndLogin = ({ name, login, isAuthorized, updateName, updateLogin }) =>
       return <Heading tagName="h1">@{login}</Heading>;
     }
     return (
-      <>
+      <React.Fragment>
         <Heading tagName="h1">{name}</Heading>
         <Heading tagName="h2">@{login}</Heading>
-      </>
+      </React.Fragment>
     );
   }
   const editableName = name !== null ? name : '';
   return (
-    <>
+    <React.Fragment>
       <Heading tagName="h1">
         <UserNameInput name={editableName} onChange={updateName} />
       </Heading>
       <Heading tagName="h2">
         <UserLoginInput login={login} onChange={updateLogin} />
       </Heading>
-    </>
+    </React.Fragment>
   );
 };
 NameAndLogin.propTypes = {

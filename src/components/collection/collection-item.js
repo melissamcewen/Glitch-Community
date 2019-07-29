@@ -56,7 +56,7 @@ const CollectionProjects = ({ collection, isAuthorized }) => {
   }
 
   return (
-    <>
+    <React.Fragment>
       <div className={styles.projectsContainer}>
         <Row className={styles.projectsList} items={projects} count={3}>
           {(project) => <ProjectItemSmall project={project} />}
@@ -66,7 +66,7 @@ const CollectionProjects = ({ collection, isAuthorized }) => {
         {`View ${projects.length >= 3 ? 'all' : ''} `}
         <Pluralize count={projects.length} singular="project" /> <Arrow />
       </CollectionLink>
-    </>
+    </React.Fragment>
   );
 };
 

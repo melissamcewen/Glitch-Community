@@ -37,12 +37,12 @@ const Notification = ({ children, type, persistent, inline, remove }) => {
   });
 
   return (
-    <>
+    <React.Fragment>
       <LiveMessage aria-live="polite" message={message} />
       <aside ref={el} className={className} onAnimationEnd={remove}>
         {children}
       </aside>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -59,7 +59,7 @@ Notification.defaultProps = {
 };
 
 export const AddProjectToCollectionMsg = ({ projectDomain, collectionName, url }) => (
-  <>
+  <React.Fragment>
     <Text>
       {`Added ${projectDomain} `}
       {collectionName && `to collection ${collectionName}`}
@@ -69,7 +69,7 @@ export const AddProjectToCollectionMsg = ({ projectDomain, collectionName, url }
         Take me there
       </Button>
     )}
-  </>
+  </React.Fragment>
 );
 
 AddProjectToCollectionMsg.propTypes = {

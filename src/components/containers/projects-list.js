@@ -25,7 +25,7 @@ const ProjectsUL = ({ collection, projects, sortable, onReorder, noteOptions, la
   return (
     <Container itemClassName={styles.projectsItem} items={projects} sortable={sortable} onReorder={onReorder}>
       {(project) => (
-        <>
+        <React.Fragment>
           {collection && (
             <div className={styles.projectsContainerNote}>
               <Note
@@ -38,7 +38,7 @@ const ProjectsUL = ({ collection, projects, sortable, onReorder, noteOptions, la
             </div>
           )}
           <ProjectItem key={project.id} project={project} projectOptions={projectOptions} />
-        </>
+        </React.Fragment>
       )}
     </Container>
   );
@@ -67,9 +67,9 @@ function ProjectsList({
       return title;
     }
     return (
-      <>
+      <React.Fragment>
         {title} <Emoji inTitle name={titleEmoji} />
-      </>
+      </React.Fragment>
     );
   };
 

@@ -54,7 +54,7 @@ export const NotificationsProvider = (props) => {
     position: 'fixed',
   };
   return (
-    <>
+    <React.Fragment>
       <Provider value={funcs}>{props.children}</Provider>
       {!!notifications.length && (
         <div style={notificationsStyles}>
@@ -65,6 +65,6 @@ export const NotificationsProvider = (props) => {
           ))}
         </div>
       )}
-    </>
+    </React.Fragment>
   );
 };

@@ -42,10 +42,10 @@ const TwoFactorSignIn = ({ initialToken, onSuccess }) => {
 
   if (status.error) {
     return (
-      <>
+      <React.Fragment>
         <Notification type="error" persistent>Error</Notification>
         We couldn't sign you in
-      </>
+      </React.Fragment>
     );
   }
 

@@ -55,11 +55,11 @@ const Button = React.forwardRef(
     }, className);
 
     const content = (
-      <>
+      <React.Fragment>
         {children}
         {emoji && <ButtonEmoji emoji={emoji} position={imagePosition} />}
         {image && <ButtonImage image={image} position={imagePosition} />}
-      </>
+      </React.Fragment>
     );
 
     if (href) {

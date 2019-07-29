@@ -47,7 +47,7 @@ function useDebouncedState(initialState, timeout) {
 }
 
 const Success = () => (
-  <>
+  <React.Fragment>
     <PopoverTitle>Report Abuse</PopoverTitle>
     <PopoverActions>
       <Notification persistent type="success">Report Sent</Notification>
@@ -55,11 +55,11 @@ const Success = () => (
         Thanks for helping to keep Glitch a safe, friendly community <Emoji name="park" />
       </InfoDescription>
     </PopoverActions>
-  </>
+  </React.Fragment>
 );
 
 const Failure = ({ value }) => (
-  <>
+  <React.Fragment>
     <PopoverTitle>
       Failed to Send <Emoji name="sick" />
     </PopoverTitle>
@@ -71,7 +71,7 @@ const Failure = ({ value }) => (
     <PopoverActions>
       <textarea className={styles.manualReport} value={value} readOnly />
     </PopoverActions>
-  </>
+  </React.Fragment>
 );
 
 function ReportAbusePop({ reportedType, reportedModel }) {

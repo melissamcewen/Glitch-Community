@@ -170,17 +170,17 @@ storiesOf('Segmented-Buttons', module)
           {
             name: 'a',
             contents: (
-              <>
+              <React.Fragment>
                 <Badge>Normal</Badge> Badge
-              </>
+              </React.Fragment>
             ),
           },
           {
             name: 'b',
             contents: (
-              <>
+              <React.Fragment>
                 <Badge type="error">Error</Badge> Badge
-              </>
+              </React.Fragment>
             ),
           },
         ]}
@@ -333,10 +333,10 @@ storiesOf('Embed', module).add('regular', () => <Embed domain="community-staging
 const TopLeft = <h2>This project is bananas</h2>;
 const TopRight = <button>I am on top</button>;
 const BottomRight = (
-  <>
+  <React.Fragment>
     <button>one</button>
     <button>two</button>
-  </>
+  </React.Fragment>
 );
 const BottomLeft = <button>Everything you own in a box to the left</button>;
 const addProjectToCollection = () => {};
@@ -397,10 +397,10 @@ const team = {
 };
 
 const buttons = (
-  <>
+  <React.Fragment>
     <button>one</button>
     <button>two</button>
-  </>
+  </React.Fragment>
 );
 storiesOf('CoverContainer', module)
   .add('when passed a user', () => (

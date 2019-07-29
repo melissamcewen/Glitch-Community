@@ -7,10 +7,10 @@ import Progress from 'Components/fields/progress';
 import Text from 'Components/text/text';
 
 const NotifyUploading = ({ progress }) => (
-  <>
+  <React.Fragment>
     <Text>Uploading asset</Text>
     <Progress value={progress} />
-  </>
+  </React.Fragment>
 );
 const NotifyError = ({ error }) => {
   if (error && error.status_code === 0) {

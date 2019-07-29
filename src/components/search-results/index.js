@@ -23,10 +23,10 @@ const FilterContainer = ({ filters, activeFilter, setFilter }) => {
   const buttons = filters.map((filter) => ({
     name: filter.id,
     contents: (
-      <>
+      <React.Fragment>
         {filter.label}
         {filter.hits && <Badge>{filter.hits > filter.maxHits ? `${filter.maxHits}+` : filter.hits}</Badge>}
-      </>
+      </React.Fragment>
     ),
   }));
 

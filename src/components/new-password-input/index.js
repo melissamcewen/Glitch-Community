@@ -47,7 +47,7 @@ const NewPasswordInput = ({ disabled, onChange }) => {
   if (!weakPWs.includes(password)) {
     const hasCapScore = /^(?=.*[A-Z])/.test(password) ? 1 : 0;
     const hasNumScore = /^(?=.*\d)/.test(password) ? 1 : 0;
-    const hasCharScore = /[!@#$%^&*(),.?":{}|<>]/.test(password) ? 1 : 0;
+    const hasCharScore = /[!@#$%^&*(),.?":{}|<React.Fragment>]/.test(password) ? 1 : 0;
     pwStrength = hasCapScore + hasNumScore + hasCharScore;
   } else {
     weakPasswordError = true;
@@ -62,7 +62,7 @@ const NewPasswordInput = ({ disabled, onChange }) => {
   }, [password, password2, weakPasswordError]);
 
   return (
-    <>
+    <React.Fragment>
       <TextInput
         value={password}
         type="password"
@@ -94,7 +94,7 @@ const NewPasswordInput = ({ disabled, onChange }) => {
         disabled={disabled}
         error={passwordConfirmError ? matchErrorMsg : null}
       />
-    </>
+    </React.Fragment>
   );
 };
 

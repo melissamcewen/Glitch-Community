@@ -23,9 +23,9 @@ const TeamAnalyticsTimePopButton = ({ updateTimeFrame, currentTimeFrame }) => (
   <PopoverWithButton
     buttonProps={{ size: 'small', type: 'tertiary' }}
     buttonText={
-      <>
+      <React.Fragment>
         {currentTimeFrame} <div className="down-arrow" aria-label="options" />
-      </>
+      </React.Fragment>
     }
   >
     {({ toggleAndCall }) => <TeamAnalyticsTimePop updateTimeFrame={toggleAndCall(updateTimeFrame)} currentTimeFrame={currentTimeFrame} />}

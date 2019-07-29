@@ -33,12 +33,12 @@ const ResetPassword = () => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Heading tagName="h2">Reset Password</Heading>
       <Button type="tertiary" size="small" disabled={status.working} onClick={resetPassword}>Send Reset Password Email</Button>
       {status.done && <Notification type="success" persistent>Sent a reset code to {primaryEmail.email}</Notification>}
       {status.error && <Notification type="error" persistent>Something went wrong, check your inbox?</Notification>}
-    </>
+    </React.Fragment>
   );
 };
 
@@ -77,7 +77,7 @@ const PasswordSettings = () => {
   const canSubmit = !status.working && !!newPassword && (!!oldPassword || !currentUser.passwordEnabled);
 
   return (
-    <>
+    <React.Fragment>
       <Heading tagName="h2">{currentUser.passwordEnabled ? 'Change Password' : 'Set Password'}</Heading>
 
       <form className={styles.accountSettingsForm} onSubmit={updatePassword}>
@@ -96,7 +96,7 @@ const PasswordSettings = () => {
       </form>
 
       {currentUser.passwordEnabled && <ResetPassword />}
-    </>
+    </React.Fragment>
   );
 };
 

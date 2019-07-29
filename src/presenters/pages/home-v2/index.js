@@ -52,7 +52,7 @@ const FeatureCallouts = ({ content }) => (
   <HomeSection id="feature-callouts" className={styles.featureCalloutsContainer}>
     <Row items={content} className={styles.featureCalloutsRow} minWidth="175px">
       {({ label, description, backgroundSrc, href, id }) => (
-        <>
+        <React.Fragment>
           <Link to={href} className={classnames(styles.plainLink, styles.featureCalloutsHeader)}>
             <div className={styles.featureCalloutsImage} style={{ backgroundImage: `url('${backgroundSrc}')` }}>
               {React.createElement(calloutGraphics[id].component)}
@@ -62,7 +62,7 @@ const FeatureCallouts = ({ content }) => (
             </h2>
           </Link>
           <p>{description}</p>
-        </>
+        </React.Fragment>
       )}
     </Row>
   </HomeSection>
@@ -296,9 +296,9 @@ export const HomePreview = withRouter(({ history }) => {
         get={() => api.get('https://community-home-editor.glitch.me/home.json').then((res) => res.data)}
         onPublish={onPublish}
         previewMessage={
-          <>
+          <React.Fragment>
             This is a live preview of edits done with <Link to="https://community-home-editor.glitch.me">Community Home Editor.</Link>
-          </>
+          </React.Fragment>
         }
       >
         {(data) => <Home data={{ ...data, cultureZine: ZINE_POSTS.slice(0, 4) }} />}

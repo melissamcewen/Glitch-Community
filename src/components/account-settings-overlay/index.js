@@ -61,10 +61,10 @@ const AccountSettingsOverlay = () => {
 
 const AccountSettingsContainer = ({ children }) => {
   const renderOuter = ({ visible, openPopover }) => (
-    <>
+    <React.Fragment>
       {children(openPopover)}
       {visible && <OverlayBackground />}
-    </>
+    </React.Fragment>
   );
   return (
     <PopoverContainer outer={renderOuter}>

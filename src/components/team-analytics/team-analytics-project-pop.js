@@ -61,13 +61,13 @@ const TeamAnalyticsProjectPop = ({ projects, updateProjectDomain, currentProject
     buttonProps={{ size: 'small', type: 'tertiary' }}
     buttonText={
       currentProjectDomain ? (
-        <>
+        <React.Fragment>
           Project: {currentProjectDomain} <Dropdown />
-        </>
+        </React.Fragment>
       ) : (
-        <>
+        <React.Fragment>
           All Projects <Dropdown />
-        </>
+        </React.Fragment>
       )
     }
   >

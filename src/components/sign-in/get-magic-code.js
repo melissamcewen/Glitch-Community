@@ -68,20 +68,20 @@ const GetMagicCode = () => {
       )}
       {status === 'loading' && <Loader />}
       {status === 'done' && (
-        <>
+        <React.Fragment>
           <Notification persistent type="success">
             Almost Done
           </Notification>
           <div>Finish signing in from the email sent to {email}.</div>
-        </>
+        </React.Fragment>
       )}
       {status === 'error' && (
-        <>
+        <React.Fragment>
           <Notification persistent type="error">
             Error
           </Notification>
           <div>{submitError}</div>
-        </>
+        </React.Fragment>
       )}
     </div>
   );

@@ -14,10 +14,10 @@ import styles from './collection-result-item.styl';
 const ProfileItemWithData = ({ collection }) => {
   const { value: curator } = useCollectionCurator(collection);
   return (
-    <>
+    <React.Fragment>
       {curator ? (<VisuallyHidden>by</VisuallyHidden>) : null}
       <ProfileItem {...curator} size="small" />
-    </>
+    </React.Fragment>
   );
 };
 

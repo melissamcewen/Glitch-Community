@@ -12,13 +12,13 @@ import { useCollectionEditor } from 'State/collection';
 const CategoryPageWrap = ({ category: initialCategory }) => {
   const [category, { addProjectToCollection }] = useCollectionEditor(initialCategory);
   return (
-    <>
+    <React.Fragment>
       <Helmet title={category.name} />
       <main className="collection-page">
         <CollectionContainer collection={category} funcs={{ addProjectToCollection }} />
       </main>
       <MoreIdeas />
-    </>
+    </React.Fragment>
   );
 };
 

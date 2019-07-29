@@ -24,11 +24,11 @@ const App = () => (
               <APIContextProvider>
                 <ProjectContextProvider>
                   <CollectionContextProvider>
-                    <>
+                    <React.Fragment>
                       <SuperUserBanner />
                       <OfflineNotice />
                       <Router />
-                    </>
+                    </React.Fragment>
                   </CollectionContextProvider>
                 </ProjectContextProvider>
               </APIContextProvider>
