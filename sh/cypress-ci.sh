@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npx cypress open --config baseUrl=http://localhost:8000
+npx cypress run --config baseUrl=http://localhost port=8000
