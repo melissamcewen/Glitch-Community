@@ -23,7 +23,7 @@
     "storybook": "build-storybook -c storybook-config -o build/storybook",
     "cypress:ci": "bash ./sh/cypress-ci.sh",
     "ci:start": "forever --minUptime 5000 --spinSleepTime 5000 ./server/server.js",
-    "ci:start-and-cypress": "start-server-and-test ci:start http://localhost:8000 cypress:ci"
+    "ci:start-and-cypress": "start-server-and-test ci:start https://localhost:8000 cypress:ci"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
