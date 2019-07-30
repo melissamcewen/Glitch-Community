@@ -1,46 +1,14 @@
 version: 2
-jobs:
-  build_and_test:
-    docker:
-      - image: circleci/node:10-browsers
-    working_directory: ~/FogCreek/Glitch-Community
-    environment:
-      CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
-      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
-    steps:
-      - checkout
-      - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-v2-{{ checksum "package.json" }}
-      - run:
-          name: npm-install
-          command: npm ci
-      - save_cache:
-          key: dependency-cache-v2-{{ checksum "package.json" }}
-          paths:
-            - ~/.npm
-            - ~/.cache/Cypress
-      - run:
-          name: eslint
-          command: npm run lint
-      - run:
-          name: integration tests
-          command: npm run ci:start-and-cypress
-          environment:
-            CYPRESS_SCREENSHOTS_FOLDER: /tmp/circleci-artifacts/screenshots
-            CYPRESS_VIDEOS_FOLDER: /tmp/circleci-artifacts/videos
-      - persist_to_workspace:
-          root: ~/FogCreek
-          paths: Glitch-Community
-      - store_test_results:
-          path: /tmp/circleci-test-results
-      - store_artifacts:
-          path: /tmp/circleci-artifacts
+orbs: 
+  cypress: cypress-io/cypress@1.5.1
 workflows:
   version: 2
   regular-workflow:
     jobs:
-      - build_and_test
+      - cypress/install
+      - cypress/run:
+          requires:
+            - cypress/install
+          start: npm run ci:start
+          wait-on: 'http://localhost:8000'
+          store_artifacts: true
