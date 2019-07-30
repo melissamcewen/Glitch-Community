@@ -115,6 +115,9 @@
     "webpack-dev-middleware": "^3.7.0",
     "winston": "^3.2.1"
   },
+  "devDependencies": {
+    "cypress": "^3.4.0"
+  },
   "engines": {
     "node": "10.x"
   }
