@@ -1,26 +1,31 @@
+# Glitch-Community CircleCI Config
+#
+# Note: Version 2.1 is required in order to use orbs.
+#
+# Dependencies: Cypress.IO Orb
+
 version: 2.1
-orbs: 
+orbs:
   cypress: cypress-io/cypress@1.5.1
 jobs:
   lint:
     docker:
       - image: circleci/node:10-browsers
-    working_directory: ~/repo
+    working_directory: ~/Glitch-Community
     steps:
       - checkout
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
       - restore_cache:
-          key: dependency-cache-v2-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: npm-install
           command: npm ci
       - save_cache:
-          key: dependency-cache-v2-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - ~/.npm
-            - ~/.cache/Cypress
+            - ~/.node_modules
       - run:
           name: eslint
           command: npm run lint
