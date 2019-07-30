@@ -7,12 +7,12 @@ import Button from 'Components/buttons/button';
 import Loader from 'Components/loader';
 import Notification from 'Components/notification';
 
-import { useAPI, createAPIHook } from 'State/api';
+import { useAPI } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
 
 import styles from './styles.styl';
 
-const useQRCode = createAPIHook(async () => import(/* webpackChunkName: "qrcode-bundle" */ 'qrcode'));
+const useQRCode = async () => import(/* webpackChunkName: "qrcode-bundle" */ 'qrcode');
 
 function TwoFactorSettings() {
   const { currentUser, reload } = useCurrentUser();
