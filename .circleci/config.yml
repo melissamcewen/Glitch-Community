@@ -19,7 +19,8 @@ jobs:
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - ~/.npm	
+            - ~/.npm
+            - ~/.cache/Cypress
       - run:
           name: eslint
           command: npm run lint
