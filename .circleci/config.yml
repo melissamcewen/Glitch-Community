@@ -43,3 +43,4 @@ workflows:
           start: npm run ci:start
           wait-on: 'http://localhost:8000'
           store_artifacts: true
+          record: true
