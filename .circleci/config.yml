@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 orbs: 
   cypress: cypress-io/cypress@1.5.1
 jobs:
@@ -24,7 +24,7 @@ jobs:
           name: eslint
           command: npm run lint
 workflows:
-  version: 2
+  version: 2.1
   regular-workflow:
     jobs:
       - lint
