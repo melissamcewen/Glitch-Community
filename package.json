@@ -59,7 +59,7 @@
     "dotenv": "^8.0.0",
     "ejs": "^2.6.2",
     "email-addresses": "^3.0.3",
-    "eslint": "^6.0.1",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-loader": "^2.1.2",
