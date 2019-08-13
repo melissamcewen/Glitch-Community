@@ -28,6 +28,15 @@ const envs = {
     FACEBOOK_CLIENT_ID: '1121393391305429',
     PROJECTS_DOMAIN: 'glitch.development',
   },
+  local: {
+    APP_URL: 'https://glitch.com',
+    API_URL: `https://${process.env.PROJECT_NAME}-glitch.fwd.wf/`,
+    EDITOR_URL: 'https://glitch.com/edit/',
+    CDN_URL: 'https://cdn.glitch.com',
+    GITHUB_CLIENT_ID: '5d4f1392f69bcdf73d9f',
+    FACEBOOK_CLIENT_ID: '1121393391305429',
+    PROJECTS_DOMAIN: 'glitch.me',
+  }
 };
 
 const tagline = 'friendly community where everyone can discover & create the best apps on the web.';
