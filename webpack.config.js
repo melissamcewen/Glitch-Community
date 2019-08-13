@@ -44,7 +44,7 @@ module.exports = smp.wrap({
     path: BUILD,
     publicPath: '/',
   },
-  devtool: mode === 'production' ? 'source-map' : 'cheap-module-source-map',
+  devtool: mode === 'production' ? 'source-map' : false,
   optimization: {
     splitChunks: {
       chunks: 'initial',
@@ -83,6 +83,7 @@ module.exports = smp.wrap({
         enforce: 'pre',
         test: /\.js$/,
         include: SRC,
+        exclude: /node_modules/,
         loader: 'eslint-loader',
         options: {
           fix: false, //mode === 'development', // Only change source files in development
@@ -98,6 +99,7 @@ module.exports = smp.wrap({
           {
             test: /\.js$/,
             loader: 'babel-loader',
+            exclude: /node_modules/,
             include: mode === 'development' ? [SRC, SHARED] : [SRC, SHARED, NODE_MODULES],
             query: {
               compact: mode === 'development' ? true : false,
