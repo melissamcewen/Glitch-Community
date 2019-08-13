@@ -79,21 +79,21 @@ module.exports = smp.wrap({
   },
   module: {
     rules: [
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        include: SRC,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        options: {
-          fix: false, //mode === 'development', // Only change source files in development
-          cache: false, // Keep this off, it can use a lot of space.  Let Webpack --watch do the heavy lifting for us.
-          emitError: false,
-          emitWarning: true,
-          failOnError: false,
-          ignorePattern: 'src/curated/**',
-        },
-      },
+      // {
+      //   enforce: 'pre',
+      //   test: /\.js$/,
+      //   include: SRC,
+      //   exclude: /node_modules/,
+      //   loader: 'eslint-loader',
+      //   options: {
+      //     fix: false, //mode === 'development', // Only change source files in development
+      //     cache: false, // Keep this off, it can use a lot of space.  Let Webpack --watch do the heavy lifting for us.
+      //     emitError: false,
+      //     emitWarning: true,
+      //     failOnError: false,
+      //     ignorePattern: 'src/curated/**',
+      //   },
+      // },
       {
         oneOf: [
           {
