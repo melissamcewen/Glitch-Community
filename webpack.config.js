@@ -7,6 +7,7 @@ const AutoprefixerStylus = require('autoprefixer-stylus');
 const StatsPlugin = require('stats-webpack-plugin');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { EnvironmentPlugin } = require('webpack');
 const aliases = require('./shared/aliases');
 
 const BUILD = path.resolve(__dirname, 'build');
@@ -164,6 +165,7 @@ module.exports = smp.wrap({
       publicPath: true,
     }),
     new CleanWebpackPlugin({ dry: false, verbose: true, cleanOnceBeforeBuildPatterns: ['**/*', '!storybook/**', ...prevBuildAssets]}),
+    new EnvironmentPlugin({PROJECT_NAME: "community"}),
   ],
   watchOptions: {
     ignored: /node_modules/,
