@@ -30,9 +30,9 @@ const envs = {
   },
   local: {
     APP_URL: 'https://glitch.com',
-    API_URL: `https://${process.env.FWD_SUBDOMAIN_PREFIX}-glitch.fwd.wf/`,
+    API_URL: `https://${process.env.PROJECT_NAME}-glitch.fwd.wf/`,
     EDITOR_URL: 'https://glitch.com/edit/',
-    CDN_URL: 'https://cdn.glitch.com',
+    CDN_URL: 'https://s3.amazonaws.com/hyperdev-development',
     GITHUB_CLIENT_ID: '5d4f1392f69bcdf73d9f',
     FACEBOOK_CLIENT_ID: '1121393391305429',
     PROJECTS_DOMAIN: 'glitch.me',
