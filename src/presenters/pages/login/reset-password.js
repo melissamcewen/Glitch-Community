@@ -13,7 +13,7 @@ import Text from 'Components/text/text';
 
 import AuthLayout from 'Components/layout/auth-layout';
 import NewPasswordInput from 'Components/new-password-input';
-import { EmailTokenLoginPage } from './login';
+import { EmailTokenLoginPage } from './callbacks';
 
 import styles from './reset-password.styl';
 
@@ -68,14 +68,18 @@ const ResetPasswordForm = ({ resetPasswordToken }) => {
       <Text>Enter a new password</Text>
       {state.error ? (
         <>
-          <Notification type="error" persistent>Error</Notification>
+          <Notification type="error" persistent>
+            Error
+          </Notification>
           <Text>{state.error}</Text>
         </>
       ) : (
         <form onSubmit={onSubmit}>
           <NewPasswordInput disabled={state.working} onChange={setPassword} />
           <div className={styles.submitWrap}>
-            <Button size="small" disabled={!password || state.working} submit>Set Password</Button>
+            <Button size="small" disabled={!password || state.working} submit>
+              Set Password
+            </Button>
           </div>
         </form>
       )}
