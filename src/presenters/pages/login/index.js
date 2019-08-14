@@ -1,7 +1,8 @@
 import React from 'react';
+import SignInLayout from 'Components/layout/sign-in-layout';
 
 const LoginPage = () => {
-  return <div className="content">For new work</div>;
+  return <SignInLayout />;
 };
 
 export default LoginPage;
