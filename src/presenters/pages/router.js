@@ -8,8 +8,9 @@ import rootTeams from 'Curated/teams';
 import { useCurrentUser } from 'State/current-user';
 import { useGlobals } from 'State/globals';
 
-import { FacebookLoginPage, GitHubLoginPage, GoogleLoginPage, SlackLoginPage, EmailTokenLoginPage } from './login';
-import ResetPasswordPage from './reset-password';
+import LoginPage from './login';
+import { FacebookLoginPage, GitHubLoginPage, GoogleLoginPage, SlackLoginPage, EmailTokenLoginPage } from './login/callbacks';
+import ResetPasswordPage from './login/reset-password';
 import OauthSignIn from './signin';
 import JoinTeamPage from './join-team';
 import QuestionsPage from './questions';
@@ -51,18 +52,15 @@ const PageChangeHandler = withRouter(({ location }) => {
   const { reload } = useCurrentUser();
   const isUpdate = useRef(false);
 
-  useEffect(
-    () => {
-      if (isUpdate.current) {
-        window.scrollTo(0, 0);
-        reload();
-      }
+  useEffect(() => {
+    if (isUpdate.current) {
+      window.scrollTo(0, 0);
+      reload();
+    }
 
-      isUpdate.current = true;
-      track();
-    },
-    [location.key],
-  );
+    isUpdate.current = true;
+    track();
+  }, [location.key]);
 
   const [scrolledToLinkedEl, setScrolledToLinkedEl] = useState(false);
   let linkedEl = null;
@@ -88,6 +86,7 @@ const Router = () => {
         <Route path="/index.html" exact render={({ location }) => <NewHomePage key={location.key} />} />
         <Route path="/index/preview" exact render={({ location }) => <NewHomePagePreview key={location.key} />} />
 
+        <Route path="/login" exact render={({ location }) => <LoginPage key={location.key} />} />
         <Route
           path="/login/facebook"
           exact
@@ -112,7 +111,9 @@ const Router = () => {
         <Route
           path="/login/slack"
           exact
-          render={({ location }) => <SlackLoginPage key={location.key} code={parse(location.search, 'code')} error={parse(location.search, 'error')} />}
+          render={({ location }) => (
+            <SlackLoginPage key={location.key} code={parse(location.search, 'code')} error={parse(location.search, 'error')} />
+          )}
         />
         <Route
           path="/login/email"

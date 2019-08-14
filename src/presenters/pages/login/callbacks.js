@@ -9,8 +9,8 @@ import { APP_URL } from 'Utils/constants';
 import useLocalStorage from 'State/local-storage';
 import { useAPI } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
-import TwoFactorCodePage from './two-factor-code';
-import { EmailErrorPage, OauthErrorPage } from './error';
+import TwoFactorCodePage from '../two-factor-code';
+import { EmailErrorPage, OauthErrorPage } from '../error';
 
 // The Editor may embed /login/* endpoints in an iframe in order to share code.
 // NotifyParent allows the editor to receive messages from this page.
@@ -116,6 +116,11 @@ LoginPage.propTypes = {
   url: PropTypes.string.isRequired,
 };
 
+export const EmailTokenLoginPage = ({ token }) => {
+  const url = `/auth/email/${token}`;
+  return <LoginPage provider="Email" url={url} />;
+};
+
 const OAuthLoginPage = ({ error, provider, url }) => {
   if (error === 'access_denied') {
     return <RedirectToDestination />;
@@ -150,9 +155,4 @@ export const SlackLoginPage = ({ code, error }) => {
   const callbackUrl = `${APP_URL}/login/slack`;
   const url = `/auth/slack/callback?code=${code}&callbackURL=${encodeURIComponent(callbackUrl)}`;
   return <OAuthLoginPage error={error} provider="Slack" url={url} />;
-};
-
-export const EmailTokenLoginPage = ({ token }) => {
-  const url = `/auth/email/${token}`;
-  return <LoginPage provider="Email" url={url} />;
 };
