@@ -122,14 +122,18 @@ const BlockContainer = ({ size, users, teams }) => (
 );
 
 const GLITCH_TEAM_AVATAR = 'https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fglitch-team-avatar.svg?1489266029267';
+const GLITCH_TEAM_URL = 'glitch';
 
-const GlitchTeamList = ({ size }) => (
-  <ul className={classnames(styles.container, styles[size])}>
-    <li className={styles.teamItem}>
-      <Avatar name="Glitch Team" src={GLITCH_TEAM_AVATAR} color="#74ecfc" type="team" />
-    </li>
-  </ul>
-);
+const GlitchTeamList = ({ size }) => {
+  const tooltipTarget = <TeamLink team={{url: GLITCH_TEAM_URL }} draggable={false}><Avatar name="Glitch Team" src={GLITCH_TEAM_AVATAR} color="#74ecfc" type="team" hideTooltip /></TeamLink>;
+  return (
+    <ul className={classnames(styles.container, styles[size])}>
+      <li className={styles.teamItem}>
+        <TooltipContainer type="info" tooltip="Glitch Team" target={tooltipTarget} />
+      </li>
+    </ul>
+  );
+};
 
 const PlaceholderList = ({ size }) => (
   <ul className={classnames(styles.container, styles[size])}>
