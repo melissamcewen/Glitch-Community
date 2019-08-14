@@ -1,8 +1,6 @@
 import React from 'react';
 import SignInLayout from 'Components/layout/sign-in-layout';
 
-const LoginPage = () => {
-  return <SignInLayout />;
-};
+const LoginPage = () => <SignInLayout />;
 
 export default LoginPage;
