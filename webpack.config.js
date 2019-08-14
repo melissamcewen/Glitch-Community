@@ -1,5 +1,4 @@
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -46,7 +45,7 @@ module.exports = smp.wrap({
     path: BUILD,
     publicPath: '/',
   },
-  devtool: mode === 'production' ? 'source-map' : false,
+  devtool: mode === 'production' ? 'source-map' :  'cheap-module-source-map',
   optimization: {
     splitChunks: {
       chunks: 'initial',
@@ -81,26 +80,25 @@ module.exports = smp.wrap({
   },
   module: {
     rules: [
-      // {
-      //   enforce: 'pre',
-      //   test: /\.js$/,
-      //   include: SRC,
-      //   exclude: /node_modules/,
-      //   loader: 'eslint-loader',
-      //   options: {
-      //     fix: false, //mode === 'development', // Only change source files in development
-      //     cache: false, // Keep this off, it can use a lot of space.  Let Webpack --watch do the heavy lifting for us.
-      //     emitError: false,
-      //     emitWarning: true,
-      //     failOnError: false,
-      //     ignorePattern: 'src/curated/**',
-      //   },
-      // },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        include: SRC,
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        options: {
+          fix: false, //mode === 'development', // Only change source files in development
+          cache: false, // Keep this off, it can use a lot of space.  Let Webpack --watch do the heavy lifting for us.
+          emitError: false,
+          emitWarning: true,
+          failOnError: false,
+          ignorePattern: 'src/curated/**',
+        },
+      },
       {
         oneOf: [
           {
             test: /\.js$/,
-            loader: 'babel-loader',
             exclude: /node_modules/,
             include: mode === 'development' ? [SRC, SHARED] : [SRC, SHARED, NODE_MODULES],
             query: {
@@ -166,9 +164,7 @@ module.exports = smp.wrap({
       publicPath: true,
     }),
     new CleanWebpackPlugin({ dry: false, verbose: true, cleanOnceBeforeBuildPatterns: ['**/*', '!storybook/**', ...prevBuildAssets]}),
-    new EnvironmentPlugin({
-      FWD_SUBDOMAIN_PREFIX: process.env.PROJECT_NAME || os.userInfo().username,
-    }),
+    new EnvironmentPlugin({PROJECT_NAME: "community"}),
   ],
   watchOptions: {
     ignored: /node_modules/,
