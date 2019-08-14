@@ -30,7 +30,7 @@ const envs = {
   },
   local: {
     APP_URL: 'https://glitch.com',
-    API_URL: `https://${process.env.PROJECT_NAME}-glitch.fwd.wf/`,
+    API_URL: `https://${process.env.FWD_SUBDOMAIN_PREFIX}-glitch.fwd.wf/`,
     EDITOR_URL: 'https://glitch.com/edit/',
     CDN_URL: 'https://cdn.glitch.com',
     GITHUB_CLIENT_ID: '5d4f1392f69bcdf73d9f',

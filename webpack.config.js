@@ -1,4 +1,5 @@
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -165,7 +166,9 @@ module.exports = smp.wrap({
       publicPath: true,
     }),
     new CleanWebpackPlugin({ dry: false, verbose: true, cleanOnceBeforeBuildPatterns: ['**/*', '!storybook/**', ...prevBuildAssets]}),
-    new EnvironmentPlugin({PROJECT_NAME: "community"}),
+    new EnvironmentPlugin({
+      FWD_SUBDOMAIN_PREFIX: process.env.PROJECT_NAME || os.userInfo().username,
+    }),
   ],
   watchOptions: {
     ignored: /node_modules/,
