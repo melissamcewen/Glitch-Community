@@ -34,31 +34,34 @@ const TeamItem = ({ team }) => {
 const useResizeObserver = () => {
   const ref = useRef();
   const [width, setWidth] = useState(0);
-  useEffect(() => {
-    const setWidthOfRef = () => {
-      if (ref.current) {
-        const boundingClientRect = ref.current.getBoundingClientRect();
-        if (boundingClientRect) {
-          setWidth(boundingClientRect.width);
+  useEffect(
+    () => {
+      const setWidthOfRef = () => {
+        if (ref.current) {
+          const boundingClientRect = ref.current.getBoundingClientRect();
+          if (boundingClientRect) {
+            setWidth(boundingClientRect.width);
+          }
         }
-      }
-    };
-    const debouncedSetWidth = debounce(setWidthOfRef, 100);
-    setWidthOfRef();
-
-    if (window.ResizeObserver) {
-      const observer = new ResizeObserver(debouncedSetWidth);
-      observer.observe(ref.current);
-
-      return () => {
-        observer.unobserve(ref.current);
       };
-    }
-    window.addEventListener('resize', debouncedSetWidth);
-    return () => {
-      window.removeEventListener('resize', debouncedSetWidth);
-    };
-  }, [ref, setWidth]);
+      const debouncedSetWidth = debounce(setWidthOfRef, 100);
+      setWidthOfRef();
+
+      if (window.ResizeObserver) {
+        const observer = new ResizeObserver(debouncedSetWidth);
+        observer.observe(ref.current);
+
+        return () => {
+          observer.unobserve(ref.current);
+        };
+      }
+      window.addEventListener('resize', debouncedSetWidth);
+      return () => {
+        window.removeEventListener('resize', debouncedSetWidth);
+      };
+    },
+    [ref, setWidth],
+  );
   return { ref, width };
 };
 
@@ -125,7 +128,11 @@ const GLITCH_TEAM_AVATAR = 'https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-20439
 const GLITCH_TEAM_URL = 'glitch';
 
 const GlitchTeamList = ({ size }) => {
-  const tooltipTarget = <TeamLink team={{url: GLITCH_TEAM_URL }} draggable={false}><Avatar name="Glitch Team" src={GLITCH_TEAM_AVATAR} color="#74ecfc" type="team" hideTooltip /></TeamLink>;
+  const tooltipTarget = (
+    <TeamLink team={{ url: GLITCH_TEAM_URL }} draggable={false}>
+      <Avatar name="Glitch Team" src={GLITCH_TEAM_AVATAR} color="#74ecfc" type="team" hideTooltip />
+    </TeamLink>
+  );
   return (
     <ul className={classnames(styles.container, styles[size])}>
       <li className={styles.teamItem}>

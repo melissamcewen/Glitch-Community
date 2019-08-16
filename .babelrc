@@ -24,7 +24,5 @@
       }
     ]
   ],
-  "sourceType": "unambiguous",
-  "sourceMaps": true,
-  "inputSourceMap": true
+  "sourceType": "unambiguous"
 }

@@ -47,7 +47,6 @@ module.exports = smp.wrap({
     publicPath: '/',
   },
   devtool: mode === 'production' ? 'source-map' : 'eval-source-map',
-  // devtool: 'source-map',
   optimization: {
     splitChunks: {
       chunks: 'initial',
