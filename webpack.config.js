@@ -46,7 +46,8 @@ module.exports = smp.wrap({
     path: BUILD,
     publicPath: '/',
   },
-  devtool: 'source-map', //mode === 'production' ? 'source-map' : 'cheap-module-source-map',
+  devtool: mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
+  // devtool: 'source-map',
   optimization: {
     splitChunks: {
       chunks: 'initial',
