@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const WistiaVideo = ({ videoId }) => {
+const WistiaVideo = React.forwardRef(({ videoId }, ref) => {
   useEffect(() => {
     const loadedScripts = new Set();
     const scriptTags = document.querySelectorAll('script');
@@ -31,10 +31,10 @@ const WistiaVideo = ({ videoId }) => {
   return (
     <div className="wistia_responsive_padding">
       <div className="wistia_responsive_wrapper">
-        <div className={`wistia_embed wistia_async_${videoId}`} videofoam="true" />
+        <div ref={ref} className={`wistia_embed wistia_async_${videoId}`} videofoam="true" />
       </div>
     </div>
   );
-};
+});
 
 export default WistiaVideo;

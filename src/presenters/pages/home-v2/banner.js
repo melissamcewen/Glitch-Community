@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 
 import Button from 'Components/buttons/button';
@@ -48,16 +48,28 @@ const OverlayVideo = () => {
 const InlineVideo = () => {
   const [showVideo, setShowVideo] = useState(false);
   const track = useTracker();
+  const wistiaRef = React.createRef();
 
   const onClick = () => {
     track('Watch Video clicked');
     setShowVideo(true);
   };
 
+  useEffect(() => {
+    if (showVideo && wistiaRef.current) {
+      setTimeout(() => {
+        const pauseButton = wistiaRef.current.querySelector('[aria-label="Pause"]');
+        if (pauseButton) {
+          pauseButton.focus();
+        }
+      }, 500);
+    }
+  }, [showVideo]);
+
   return (
     <div className={classnames(styles.bannerVideo)}>
       {showVideo ? (
-        <WistiaVideo videoId="z2ksbcs34d" />
+        <WistiaVideo ref={wistiaRef} videoId="z2ksbcs34d" />
       ) : (
         <>
           <div className={styles.bannerVideoPoster} onClick={onClick} aria-hidden="true" />
