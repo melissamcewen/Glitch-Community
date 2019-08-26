@@ -58,13 +58,17 @@ const InlineVideo = () => {
   useEffect(() => {
     if (showVideo && wistiaRef.current) {
       setTimeout(() => {
+        if (!wistiaRef.current) {
+          return;
+        }
+
         const pauseButton = wistiaRef.current.querySelector('[aria-label="Pause"]');
         if (pauseButton) {
           pauseButton.focus();
         }
       }, 500);
     }
-  }, [showVideo]);
+  }, [showVideo, wistiaRef.current]);
 
   return (
     <div className={classnames(styles.bannerVideo)}>
