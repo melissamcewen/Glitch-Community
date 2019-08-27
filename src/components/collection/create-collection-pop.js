@@ -152,7 +152,7 @@ function CreateCollectionPopBase({ align, title, onSubmit, options, initialColle
   );
 }
 
-export function CreateCollectionWithProject({ project, addProjectToCollection }) {
+export function CreateCollectionWithProject({ project, addProjectToCollection, initialCollectionName }) {
   const { createNotification } = useNotifications();
   const { currentUser } = useCurrentUser();
   const options = getOptions(currentUser);
@@ -175,7 +175,7 @@ export function CreateCollectionWithProject({ project, addProjectToCollection })
   };
   const title = <MultiPopoverTitle>{`Add ${project.domain} to a new collection`}</MultiPopoverTitle>;
 
-  return <CreateCollectionPopBase align="right" title={title} options={options} onSubmit={onSubmit} />;
+  return <CreateCollectionPopBase align="right" title={title} options={options} onSubmit={onSubmit} initialCollectionName={initialCollectionName} />;
 }
 
 CreateCollectionWithProject.propTypes = {
