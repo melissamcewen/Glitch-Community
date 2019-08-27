@@ -77,14 +77,13 @@ const useCollections = createAPIHook((api, teamId, currentUser) => {
   return getAllPages(api, `/v1/users/by/id/collections?id=${currentUser.id}&limit=100`);
 });
 
-function CreateCollectionPopBase({ align, title, onSubmit, options }) {
+function CreateCollectionPopBase({ align, title, onSubmit, options, initialCollectionName }) {
   const api = useAPI();
   const { createNotification } = useNotifications();
   const { currentUser } = useCurrentUser();
 
   const [loading, setLoading] = useState(false);
-  // TODO: should this be pre-populated with a friendly name?
-  const [collectionName, setCollectionName] = useState('');
+  const [collectionName, setCollectionName] = useState(initialCollectionName);
 
   const [selection, setSelection] = useState(options[0]);
 
