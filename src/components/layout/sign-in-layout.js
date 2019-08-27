@@ -21,6 +21,12 @@ const TermsAndConditions = () => (
   </div>
 );
 
+const savingThisForLater = () => (
+  <div className={styles.useCode}>
+    <UseMagicCode />
+  </div>
+);
+
 const SignInLayout = () => {
   const slackAuthEnabled = useDevToggle('Slack Auth');
   const [page, setPage] = useState('main');
@@ -50,39 +56,31 @@ const SignInLayout = () => {
         </section>
         <section className={styles.content}>
           {page === 'main' && (
-            <>
-              <div className={styles.oAuth}>
-                <div>
-                  <div className={styles.signInButtons}>
-                    {companyNames
-                      .filter((companyName) => companyName !== 'slack' || slackAuthEnabled)
-                      .map((companyName) => (
-                        <div key={companyName} className={styles.signInButton}>
-                          <SignInButton short companyName={companyName} />
-                        </div>
-                      ))}
-                  </div>
-                  <div className={styles.signInButtons}>
-                    <Button emoji="loveLetter" onClick={showMagicPage}>
-                      Magic Code via Email
-                    </Button>
-                  </div>
+            <div className={styles.oAuth}>
+              <div>
+                <div className={styles.signInButtons}>
+                  {companyNames
+                    .filter((companyName) => companyName !== 'slack' || slackAuthEnabled)
+                    .map((companyName) => (
+                      <div key={companyName} className={styles.signInButton}>
+                        <SignInButton short companyName={companyName} />
+                      </div>
+                    ))}
                 </div>
-                <TermsAndConditions />
+                <div className={styles.signInButtons}>
+                  <Button emoji="loveLetter" onClick={showMagicPage}>
+                    Magic Code via Email
+                  </Button>
+                </div>
               </div>
-              <div className={styles.passwordAuth}>
-                <Image src={keyImageUrl} alt="Door and key illustration" width={200} />
-              </div>
-            </>
+              <TermsAndConditions />
+            </div>
           )}
           {page === 'magic' && (
             <>
               <div className={styles.getCode}>
                 <GetMagicCode />
                 <TermsAndConditions />
-              </div>
-              <div className={styles.useCode}>
-                <UseMagicCode />
               </div>
             </>
           )}
