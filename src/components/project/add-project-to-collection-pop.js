@@ -164,6 +164,12 @@ export const AddProjectToCollectionBase = ({ project, fromProject, addProjectToC
         onSubmit={addProjectTo}
         placeholder="Filter collections"
         labelText="Filter collections"
+        renderMessage={() => {
+          if (collectionsWithProject.length) {
+            return <PopoverInfo><AlreadyInCollection project={project} collections={collectionsWithProject} /></PopoverInfo>;
+          }
+          return null;
+        }}
         renderItem={({ item: collection, active }) => (
           <AddProjectToCollectionResultItem active={active} onClick={() => addProjectTo(collection)} collection={collection} />
         )}
