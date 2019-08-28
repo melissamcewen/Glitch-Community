@@ -64,8 +64,8 @@ export const useProjectOptions = (project, { user, team, collection, ...options 
 
   return pickBy({
     addProjectToCollection: isLoggedIn && projectOptions.addProjectToCollection,
-    featureProject: !project.private && isProfileOwner && bind(projectOptions.featureProject, project),
-    addPin: isProfileOwner && !isPinned && bind(projectOptions.addPin, project),
+    featureProject: isLoggedIn && !project.private && isProfileOwner && bind(projectOptions.featureProject, project),
+    addPin: isLoggedIn && isProfileOwner && !isPinned && bind(projectOptions.addPin, project),
     removePin: isProfileOwner && isPinned && bind(projectOptions.removePin, project),
     displayNewNote: !project.note && !project.isAddingANewNote && canAddNote && bind(projectOptions.displayNewNote, project),
     joinTeamProject: !isProjectMember && !!projectTeam && bind(projectOptions.joinTeamProject, project, projectTeam),

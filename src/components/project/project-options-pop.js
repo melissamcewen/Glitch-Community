@@ -62,7 +62,7 @@ const ProjectOptionsContent = ({ project, projectOptions, addToCollectionPopover
             { onClick: projectOptions.removePin, label: 'Un-Pin', emoji: 'pushpin' },
           ],
           [{ onClick: projectOptions.displayNewNote, label: 'Add Note', emoji: 'spiralNotePad' }],
-          [{ onClick: addToCollectionPopover, label: 'Add to Collection', emoji: 'framedPicture' }],
+          [{ onClick: projectOptions.addProjectToCollection && addToCollectionPopover, label: 'Add to Collection', emoji: 'framedPicture' }],
           [{ onClick: projectOptions.joinTeamProject, label: 'Join Project', emoji: 'rainbow' }],
           [
             { onClick: leaveProjectDirect && onClickLeaveProject, label: 'Leave Project', emoji: 'wave' },

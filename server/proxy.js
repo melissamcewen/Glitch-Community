@@ -80,6 +80,10 @@ module.exports = function(app) {
 
   // proxy home CMS (without rewriting paths)
   app.use('/index/edit', proxy('community-home-editor.glitch.me'));
+  
+
+  // proxy home CMS (without rewriting paths)
+  app.use('/pupdates/edit', proxy('pupdates-editor.glitch.me'));
 
   return routes;
 };

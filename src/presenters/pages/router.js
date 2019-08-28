@@ -19,6 +19,7 @@ import CategoryPage from './category';
 import CollectionPage from './collection';
 import CreatePage from './create';
 import { NotFoundPage } from './error';
+import PupdatesPreview from './pupdates-preview';
 import SearchPage from './search';
 import SecretPage from './secret';
 import NewHomePage, { HomePreview as NewHomePagePreview } from './home-v2';
@@ -87,6 +88,7 @@ const Router = () => {
         <Route path="/" exact render={({ location }) => <NewHomePage key={location.key} />} />
         <Route path="/index.html" exact render={({ location }) => <NewHomePage key={location.key} />} />
         <Route path="/index/preview" exact render={({ location }) => <NewHomePagePreview key={location.key} />} />
+        <Route path="/pupdates/preview" exact render={({ location }) => <PupdatesPreview key={location.key} />} />
 
         <Route
           path="/login/facebook"

@@ -16,7 +16,7 @@ const initWebpack = require('./webpack');
 const constants = require('./constants');
 const renderPage = require('./render');
 const { defaultProjectDescriptionPattern } = require('../shared/regex');
-const { getHomeData, saveHomeDataToFile } = require('./home');
+const { getData, saveDataToFile } = require('./home');
 
 const DEFAULT_USER_DESCRIPTION = (login, name) => `See what ${name} (@${login}) is up to on Glitch, the ${constants.tagline} `;
 const DEFAULT_TEAM_DESCRIPTION = (login, name) => `See what Team ${name} (@${login}) is up to on Glitch, the ${constants.tagline} `;
@@ -84,7 +84,7 @@ module.exports = function(external) {
     }
 
     const signedIn = !!req.cookies.hasLogin;
-    const [zine, homeContent] = await Promise.all([getZine(), getHomeData()]);
+    const [zine, homeContent] = await Promise.all([getZine(), getData('home')]);
 
     let ssr = { rendered: null };
     if (shouldRender) {
@@ -249,15 +249,34 @@ module.exports = function(external) {
   });
 
   app.get('/api/home', async (req, res) => {
-    const data = await getHomeData();
+    const data = await getData('home');
     res.send(data);
   });
 
   app.post('/api/home', async (req, res) => {
     const persistentToken = req.headers.authorization;
     const data = req.body;
+    const page = 'home';
     try {
-      await saveHomeDataToFile({ persistentToken, data });
+      await saveDataToFile({ page, persistentToken, data });
+      res.sendStatus(200);
+    } catch (e) {
+      console.warn(e);
+      res.sendStatus(403);
+    }
+  });
+
+  app.get('/api/pupdate', async (req, res) => {
+    const data = await getData('pupdates');
+    res.send(data);
+  });
+
+  app.post('/api/pupdate', async (req, res) => {
+    const persistentToken = req.headers.authorization;
+    const data = req.body;
+    const page = 'pupdates';
+    try {
+      await saveDataToFile({ page, persistentToken, data });
       res.sendStatus(200);
     } catch (e) {
       console.warn(e);
