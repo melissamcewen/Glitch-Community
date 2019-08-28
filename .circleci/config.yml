@@ -1,4 +1,3 @@
-    
 # Glitch-Community CircleCI Config
 #
 # Note: Version 2.1 is required in order to use orbs.
@@ -12,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: update-pnpm
-          command: 'sudo npm install -g pnpm@latest'
+          command: "sudo npm install -g pnpm@latest"
       - restore_cache:
           keys:
             - deps-{{ checksum "package-lock.json" }}
@@ -33,6 +32,17 @@ jobs:
           paths:
             - build
           key: build-{{ .Revision }}
+  install_cypress:
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - run:
+          name: update-cypress
+          command: "npm install cypress@latest"
+      - save_cache:
+          paths:
+            - ~/.cache
+          key: cypress
   integration_tests:
     docker:
       - image: circleci/node:10-browsers
@@ -44,9 +54,12 @@ jobs:
       - restore_cache:
           keys:
             - build-{{ .Revision }}
+      - restore_cache:
+          keys:
+            - cypress
       - run:
           name: update-pnpm
-          command: 'sudo npm install -g pnpm@latest'
+          command: "sudo npm install -g pnpm@latest"
       - run:
           name: pnpm-install
           command: pnpm install
@@ -58,6 +71,10 @@ workflows:
   regular-workflow:
     jobs:
       - lint_and_build
+      - install_cypress:
+          requires:
+            - lint_and_build
       - integration_tests:
           requires:
-          - lint_and_build
+            - lint_and_build
+            - install_cypress
