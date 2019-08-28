@@ -1,3 +1,5 @@
 #!/bin/bash
 set -o allexport; source .env; set +o allexport
-npx cypress open --config baseUrl=https://$1.glitch.me
+
+npm i -g cypress@3.1.5
+cypress open --config baseUrl=

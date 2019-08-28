@@ -19,13 +19,15 @@
   "scripts": {
     "prestart": "nodemon --watch server --watch shared --exec 'npm run lint:server' &",
     "start": "forever --minUptime 5000 --spinSleepTime 1000 -c 'nodemon --watch server --watch shared --watch views --exitcrash' ./server/server.js",
+    "start:ci": "forever --minUptime 5000 --spinSleepTime 1000 ./server/server.js",
     "lint:server": "eslint --config server/.eslintrc.server.js server shared webpack.config.js",
     "lint:src": "eslint --config src/.eslintrc.js src",
     "lint": "npm run lint:server && npm run lint:src",
     "cy:run": "npx cypress run",
     "cy:open": "npx cypress open",
     "cy:remix": "bash ./sh/cypress.sh",
-    "cy:ci": "start-server-and-test start http://localhost:8000 'npx cypress run --record'",
+    "cy:test": "npx cypress open --config baseUrl=https://pebble-jaborosa.glitch.me",
+    "cy:ci": "start-server-and-test start:ci http://localhost:8000 'npx cypress run --record'",
     "build": "webpack",
     "storybook": "build-storybook -c storybook-config -o build/storybook"
   },
@@ -65,6 +67,7 @@
     "cookie-parser": "^1.4.4",
     "core-js": "^3.1.2",
     "css-loader": "^3.1.0",
+    "cypress": "^3.4.1",
     "d3-array": "^2.1.0",
     "dayjs": "^1.8.15",
     "details-element-polyfill": "^2.3.1",
@@ -106,6 +109,7 @@
     "randomcolor": "^0.5.4",
     "react": "^16.8.6",
     "react-aria-live": "^2.0.5",
+    "react-axe": "^2.1.9",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
     "react-is": "^16.8.6",
@@ -129,8 +133,7 @@
     "webpack": "^4.35.0",
     "webpack-cli": "^3.3.5",
     "webpack-dev-middleware": "^3.7.0",
-    "winston": "^3.2.1",
-    "react-axe": "^2.1.9"
+    "winston": "^3.2.1"
   },
   "engines": {
     "node": "10.x"
