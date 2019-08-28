@@ -11,7 +11,7 @@ import { withState } from '../../../stories/util';
 storiesOf('Image', module)
   .add('regular', () => <Image src="https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-day.svg" alt="Glitch Logo" />)
   .add('background Image', () => (
-    <Image backgroundImage={true} src="https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-day.svg" alt="Glitch Logo" />
+    <Image backgroundImage src="https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Flogo-day.svg" alt="Glitch Logo" />
   ))
   .add('srcSet', () => (
     <Image
@@ -34,7 +34,7 @@ storiesOf('Image', module)
       width="200px"
       height="200px"
     />
-  ))
+  ));
 
 storiesOf('MaskImage', module)
   .add('random mask', () => <MaskImage src="https://glitch.com/culture/content/images/2018/10/react-starter-kit-1.jpg" />)
@@ -53,9 +53,8 @@ storiesOf('MaskImage', module)
     )),
   );
 
-storiesOf('BookmarkAvatar', module)
-  .add('regular', () => (
-    <div style={{ height: "100px", width: "100px"}}>
-      <BookmarkAvatar />
-    </div>
-  ))
+storiesOf('BookmarkAvatar', module).add('regular', () => (
+  <div style={{ height: '100px', width: '100px' }}>
+    <BookmarkAvatar />
+  </div>
+));

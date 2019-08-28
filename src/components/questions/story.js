@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { mapValues, sumBy, memoize } from 'lodash';
+import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { provideContext } from '../../../stories/util';
 import { users } from '../../../stories/data';

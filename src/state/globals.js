@@ -2,7 +2,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
-const Context = createContext({});
+export const Context = createContext({});
 
 export const GlobalsProvider = withRouter(({ children, history, location, origin, SSR_SIGNED_IN, ZINE_POSTS, HOME_CONTENT, EXTERNAL_ROUTES }) => {
   const value = useMemo(() => {

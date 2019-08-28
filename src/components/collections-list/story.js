@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { mapValues, sumBy, memoize } from 'lodash';
+import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { projects, collections } from '../../../stories/data';
 import { provideContext } from '../../../stories/util';
@@ -101,10 +100,10 @@ const glitchCollections = [
 const mockAPI = {
   get: async (url) => {
     if (/v1\/teams/.test(url)) {
-      return { data: { items: glitchCollections } }
-    } 
-    return { data: { items: Object.values(projects) } }
-  }
+      return { data: { items: glitchCollections } };
+    }
+    return { data: { items: Object.values(projects) } };
+  },
 };
 
 storiesOf('Collections', module)

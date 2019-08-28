@@ -1,7 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import DeletedProjects, { DeletedProjectsList } from './index';
-import { projects } from '../../../stories/data';
 import { provideContext } from '../../../stories/util';
 
 const clickedUndelete = () => {

@@ -1,15 +1,15 @@
 import React from 'react';
+import { Progress } from '@fogcreek/shared-components';
 
 import { uploadAsset, uploadAssetSizes } from 'Utils/assets';
 import { captureException } from 'Utils/sentry';
 import { useNotifications } from 'State/notifications';
-import Progress from 'Components/fields/progress';
 import Text from 'Components/text/text';
 
 const NotifyUploading = ({ progress }) => (
   <>
     <Text>Uploading asset</Text>
-    <Progress value={progress} />
+    <Progress value={progress} max={100}>{progress}%</Progress>
   </>
 );
 const NotifyError = ({ error }) => {

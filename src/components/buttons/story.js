@@ -2,11 +2,12 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import 'Components/global.styl';
 
-import Button from './button';
-import CheckboxButton from './checkbox-button'
-import BookmarkButton from './bookmark-button'
 import Emoji from 'Components/images/emoji';
 import Image from 'Components/images/image';
+
+import Button from './button';
+import CheckboxButton from './checkbox-button';
+import BookmarkButton from './bookmark-button';
 import { withState } from '../../../stories/util';
 
 const helloAlert = () => {
@@ -41,16 +42,18 @@ storiesOf('Button', module)
       Show
     </Button>
   ))
-  .add('with an image', () => <Button image={<Image width={16} height={16} src="https://cdn.glitch.com/team-avatar/74/small?689" alt="" />}>Glitch</Button>)
-  .add(`match background`, () => (
+  .add('with an image', () => (
+    <Button image={<Image width={16} height={16} src="https://cdn.glitch.com/team-avatar/74/small?689" alt="" />}>Glitch</Button>
+  ))
+  .add('match background', () => (
     <div style={{ width: '100%', height: '100%', backgroundColor: '#F5F5F5' }}>
-      <Button onClick={helloAlert} matchBackground={true}>
+      <Button onClick={helloAlert} matchBackground>
         Support <Emoji name="ambulance" />
       </Button>
     </div>
   ))
   .add(
-    `checkbox`,
+    'checkbox',
     withState(false, ({ state, setState }) => (
       <>
         <CheckboxButton value={state} onChange={setState}>
@@ -64,6 +67,4 @@ storiesOf('Button', module)
       </>
     )),
   )
-  .add('BookmarkButton', () => (
-    <BookmarkButton />
-  ))
+  .add('BookmarkButton', () => <BookmarkButton />);

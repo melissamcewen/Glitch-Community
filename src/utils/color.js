@@ -28,10 +28,15 @@ export const hexToRgbA = (hex) => {
 
 export const isGoodColorContrast = (hex) => getContrastWithDarkText(hex) >= 4.5 || getContrastWithLightText(hex) >= 4.5;
 
-export function pickRandomColor() {
-  const newColor = randomColor({ luminosity: 'light' });
-  if (isGoodColorContrast(newColor)) {
-    return newColor;
+export function pickRandomColors(count) {
+  const newColors = randomColor({ luminosity: 'light', count });
+  if (newColors.every((color) => isGoodColorContrast(color))) {
+    return newColors;
   }
-  return pickRandomColor();
+  return pickRandomColors(count);
+}
+
+export function pickRandomColor() {
+  const [newColor] = pickRandomColors(1);
+  return newColor;
 }

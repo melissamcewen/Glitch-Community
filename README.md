@@ -24,6 +24,20 @@ File structure
 
 application models -> presenter -> DOM
 
+## Script Overview
+
+The following commands are available for use during development:
+
+| Command           | Description                                                              |
+| ----------------- | ------------------------------------------------------------------------ |
+| `npm start`       | Launch the development server                                            |
+| `npm run lint`    | Lint the codebase using ESLint                                           |
+| `npm run cy:run`  | Run Cypress-based integration tests in the console                       |
+| `npm run cy:open` | Launch the Cypress GUI for running integration tests                     |
+| `npm run cy:ci`   | Auto-start a temporary dev server and run integration tests against it   |
+| `npm run build`   | Perform a production build of the site and store the results in `build/` |
+
+
 ## Built with
 
 - [ES6](http://es6-features.org/)

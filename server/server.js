@@ -62,7 +62,16 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+const bodyParserJSON = bodyParser.json();
+app.use((req, res, next) => {
+  bodyParserJSON(req, res, (error) => {
+    if (error && error.expose && !res.headersSent) {
+      res.sendStatus(error.status);
+    } else {
+      next(error);
+    }
+  });
+});
 app.use(compression());
 
 app.get('/edit', function(req, res) {

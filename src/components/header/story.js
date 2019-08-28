@@ -5,7 +5,7 @@ import { provideContext } from '../../../stories/util';
 import Header from './index';
 
 const mockAPI = {
-  async get(url) {
+  async get() {
     return { data: [] };
   },
 };
