@@ -126,12 +126,22 @@ function useCollectionSearch(query, project, collectionType) {
   return { status: searchResults.status, collections, collectionsWithProject };
 }
 
-export const AddProjectToCollectionBase = ({ project, fromProject, addProjectToCollection, togglePopover, createCollectionPopover, setInitialCollectionName }) => {
+export const AddProjectToCollectionBase = ({
+  project,
+  fromProject,
+  addProjectToCollection,
+  togglePopover,
+  createCollectionPopover,
+  setInitialCollectionName,
+}) => {
   const [collectionType, setCollectionType] = useState('user');
   const [query, setQuery] = useState('');
-  useEffect(() => {
-    setInitialCollectionName(query);
-  }, [query]);
+  useEffect(
+    () => {
+      setInitialCollectionName(query);
+    },
+    [query],
+  );
   const { status, collections, collectionsWithProject } = useCollectionSearch(query, project, collectionType);
   const { currentUser } = useCurrentUser();
   const { createNotification } = useNotifications();

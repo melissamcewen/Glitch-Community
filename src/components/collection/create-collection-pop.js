@@ -129,6 +129,7 @@ function CreateCollectionPopBase({ align, title, onSubmit, options, initialColle
               error={error}
               placeholder="New Collection Name"
               labelText="New Collection Name"
+              autoFocus
             />
           </div>
 
@@ -151,13 +152,10 @@ function CreateCollectionPopBase({ align, title, onSubmit, options, initialColle
     </PopoverDialog>
   );
 }
-
 CreateCollectionPopBase.propTypes = {
-  team: PropTypes.object,
   initialCollectionName: PropTypes.string,
 };
 CreateCollectionPopBase.defaultProps = {
-  team: null,
   initialCollectionName: '',
 };
 
@@ -192,7 +190,7 @@ CreateCollectionWithProject.propTypes = {
   addProjectToCollection: PropTypes.func.isRequired,
 };
 
-const CreateCollectionPop = withRouter(({ team, history, initialCollectionName }) => {
+const CreateCollectionPop = withRouter(({ team, history }) => {
   const { currentUser } = useCurrentUser();
   const options = team ? [getTeamOption(team)] : [getUserOption(currentUser)];
   const track = useTracker('Create Collection clicked');
@@ -205,7 +203,7 @@ const CreateCollectionPop = withRouter(({ team, history, initialCollectionName }
 
   return (
     <PopoverWithButton buttonText="Create Collection">
-      {() => <CreateCollectionPopBase align="left" options={options} onSubmit={onSubmit} initialCollectionName={initialCollectionName} />}
+      {() => <CreateCollectionPopBase align="left" options={options} onSubmit={onSubmit} />}
     </PopoverWithButton>
   );
 });
@@ -215,7 +213,6 @@ CreateCollectionPop.propTypes = {
 };
 CreateCollectionPop.defaultProps = {
   team: null,
-  initialCollectionName: '',
 };
 
 export default CreateCollectionPop;
