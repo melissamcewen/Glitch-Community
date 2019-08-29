@@ -65,7 +65,9 @@ const usePopoverToggle = ({ startOpen, onOpen, triggerButtonRef }) => {
   );
 };
 
-const MonitoredComponent = onClickOutside(({ children }) => children, {
+// onClickOutside requires the component to have a prototype, which arrow functions do not have
+const IdentityComponent = function IdentityComponent({ children }) { return children; };
+const MonitoredComponent = onClickOutside(IdentityComponent, {
   handleClickOutside: (component) => component.props.onClickOutside,
 });
 
