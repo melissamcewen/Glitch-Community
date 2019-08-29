@@ -49,14 +49,18 @@ RemixButton.defaultProps = {
 
 export const MembershipButton = ({ project, isMember, isTeamProject, leaveProject, joinProject }) => {
   if (!isMember) {
-    return isTeamProject ? <Button size="small" onClick={joinProject} emoji="rainbow">Join Project</Button> : null;
+    return isTeamProject ? (
+      <Button size="small" onClick={joinProject} emoji="rainbow">
+        Join Project
+      </Button>
+    ) : null;
   }
 
   // let team members leave directly, warn non team members
   if (isTeamProject) return <Button size="small" onClick={() => leaveProject(project)} emoji="wave">Leave Project</Button>;
   return (
     <PopoverWithButton buttonProps={{ emoji: 'wave', size: 'small' }} buttonText="Leave Project">
-      {({ togglePopover }) => <LeaveProjectPopover project={project} leaveProject={leaveProject} togglePopover={togglePopover} />}
+      {({ togglePopover }) => <LeaveProjectPopover project={project} leaveProject={leaveProject} togglePopover={togglePopover} align="left" />}
     </PopoverWithButton>
   );
 };

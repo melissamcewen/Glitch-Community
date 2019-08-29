@@ -35,7 +35,6 @@ function loadProjectMembers(api, projectIds, setProjectResponses, withCacheBust)
         next[projectId] = { ...next[projectId], members: loadingResponse };
       }
     }
-    console.log(next);
     return next;
   });
   // update each project as it loads
@@ -60,11 +59,9 @@ export const ProjectContextProvider = ({ children }) => {
 
   const getProjectMembers = useCallback((projectId) => {
     if (projectResponses[projectId] && projectResponses[projectId].members) {
-      debugger;
       return projectResponses[projectId].members;
     }
     loadProjectMembers(api, [projectId], setProjectResponses);
-    debugger;
     return loadingResponse;
   }, [projectResponses, api]);
 
