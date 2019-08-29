@@ -29,17 +29,15 @@ const useDefaultProjectOptions = () => {
     }, handleCustomError),
     joinTeamProject: withErrorHandler(async (project, team) => {
       await joinTeamProject({ team, project });
-      console.log('join in state')
+      console.log(project.permissions)
       reloadProjectMembers([project.id]);
-      console.log(project)
+      console.log(project.permissions)
     }, handleError),
     leaveProject: withErrorHandler(async (project) => {
       await removeUserFromProject({ project, user: currentUser });
-      console.log('leave in state')
-      console.log(project)
-      console.log(project)
+      console.log(project.permissions)
       reloadProjectMembers([project.id]);
-      console.log(project)
+      console.log(project.permissions)
     }, handleError),
   };
 };

@@ -59,6 +59,7 @@ export const ProjectContextProvider = ({ children }) => {
 
   const getProjectMembers = useCallback((projectId) => {
     if (projectResponses[projectId] && projectResponses[projectId].members) {
+      console.log('returning from cache', Date.now());
       return projectResponses[projectId].members;
     }
     loadProjectMembers(api, [projectId], setProjectResponses);
@@ -66,8 +67,9 @@ export const ProjectContextProvider = ({ children }) => {
   }, [projectResponses, api]);
 
   const reloadProjectMembers = useCallback((projectIds) => {
+    console.log('reloadProjectMembers');
     loadProjectMembers(api, projectIds, setProjectResponses, true);
-  }, [api]);
+  }, [projectResponses, api]);
 
   return (
     <ProjectMemberContext.Provider value={getProjectMembers}>
