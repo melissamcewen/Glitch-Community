@@ -194,7 +194,7 @@ export const AddProjectToCollectionBase = ({
       />
 
       <PopoverActions>
-        <Button size="small" type="tertiary" onClick={() => createCollectionPopover()}>
+        <Button size="small" type="tertiary" onClick={createCollectionPopover}>
           Add to a new collection
         </Button>
       </PopoverActions>
