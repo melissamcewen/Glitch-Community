@@ -31,7 +31,8 @@ const PupdatesPreview = withRouter(({ history }) => {
         previewMessage={
           <>
             This is a live preview of edits done with the <Link to="https://pupdates-editor.glitch.me">Pupdates Editor.</Link>
-            <br />If you aren't logged in, <Link to="/">Go Home</Link> and then come back here to publish!
+            <br />
+            If you aren't logged in, <Link to="/">Go Home</Link> and then come back here to publish!
           </>
         }
       >

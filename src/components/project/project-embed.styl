@@ -1,21 +1,14 @@
 .buttonContainer
   display: flex
+  justify-content: space-between
   flex-wrap: nowrap
   margin-top: 5px
   position: relative
-      
-.left
-  width: 50%
-
-.right
-  width: 50%
-  text-align: right
- 
-.buttonWrap > div
+  > div
+    display: inline-flex
+  
+.buttonWrap:not(:last-child)
   margin-right: 5px
     
 .embedWrap
   height: 500px
-
-.addToCollectionWrap
-  display: inline-block

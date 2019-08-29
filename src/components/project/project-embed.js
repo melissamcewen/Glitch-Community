@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
 
 import Embed from 'Components/project/embed';
 import ReportButton from 'Components/report-abuse-pop';
@@ -9,18 +8,25 @@ import { useTracker, useTrackedFunc } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
 import { useProjectOptions } from 'State/project-options';
 
-import { EditButton, RemixButton, MembershipButton } from 'Components/project/project-actions';
+import { EditButton, RemixButton, MembershipButton } from './project-actions';
 import AddProjectToCollection from './add-project-to-collection-pop';
 
 import styles from './project-embed.styl';
 
-const cx = classNames.bind(styles);
-
 const ProjectEmbed = ({ project, top, addProjectToCollection, loading }) => {
   const projectOptions = useProjectOptions(project, addProjectToCollection ? { addProjectToCollection } : {});
   const { currentUser } = useCurrentUser();
-  const isMember = userIsProjectMember({ project, user: currentUser });
-  const canBecomeMember = userIsProjectTeamMember({ project, user: currentUser });
+
+  let isMember;
+  let canBecomeMember;
+  useEffect(
+    () => {
+      isMember = userIsProjectMember({ project, user: currentUser });
+      canBecomeMember = userIsProjectTeamMember({ project, user: currentUser });
+    },
+    [],
+  );
+
   const trackRemix = useTracker('Click Remix', {
     baseProjectId: project.id,
     baseDomain: project.domain,
