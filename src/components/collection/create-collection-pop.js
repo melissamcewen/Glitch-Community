@@ -77,14 +77,13 @@ const useCollections = createAPIHook((api, teamId, currentUser) => {
   return getAllPages(api, `/v1/users/by/id/collections?id=${currentUser.id}&limit=100`);
 });
 
-function CreateCollectionPopBase({ align, title, onSubmit, options }) {
+function CreateCollectionPopBase({ align, title, onSubmit, options, initialCollectionName }) {
   const api = useAPI();
   const { createNotification } = useNotifications();
   const { currentUser } = useCurrentUser();
 
   const [loading, setLoading] = useState(false);
-  // TODO: should this be pre-populated with a friendly name?
-  const [collectionName, setCollectionName] = useState('');
+  const [collectionName, setCollectionName] = useState(initialCollectionName);
 
   const [selection, setSelection] = useState(options[0]);
 
@@ -153,7 +152,16 @@ function CreateCollectionPopBase({ align, title, onSubmit, options }) {
   );
 }
 
-export function CreateCollectionWithProject({ project, addProjectToCollection }) {
+CreateCollectionPopBase.propTypes = {
+  team: PropTypes.object,
+  initialCollectionName: PropTypes.string,
+};
+CreateCollectionPopBase.defaultProps = {
+  team: null,
+  initialCollectionName: '',
+};
+
+export function CreateCollectionWithProject({ project, addProjectToCollection, initialCollectionName }) {
   const { createNotification } = useNotifications();
   const { currentUser } = useCurrentUser();
   const options = getOptions(currentUser);
@@ -176,7 +184,7 @@ export function CreateCollectionWithProject({ project, addProjectToCollection })
   };
   const title = <MultiPopoverTitle>{`Add ${project.domain} to a new collection`}</MultiPopoverTitle>;
 
-  return <CreateCollectionPopBase align="right" title={title} options={options} onSubmit={onSubmit} />;
+  return <CreateCollectionPopBase align="right" title={title} options={options} onSubmit={onSubmit} initialCollectionName={initialCollectionName} />;
 }
 
 CreateCollectionWithProject.propTypes = {
@@ -184,7 +192,7 @@ CreateCollectionWithProject.propTypes = {
   addProjectToCollection: PropTypes.func.isRequired,
 };
 
-const CreateCollectionPop = withRouter(({ team, history }) => {
+const CreateCollectionPop = withRouter(({ team, history, initialCollectionName }) => {
   const { currentUser } = useCurrentUser();
   const options = team ? [getTeamOption(team)] : [getUserOption(currentUser)];
   const track = useTracker('Create Collection clicked');
@@ -197,7 +205,7 @@ const CreateCollectionPop = withRouter(({ team, history }) => {
 
   return (
     <PopoverWithButton buttonText="Create Collection">
-      {() => <CreateCollectionPopBase align="left" options={options} onSubmit={onSubmit} />}
+      {() => <CreateCollectionPopBase align="left" options={options} onSubmit={onSubmit} initialCollectionName={initialCollectionName} />}
     </PopoverWithButton>
   );
 });
@@ -207,6 +215,7 @@ CreateCollectionPop.propTypes = {
 };
 CreateCollectionPop.defaultProps = {
   team: null,
+  initialCollectionName: '',
 };
 
 export default CreateCollectionPop;
