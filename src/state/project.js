@@ -17,6 +17,7 @@ export async function getProjectByDomain(api, domain) {
 
 async function getMembers(api, projectId, withCacheBust) {
   const cacheBust = withCacheBust ? `&cacheBust=${Date.now()}` : '';
+  debugger;
   const [users, teams] = await Promise.all([
     getAllPages(api, `/v1/projects/by/id/users?id=${projectId}${cacheBust}`),
     getAllPages(api, `/v1/projects/by/id/teams?id=${projectId}${cacheBust}`),
@@ -40,6 +41,7 @@ function loadProjectMembers(api, projectIds, setProjectResponses, withCacheBust)
   // update each project as it loads
   projectIds.forEach(async (projectId) => {
     const members = await getMembers(api, projectId, withCacheBust);
+    debugger;
     setProjectResponses((prev) => ({
       ...prev,
       [projectId]: {
@@ -55,6 +57,7 @@ const ProjectReloadContext = createContext();
 
 export const ProjectContextProvider = ({ children }) => {
   const [projectResponses, setProjectResponses] = useState({});
+  debugger;
   const api = useAPI();
 
   const getProjectMembers = useCallback((projectId) => {
