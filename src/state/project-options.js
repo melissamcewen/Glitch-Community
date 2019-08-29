@@ -29,10 +29,12 @@ const useDefaultProjectOptions = () => {
     }, handleCustomError),
     joinTeamProject: withErrorHandler(async (project, team) => {
       await joinTeamProject({ team, project });
+      console.log('join in state')
       reloadProjectMembers([project.id]);
     }, handleError),
     leaveProject: withErrorHandler(async (project) => {
       await removeUserFromProject({ project, user: currentUser });
+      console.log('leave in state')
       reloadProjectMembers([project.id]);
     }, handleError),
   };
