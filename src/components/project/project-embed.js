@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Embed from 'Components/project/embed';
@@ -17,15 +17,14 @@ const ProjectEmbed = ({ project, top, addProjectToCollection, loading }) => {
   const projectOptions = useProjectOptions(project, addProjectToCollection ? { addProjectToCollection } : {});
   const { currentUser } = useCurrentUser();
 
-  let isMember;
-  let canBecomeMember;
+  const canBecomeMember = userIsProjectTeamMember({ project, user: currentUser });
+  const [isMember, setIsMember] = useState(userIsProjectMember({ project, user: currentUser }));
   useEffect(
     () => {
-      isMember = userIsProjectMember({ project, user: currentUser });
-      canBecomeMember = userIsProjectTeamMember({ project, user: currentUser });
-    },
-    [],
-  );
+      console.log('in effect');
+      setIsMember(userIsProjectMember({ project, user: currentUser }));
+    [project.permissions]
+    });
 
   const trackRemix = useTracker('Click Remix', {
     baseProjectId: project.id,
