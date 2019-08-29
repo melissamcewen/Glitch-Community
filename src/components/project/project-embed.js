@@ -21,10 +21,12 @@ const ProjectEmbed = ({ project, top, addProjectToCollection, loading }) => {
   const [isMember, setIsMember] = useState(userIsProjectMember({ project, user: currentUser }));
   useEffect(
     () => {
-      console.log('in effect');
+      console.log(project.permissions);
+      console.log('in effect', userIsProjectMember({ project, user: currentUser }));
       setIsMember(userIsProjectMember({ project, user: currentUser }));
-    [project.permissions]
-    });
+    },
+    [project.permissions],
+  );
 
   const trackRemix = useTracker('Click Remix', {
     baseProjectId: project.id,
