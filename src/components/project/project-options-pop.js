@@ -1,17 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { mapValues } from 'lodash';
-import Button from 'Components/buttons/button';
-import Image from 'Components/images/image';
-import { PopoverMenu, MultiPopover, PopoverDialog, PopoverActions, PopoverMenuButton, PopoverTitle, ActionDescription } from 'Components/popover';
+import { PopoverMenu, MultiPopover, PopoverDialog, PopoverActions, PopoverMenuButton } from 'Components/popover';
 import { CreateCollectionWithProject } from 'Components/collection/create-collection-pop';
 import { useTrackedFunc } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
+import { userIsProjectTeamMember } from 'Models/project';
 
+import LeaveProjectPopover from './leave-project-pop';
 import { AddProjectToCollectionBase } from './add-project-to-collection-pop';
-
-const isTeamProject = ({ currentUser, project }) => currentUser.teams.some((team) => project.teamIds.includes(team.id));
-const useTrackedLeaveProject = (leaveProject) => useTrackedFunc(leaveProject, 'Leave Project clicked');
 
 /* eslint-disable react/no-array-index-key */
 const PopoverMenuItems = ({ children }) =>
@@ -24,33 +21,11 @@ const PopoverMenuItems = ({ children }) =>
       ),
   );
 
-const LeaveProjectPopover = ({ project, leaveProject, togglePopover }) => {
-  const illustration = 'https://cdn.glitch.com/55f8497b-3334-43ca-851e-6c9780082244%2Fwave.png?v=1502123444938';
-  const trackLeaveProject = useTrackedLeaveProject(leaveProject);
-
-  return (
-    <PopoverDialog wide focusOnDialog align="right">
-      <PopoverTitle>Leave {project.domain}</PopoverTitle>
-      <PopoverActions>
-        <Image height="50px" width="auto" src={illustration} alt="" />
-        <ActionDescription>
-          Are you sure you want to leave? You'll lose access to this project unless someone else invites you back.
-        </ActionDescription>
-      </PopoverActions>
-      <PopoverActions type="dangerZone">
-        <Button type="dangerZone" onClick={() => { trackLeaveProject(project); togglePopover(); }}>
-          Leave Project
-        </Button>
-      </PopoverActions>
-    </PopoverDialog>
-  );
-};
-
 const ProjectOptionsContent = ({ project, projectOptions, addToCollectionPopover, leaveProjectPopover, leaveProjectDirect }) => {
   const { currentUser } = useCurrentUser();
   const onClickDeleteProject = useTrackedFunc(projectOptions.deleteProject, 'Delete Project clicked');
-  const trackedLeaveProjectDirect = useTrackedLeaveProject(leaveProjectDirect);
-  const onClickLeaveProject = isTeamProject({ currentUser, project }) ? trackedLeaveProjectDirect : leaveProjectPopover;
+  const trackedLeaveProjectDirect = useTrackedFunc(leaveProjectDirect, 'Leave Project clicked');
+  const onClickLeaveProject = userIsProjectTeamMember({ currentUser, project }) ? trackedLeaveProjectDirect : leaveProjectPopover;
 
   return (
     <PopoverDialog align="right">
@@ -62,11 +37,9 @@ const ProjectOptionsContent = ({ project, projectOptions, addToCollectionPopover
             { onClick: projectOptions.removePin, label: 'Un-Pin', emoji: 'pushpin' },
           ],
           [{ onClick: projectOptions.displayNewNote, label: 'Add Note', emoji: 'spiralNotePad' }],
-          [{ onClick: projectOptions.addProjectToCollection && addToCollectionPopover, label: 'Add to Collection', emoji: 'framedPicture' }],
+          [{ onClick: addToCollectionPopover, label: 'Add to Collection', emoji: 'framedPicture' }],
           [{ onClick: projectOptions.joinTeamProject, label: 'Join Project', emoji: 'rainbow' }],
-          [
-            { onClick: leaveProjectDirect && onClickLeaveProject, label: 'Leave Project', emoji: 'wave' },
-          ],
+          [{ onClick: leaveProjectDirect && onClickLeaveProject, label: 'Leave Project', emoji: 'wave' }],
           [
             { onClick: projectOptions.removeProjectFromTeam, label: 'Remove Project', emoji: 'thumbsDown', dangerZone: true },
             { onClick: onClickDeleteProject, label: 'Delete Project', emoji: 'bomb', dangerZone: true },
@@ -83,10 +56,12 @@ export default function ProjectOptionsPop({ project, projectOptions }) {
 
   if (noProjectOptions) return null;
 
-  const toggleBeforeAction = (togglePopover, action) => action && ((...args) => {
-    togglePopover();
-    action(...args);
-  });
+  const toggleBeforeAction = (togglePopover, action) =>
+    action &&
+    ((...args) => {
+      togglePopover();
+      action(...args);
+    });
   const toggleBeforeActions = (togglePopover) => mapValues(projectOptions, (action) => toggleBeforeAction(togglePopover, action));
 
   return (
