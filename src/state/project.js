@@ -67,7 +67,6 @@ export const ProjectContextProvider = ({ children }) => {
 
   const reloadProjectMembers = useCallback((projectIds) => {
     loadProjectMembers(api, projectIds, setProjectResponses, true);
-    console.log(projectResponses);
   }, [api]);
 
   return (
@@ -95,7 +94,6 @@ export function useProjectEditor(initialProject) {
   const { getAvatarImagePolicy } = assets.useAssetPolicy();
   const { updateItem, deleteItem, updateProjectDomain } = useAPIHandlers();
   useEffect(() => setProject(initialProject), [initialProject]);
-  console.log('useProjectEditor', project.permissions);
 
   async function updateFields(changes) {
     await updateItem({ project }, changes);
