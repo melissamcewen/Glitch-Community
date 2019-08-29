@@ -186,6 +186,12 @@ export const AddProjectToCollectionBase = ({
         renderItem={({ item: collection, active }) => (
           <AddProjectToCollectionResultItem active={active} onClick={() => addProjectTo(collection)} collection={collection} />
         )}
+        renderMessage={() => {
+          if (collectionsWithProject.length) {
+            return <PopoverInfo><AlreadyInCollection project={project} collections={collectionsWithProject} /></PopoverInfo>;
+          }
+          return null;
+        }}
         renderNoResults={() => (
           <PopoverInfo>
             <NoResults project={project} collectionsWithProject={collectionsWithProject} query={query} />
