@@ -13,7 +13,8 @@ import AddProjectToCollection from './add-project-to-collection-pop';
 
 import styles from './project-embed.styl';
 
-const ProjectEmbed = ({ project, top, addProjectToCollection, loading }) => {
+const ProjectEmbed = ({ project: initialProject, top, addProjectToCollection, loading }) => {
+  const project = initialProject;
   const projectOptions = useProjectOptions(project, addProjectToCollection ? { addProjectToCollection } : {});
   const { currentUser } = useCurrentUser();
 
@@ -21,8 +22,6 @@ const ProjectEmbed = ({ project, top, addProjectToCollection, loading }) => {
   const [isMember, setIsMember] = useState(userIsProjectMember({ project, user: currentUser }));
   useEffect(
     () => {
-      console.log(project.permissions);
-      console.log('in effect', userIsProjectMember({ project, user: currentUser }));
       setIsMember(userIsProjectMember({ project, user: currentUser }));
     },
     [project.permissions],

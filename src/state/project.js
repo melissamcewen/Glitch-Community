@@ -69,7 +69,7 @@ export const ProjectContextProvider = ({ children }) => {
   const reloadProjectMembers = useCallback((projectIds) => {
     console.log('reloadProjectMembers');
     loadProjectMembers(api, projectIds, setProjectResponses, true);
-  }, [projectResponses, api]);
+  }, [api]);
 
   return (
     <ProjectMemberContext.Provider value={getProjectMembers}>
