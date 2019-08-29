@@ -17,7 +17,6 @@ export async function getProjectByDomain(api, domain) {
 
 async function getMembers(api, projectId, withCacheBust) {
   const cacheBust = withCacheBust ? `&cacheBust=${Date.now()}` : '';
-  debugger;
   const [users, teams] = await Promise.all([
     getAllPages(api, `/v1/projects/by/id/users?id=${projectId}${cacheBust}`),
     getAllPages(api, `/v1/projects/by/id/teams?id=${projectId}${cacheBust}`),
@@ -36,12 +35,12 @@ function loadProjectMembers(api, projectIds, setProjectResponses, withCacheBust)
         next[projectId] = { ...next[projectId], members: loadingResponse };
       }
     }
+    console.log(next);
     return next;
   });
   // update each project as it loads
   projectIds.forEach(async (projectId) => {
     const members = await getMembers(api, projectId, withCacheBust);
-    debugger;
     setProjectResponses((prev) => ({
       ...prev,
       [projectId]: {
@@ -57,21 +56,21 @@ const ProjectReloadContext = createContext();
 
 export const ProjectContextProvider = ({ children }) => {
   const [projectResponses, setProjectResponses] = useState({});
-  debugger;
   const api = useAPI();
 
   const getProjectMembers = useCallback((projectId) => {
     if (projectResponses[projectId] && projectResponses[projectId].members) {
-      console.log('returning from cache', Date.now());
+      debugger;
       return projectResponses[projectId].members;
     }
     loadProjectMembers(api, [projectId], setProjectResponses);
+    debugger;
     return loadingResponse;
   }, [projectResponses, api]);
 
   const reloadProjectMembers = useCallback((projectIds) => {
-    console.log('reloadProjectMembers');
     loadProjectMembers(api, projectIds, setProjectResponses, true);
+    console.log(projectResponses);
   }, [api]);
 
   return (
