@@ -90,7 +90,7 @@ export function useProjectReload() {
 export function useProjectEditor(initialProject) {
   const [project, setProject] = useState(initialProject);
   const { uploadAsset } = useUploader();
-  const { handleError, handleErrorForInput } = useErrorHandlers();
+  const { handleError, handleErrorForInput, handleImageUploadError } = useErrorHandlers();
   const { getAvatarImagePolicy } = assets.useAssetPolicy();
   const { updateItem, deleteItem, updateProjectDomain } = useAPIHandlers();
   useEffect(() => setProject(initialProject), [initialProject]);
@@ -118,12 +118,16 @@ export function useProjectEditor(initialProject) {
       assets.requestFile(
         withErrorHandler(async (blob) => {
           const { data: policy } = await getAvatarImagePolicy({ project });
-          await uploadAsset(blob, policy, '', { cacheControl: 60 });
+          const url = await uploadAsset(blob, policy, '', { cacheControl: 60 });
+          if (!url) {
+            return;
+          }
+
           setProject((prev) => ({
             ...prev,
             avatarUpdatedAt: Date.now(),
           }));
-        }, handleError),
+        }, handleImageUploadError),
       ),
   };
   return [project, funcs];
