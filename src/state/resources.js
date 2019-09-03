@@ -45,19 +45,30 @@ state shape:
 
 const initialState = mapValues(resourceConfig, () => ({}))
 
-const getResourceRow = (state, type, id) => {
+// get the cached resource + any requests that we need to make
+const getResource = (state, type, id) => {
+  if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
+
   const row = state[type][id]
-  if (!row || row.expires < Date.now()) return null
-  return row
-}
-  
-const getResourceValue = (state, type, id) => {
-  const row = getResourceRow(state, type, id)
-  return row ? row.value : null
+  // if resource is missing or expired, request the resource 
+  if (!row || row.expires < Date.now()) {
+    return { value: null, row, requests: [{ type, ids: [id] }] }
+  }
+  return { value: row.value, row, requests: [] }
 }
 
 const getChildResources = (state, type, id, childType) => {
-  const row = getResourceRow(state, type, id)
-  if (!row) return null
-    
+  const result = getResource(state, type, id)
+  // if resource is missing or expired, request the resource + its children
+  if (!result.value) {
+    return { value: null, row: result.row, requests: [...result.requests, { type: id, childType }] }
+  }
+  
+  const childResourceType = resourceConfig[type].refernces[childType]
+  if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`)
+  
+  const childIDs = result.row.references
+  // todo
+  if (!references[childType]) return null
+  const 
 }
