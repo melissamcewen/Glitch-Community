@@ -4,9 +4,12 @@ import { useAPI, useAPIHandlers, createAPIHook } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
 import { getSingleItem, getAllPages } from 'Shared/api';
 import { captureException } from 'Utils/sentry';
-import { createCollection } from 'Models/collection';
+import { createCollection, getCollectionLink } from 'Models/collection';
 import { AddProjectToCollectionMsg } from 'Components/notification';
+import { useNotifications } from 'State/notifications';
+import { useCurrentUser } from 'State/current-user';
 
+// used by featured-project and pages/project
 export const toggleBookmark = async ({
   api,
   project,
@@ -44,12 +47,15 @@ export const toggleBookmark = async ({
   }
 };
 
+const createAPICallForCollectionProjects = (encodedFullUrl) =>
+  `/v1/collections/by/fullUrl/projects?fullUrl=${encodedFullUrl}&orderKey=projectOrder&limit=100`;
+
 export const getCollectionWithProjects = async (api, { owner, name }) => {
-  const fullUrl = `${encodeURIComponent(owner)}/${name}`;
+  const fullUrl = encodeURIComponent(`${owner}/${name}`);
   try {
     const [collection, projects] = await Promise.all([
       getSingleItem(api, `/v1/collections/by/fullUrl?fullUrl=${fullUrl}`, `${owner}/${name}`),
-      getAllPages(api, `/v1/collections/by/fullUrl/projects?fullUrl=${fullUrl}&orderKey=projectOrder&limit=100`),
+      getAllPages(api, createAPICallForCollectionProjects(fullUrl)),
     ]);
     return { ...collection, projects };
   } catch (error) {
@@ -60,8 +66,14 @@ export const getCollectionWithProjects = async (api, { owner, name }) => {
 };
 
 async function getCollectionProjectsFromAPI(api, collection, withCacheBust) {
-  const cacheBust = withCacheBust ? `&cacheBust=${Date.now()}` : '';
-  return getAllPages(api, `/v1/collections/by/id/projects?id=${collection.id}&limit=100${cacheBust}`);
+  if (withCacheBust) {
+    // busts cache for collection projects by both url and by id
+    api.bustCache(createAPICallForCollectionProjects(encodeURIComponent(collection.fullUrl)));
+    api.bustCache(`/v1/collections/by/id/projects?id=${collection.id}&limit=100`);
+  }
+
+  // then get the latest collection projects
+  return getAllPages(api, `/v1/collections/by/id/projects?id=${collection.id}&limit=100`);
 }
 
 const loadingResponse = { status: 'loading' };
@@ -175,7 +187,12 @@ export function useCollectionEditor(initialCollection) {
     removeProjectFromCollection,
     updateProjectInCollection,
   } = useAPIHandlers();
+  const api = useAPI();
+
   const { handleError, handleErrorForInput, handleCustomError } = useErrorHandlers();
+  const reloadCollectionProjects = useCollectionReload();
+  const { createNotification } = useNotifications();
+  const { currentUser } = useCurrentUser();
 
   async function updateFields(changes) {
     // A note here: we don't want to setState with the data from the server from this call, as it doesn't return back the projects in depth with users and notes and things
@@ -200,28 +217,75 @@ export function useCollectionEditor(initialCollection) {
 
   const funcs = {
     addProjectToCollection: withErrorHandler(async (project, selectedCollection) => {
+      // if it's the same collection as the page you're on, add the project to it
       if (selectedCollection.id === collection.id) {
-        // add project to collection page
-        setCollection((prev) => ({
-          ...prev,
-          projects: [project, ...prev.projects],
+        setCollection((oldCollection) => ({
+          ...oldCollection,
+          projects: [project, ...oldCollection.projects],
         }));
       }
+
+      // if you're adding to a project to the my stuff collection, make sure the project shows as bookmarked
+      if (selectedCollection.isMyStuff) {
+        setCollection((oldCollection) => ({
+          ...oldCollection,
+          projects: oldCollection.projects.map((p) => {
+            if (p.id === project.id) {
+              p.authUserHasBookmarked = true;
+            }
+            return p;
+          }),
+        }));
+      }
+
+      // make backend call
       await addProjectToCollection({ project, collection: selectedCollection });
+
+      // reorder collection if necessary
       if (selectedCollection.id === collection.id) {
         await orderProjectInCollection({ project, collection }, 0);
       }
+
+      // reload collection projects, this will ensure next time we navigate to this page, the state is up to date and caches are busted if necessary
+      reloadCollectionProjects([selectedCollection, collection]);
     }, handleCustomError),
 
-    removeProjectFromCollection: withErrorHandler(async (project) => {
-      await removeProjectFromCollection({ project, collection });
-      setCollection((prev) => ({
-        ...prev,
-        projects: prev.projects.filter((p) => p.id !== project.id),
-      }));
+    removeProjectFromCollection: withErrorHandler(async (project, selectedCollection) => {
+      // if no collection is passed in, assume the current page is the collection we're removing from
+      if (!selectedCollection.id) {
+        selectedCollection = collection;
+      }
+
+      // if collection we're removing from is same as current collection page, remove it from the page
+      if (selectedCollection.id === collection.id) {
+        setCollection((oldCollection) => ({
+          ...oldCollection,
+          projects: oldCollection.projects.filter((p) => p.id !== project.id),
+        }));
+      }
+
+      // if we're unbookmarking a project in a collection, make sure it shows as unbookmarked
+      if (selectedCollection.isMyStuff) {
+        setCollection((oldCollection) => ({
+          ...oldCollection,
+          projects: oldCollection.projects.map((p) => {
+            if (p.id === project.id) {
+              p.authUserHasBookmarked = false;
+            }
+            return p;
+          }),
+        }));
+      }
+
+      // make api call to remove from collection
+      await removeProjectFromCollection({ project, collection: selectedCollection });
+
+      // reload collection projects, this will ensure next time we navigate to this page, the state is up to date and caches are busted if necessary
+      reloadCollectionProjects([selectedCollection, collection]);
     }, handleError),
 
     deleteCollection: () => deleteItem({ collection }).catch(handleError),
+
     deleteProject: withErrorHandler(async (project) => {
       await deleteItem({ project });
       setCollection((prev) => ({
@@ -267,6 +331,23 @@ export function useCollectionEditor(initialCollection) {
     }, handleError),
 
     unfeatureProject: () => updateFields({ featuredProjectId: null }).catch(handleError),
+
+    // used on the collection page
+    toggleBookmark: withErrorHandler(async (project) => {
+      let myStuffCollection = currentUser.collections.find((c) => c.isMyStuff);
+      if (project.authUserHasBookmarked) {
+        await funcs.removeProjectFromCollection(project, myStuffCollection);
+        createNotification(`Removed ${project.domain} from collection My Stuff`);
+      } else {
+        if (!myStuffCollection) {
+          myStuffCollection = await createCollection({ api, name: 'My Stuff', createNotification, myStuffEnabled: true });
+        }
+        await funcs.addProjectToCollection(project, myStuffCollection);
+        createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={getCollectionLink(myStuffCollection)} />, {
+          type: 'success',
+        });
+      }
+    }, handleError),
   };
   return [collection, funcs];
 }
