@@ -99,7 +99,6 @@ function DeleteProjectPopover({ projectDomain, deleteProject }) {
 
   return (
     <section>
-      <Loader />
       <PopoverWithButton buttonProps={{ size: 'small', type: 'dangerZone', emoji: 'bomb' }} buttonText="Delete Project">
         {({ togglePopover }) => (
           <PopoverDialog align="left" wide>
