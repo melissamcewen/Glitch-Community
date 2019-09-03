@@ -1,3 +1,5 @@
+import { mapValues } from 'lodash';
+
 const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
 
 const resourceConfig = {
@@ -26,18 +28,36 @@ const resourceConfig = {
   },
 };
 
-const getResourceRow = (state, type, id) => state[type][id]
-const getResourceValue = (state, type, id) => 
+/*
+state shape:
+{
+  [type]: { 
+    [id]: { 
+      value, 
+      expires, 
+      references: { 
+        [childType]: [id] 
+      } 
+    } 
+  } 
+}
+*/
 
+const initialState = mapValues(resourceConfig, () => ({}))
 
-const getChildResources = (state, type, id, childType) => {
-  const row = state[type]
+const getResourceRow = (state, type, id) => {
+  const row = state[type][id]
+  if (!row || row.expires < Date.now()) return null
+  return row
+}
+  
+const getResourceValue = (state, type, id) => {
+  const row = getResourceRow(state, type, id)
+  return row ? row.value : null
 }
 
-function createResourceState (config) {
-  const initialState = {}
-  for (const [key, { references }] of Object.values(config)) {
-    initialState[key] = { values: {}, references: {} }
-    initialState.references[]
-  }
+const getChildResources = (state, type, id, childType) => {
+  const row = getResourceRow(state, type, id)
+  if (!row) return null
+    
 }
