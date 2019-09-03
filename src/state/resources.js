@@ -122,6 +122,7 @@ const getChildResources = (state, type, id, childType) => {
   // collect all of the associated children from the child resource table
   const resultValues = [];
   const childIDsToRequest = [];
+  console.log(type, id, childIDsRequest)
   for (const childID of childIDsRequest.ids) {
     const { value: childValue } = getResource(state, childResourceType, childID);
     if (childValue) {

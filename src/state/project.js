@@ -57,7 +57,19 @@ const ProjectReloadContext = createContext();
 export const ProjectContextProvider = ({ children }) => children
 
 export function useProjectMembers(projectId) {
-  return useResources('project', projectId, 'users')
+  const usersResult = useResource('projects', projectId, 'users')
+  const teamsResult = useResource('projects', projectId, 'teams')
+  if (usersResult.value) {
+    return { status: 'ready', value: { users: usersResult.value, teams: [] } }
+  }
+  return usersResult
+//   
+//   if (usersResult.status === 'loading' || teamsResult.status === 'loading') return { status: 'loading' }
+  
+//   return {
+//     status: 'ready',
+//     value: { users: usersResult.value, teams: teamsResult.value }
+//   }
 }
 
 export function useProjectReload() {
