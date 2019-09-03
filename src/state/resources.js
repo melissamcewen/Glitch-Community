@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import axios from 'axios';
 import { mapValues, memoize, debounce } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
@@ -48,25 +49,23 @@ const resourceConfig = {
 /*
 state shape:
 {
-  [type]: { 
+  [type]: {
     [id]: {
       status: 'loading' | 'ready'
-      expires: timestamp, 
+      expires: timestamp,
       value: Object,
-      references: { 
+      references: {
         [childType]: {
           status: 'loading' | 'ready',
           expires,
           ids: [childID]
         }
-      } 
-    } 
+      }
+    }
   },
   _requestQueue: [request],
 }
 */
-
-const sleep = (timeout) => new Promise((resolve) => setTimeout(resolve, timeout));
 
 const rowIsMissingOrExpired = (row) => {
   if (!row) return true;
@@ -197,11 +196,10 @@ const getAPIForToken = memoize((persistentToken) => {
         Authorization: persistentToken,
       },
     });
-  } else {
-    return axios.create({
-      baseURL: API_URL,
-    });
   }
+  return axios.create({
+    baseURL: API_URL,
+  });
 });
 
 const handleRequest = async (api, { type, childType, id, ids }) => {
@@ -214,7 +212,7 @@ const handleRequest = async (api, { type, childType, id, ids }) => {
     return { type, id, childType, values };
   }
 
-  const idString = ids.map((id) => `id=${id}`).join('&');
+  const idString = ids.map((itemId) => `id=${itemId}`).join('&');
   const { data } = await api.get(`/v1/${type}/by/id?${idString}`);
   return { type, values: Object.values(data) };
 };
@@ -263,14 +261,14 @@ export const handlers = {
 };
 
 export const useResource = (type, id, childType) => {
-  const state = useSelector((state) => state.resources);
+  const resourceState = useSelector((state) => state.resources);
   const dispatch = useDispatch();
-  const { status, value, requests } = childType ? getChildResources(state, type, id, childType) : getResource(state, type, id);
+  const result = childType ? getChildResources(resourceState, type, id, childType) : getResource(resourceState, type, id);
 
-  if (requests.length) {
+  if (result.requests.length) {
     setTimeout(() => {
-      dispatch(actions.requestedResources(requests));
+      dispatch(actions.requestedResources(result.requests));
     }, 0);
   }
-  return { status, value };
+  return result;
 };
