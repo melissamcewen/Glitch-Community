@@ -247,11 +247,26 @@ export const { reducer, actions } = createSlice({
   },
 });
 
-const batchRequests = (requests) => {
+const batchAndDedupeRequests = (requests) => {
   const combined = {}
+  
+  // dedupe
   for (const req of requests) {
-    const hash = ``
+    const hash = `${req.type} ${req.id || ''} ${req.childType || ''}`
+    // consolidate multiple requests for a single resource type
+    if (combined[hash] && combined[hash].ids) {
+      combined[hash] = { 
+        ...combined[hash], 
+        ids: combined[hash].ids.concat(req.ids),
+      }
+    } else {
+      combined[hash] = req
+    }
   }
+  
+  const deduped = Object.values(combined)
+  
+  return deduped
 }
 
 
@@ -261,7 +276,7 @@ export const handlers = {
     const token = store.getState().currentUser.persistentToken;
     store.dispatch(actions.flushedRequestQueue());
     const api = getAPIForToken(token);
-    console.log({ requests });
+    console.log(batchAndDedupeRequests(requests));
     // requests.forEach(async (request) => {
     //   const response = await handleRequest(api, request);
     //   store.dispatch(actions.receivedResources(response));
