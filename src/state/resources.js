@@ -14,12 +14,17 @@ const status = {
 
 const resourceConfig = {
   collections: {
+    secondaryKeys: ['fullUrl'],
     references: { projects: 'projects' },
   },
   projects: {
+    secondaryKeys: ['domain'],
+    orderBy: 'domain',
     references: { collections: 'collections', teams: 'teams', users: 'users' },
   },
   teams: {
+    secondaryKeys: ['url'],
+    orderBy: 'url',
     references: {
       collections: 'collections',
       users: 'users',
@@ -28,6 +33,8 @@ const resourceConfig = {
     },
   },
   users: {
+    secondaryKeys: ['login'],
+    orderBy: 'login',
     references: {
       collections: 'collections',
       teams: 'teams',
@@ -59,7 +66,6 @@ state shape:
 }
 */
 
-
 const sleep = (timeout) => new Promise((resolve) => setTimeout(resolve, timeout));
 
 const rowIsMissingOrExpired = (row) => {
@@ -79,8 +85,7 @@ get the cached resource + any requests that we need to make
 returns {
   status: 'loading' | 'ready'
   value,
-  requests: [request],
-  _references (used internally by getChildResources)
+  requests: [{ type, ids: [id] } | { type, id, childType }],
 }
 */
 const getResource = (state, type, id) => {
@@ -201,12 +206,17 @@ const getAPIForToken = memoize((persistentToken) => {
 
 const handleRequest = async (api, { type, childType, id, ids }) => {
   if (childType) {
-    // TODO: order
-    const values = await getAllPages(api, `/v1/${type}/by/id/${childType}?id=${id}&limit=100`);
-    return { type, id, childType, values }
+    const childResourceType = getChildResourceType(type, childType);
+    const order = resourceConfig[childResourceType].orderBy;
+    const url = `/v1/${type}/by/id/${childType}?id=${id}&limit=100${order ? `&orderKey=${order}&orderDirection=ASC` : ''}`;
+
+    const values = await getAllPages(api, url);
+    return { type, id, childType, values };
   }
-  const { data } = await api.get(`/v1/${type}/by/id?${ids.map((id) => `id=${id}`).join('&')}`);
-  return { type, values: Object.values(data) }
+
+  const idString = ids.map((id) => `id=${id}`).join('&');
+  const { data } = await api.get(`/v1/${type}/by/id?${idString}`);
+  return { type, values: Object.values(data) };
 };
 
 export const { reducer, actions } = createSlice({
