@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
-import { mapValues, memoize, debounce } from 'lodash';
+import { mapValues, memoize, debounce, chunk } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -264,9 +264,19 @@ const batchAndDedupeRequests = (requests) => {
     }
   }
   
-  const deduped = Object.values(combined)
+  // batch
+  const out = []
+  for (const item of Object.values(combined)) {
+    if (item.ids) {
+      chunk(item.ids, 100).forEach(idChunk => {
+        out.push({ ...item, ids: idChunk })
+      })
+    } else {
+      out.push(item)
+    }
+  }
   
-  return deduped
+  return out
 }
 
 
@@ -276,11 +286,10 @@ export const handlers = {
     const token = store.getState().currentUser.persistentToken;
     store.dispatch(actions.flushedRequestQueue());
     const api = getAPIForToken(token);
-    console.log(batchAndDedupeRequests(requests));
-    // requests.forEach(async (request) => {
-    //   const response = await handleRequest(api, request);
-    //   store.dispatch(actions.receivedResources(response));
-    // });
+    batchAndDedupeRequests(requests).forEach(async (request) => {
+      const response = await handleRequest(api, request);
+      store.dispatch(actions.receivedResources(response));
+    });
   }, 1000),
 };
 
@@ -294,3 +303,18 @@ export const useResource = (type, id, childType) => {
   }
   return result;
 };
+
+/*
+  combine multiple results into a single result that's ready when all inputs are ready
+  (like Promise.all or allByKeys).
+  Can take an object or an array.
+*/
+export const allReady = (reqs) => {
+  if (Object.values(reqs).every(req => req.status === status.ready)) {
+    return {
+      status: status.ready,
+      value: Array.isArray(reqs) ? reqs.map((req) => req.value) : mapValues(reqs, (req) => req.value),
+    }
+  }
+  return { status: status.loading }
+}

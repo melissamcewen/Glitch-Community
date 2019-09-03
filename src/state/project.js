@@ -3,7 +3,7 @@ import React, { useState, useCallback, useContext, createContext, useEffect } fr
 import useUploader from 'State/uploader';
 import { useAPI, useAPIHandlers } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
-import { useResource, actions as resourceActions } from 'State/resources';
+import { useResource, actions as resourceActions, allReady } from 'State/resources';
 import * as assets from 'Utils/assets';
 import { allByKeys, getSingleItem, getAllPages } from 'Shared/api';
 
@@ -57,19 +57,10 @@ const ProjectReloadContext = createContext();
 export const ProjectContextProvider = ({ children }) => children
 
 export function useProjectMembers(projectId) {
-  const usersResult = useResource('projects', projectId, 'users')
-  const teamsResult = useResource('projects', projectId, 'teams')
-  if (usersResult.value) {
-    return { status: 'ready', value: { users: usersResult.value, teams: [] } }
-  }
-  return usersResult
-//   
-//   if (usersResult.status === 'loading' || teamsResult.status === 'loading') return { status: 'loading' }
-  
-//   return {
-//     status: 'ready',
-//     value: { users: usersResult.value, teams: teamsResult.value }
-//   }
+  return allReady({
+    users: useResource('projects', projectId, 'users'),
+    teams: useResource('projects', projectId, 'teams'),
+  })
 }
 
 export function useProjectReload() {
