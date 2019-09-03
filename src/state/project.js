@@ -16,44 +16,6 @@ export async function getProjectByDomain(api, domain) {
   return { ...project, teams, users };
 }
 
-async function getMembers(api, projectId, withCacheBust) {
-  const cacheBust = withCacheBust ? `&cacheBust=${Date.now()}` : '';
-  const [users, teams] = await Promise.all([
-    getAllPages(api, `/v1/projects/by/id/users?id=${projectId}${cacheBust}`),
-    getAllPages(api, `/v1/projects/by/id/teams?id=${projectId}${cacheBust}`),
-  ]);
-  return { users, teams };
-}
-
-const loadingResponse = { status: 'loading' };
-
-function loadProjectMembers(api, projectIds, setProjectResponses, withCacheBust) {
-  // set selected projects to 'loading' if they haven't been initialized yet
-  setProjectResponses((prev) => {
-    const next = { ...prev };
-    for (const projectId of projectIds) {
-      if (!next[projectId] || !next[projectId].members) {
-        next[projectId] = { ...next[projectId], members: loadingResponse };
-      }
-    }
-    return next;
-  });
-  // update each project as it loads
-  projectIds.forEach(async (projectId) => {
-    const members = await getMembers(api, projectId, withCacheBust);
-    setProjectResponses((prev) => ({
-      ...prev,
-      [projectId]: {
-        ...prev[projectId],
-        members: { status: 'ready', value: members },
-      },
-    }));
-  });
-}
-
-const ProjectMemberContext = createContext();
-const ProjectReloadContext = createContext();
-
 export const ProjectContextProvider = ({ children }) => children
 
 export function useProjectMembers(projectId) {

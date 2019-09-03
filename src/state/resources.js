@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
-import { mapValues, memoize, debounce, chunk } from 'lodash';
+import { mapValues, memoize, debounce, chunk, remove } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -224,6 +224,7 @@ export const { reducer, actions } = createSlice({
     _requestQueue: [],
   },
   reducers: {
+    // loading
     requestedResources: (state, { payload: requests }) => {
       for (const request of requests) {
         if (request.childType) {
@@ -244,6 +245,14 @@ export const { reducer, actions } = createSlice({
         storeResources(state, response);
       }
     },
+    // updates
+    joinTeamProject: (state, { payload: { projectID, userID } }) => {
+      if (state.projects[projectID] && state.projects[projectID].references.users && )
+      state.projects[projectID].references.users.value.push(userID)
+    },
+    leaveProject: (state, { payload: { projectID, userID } }) => {
+      remove(state.projects[projectID].references.users.value, (id) => userID)
+    }, 
   },
 });
 
