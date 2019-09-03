@@ -32,43 +32,69 @@ const resourceConfig = {
 state shape:
 {
   [type]: { 
-    [id]: { 
-      value, 
+    [id]: {
+      status: 'loading' | 'ready'
+      value,
       expires, 
       references: { 
-        [childType]: [id] 
+        [childType]: {
+          status: 'loading' | 'ready',
+          ids: [childID]
+        }
       } 
     } 
   } 
 }
 */
 
-const initialState = mapValues(resourceConfig, () => ({}))
+const initialState = mapValues(resourceConfig, () => ({}));
 
 // get the cached resource + any requests that we need to make
 const getResource = (state, type, id) => {
   if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
 
-  const row = state[type][id]
-  // if resource is missing or expired, request the resource 
+  const row = state[type][id];
+  // resource is missing or expired; request the resource
   if (!row || row.expires < Date.now()) {
-    return { value: null, row, requests: [{ type, ids: [id] }] }
+    return { status: 'loading', value: null, requests: [{ type, ids: [id] }] };
   }
-  return { value: row.value, row, requests: [] }
-}
+  // resource is pending; don't make a request
+  if (row.status)
+  
+  return { status: 'loading', value: row.value, row, requests: [] };
+};
 
 const getChildResources = (state, type, id, childType) => {
-  const result = getResource(state, type, id)
-  // if resource is missing or expired, request the resource + its children
-  if (!result.value) {
-    return { value: null, row: result.row, requests: [...result.requests, { type: id, childType }] }
+  const { value, row } = getResource(state, type, id);
+  // resource is missing or expired; request the resource + its children
+  if (!value) {
+    return { value: null, requests: [{ type, ids: [id] }, { type, id, childType }] };
   }
-  
-  const childResourceType = resourceConfig[type].refernces[childType]
-  if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`)
-  
-  const childIDs = result.row.references
-  // todo
-  if (!references[childType]) return null
-  const 
-}
+
+  const childResourceType = resourceConfig[type].refernces[childType];
+  if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
+
+  const childIDs = row.references[childType];
+  // resource is present but its children are missing; request all of its children
+  if (!childIDs) {
+    return { value: null, requests: [{ type, id, childType }] };
+  }
+
+  // collect all of the associated children from the child resource table
+  const resultValues = [];
+  const childIDsToRequest = [];
+  for (const childID of childIDs) {
+    const { value: childValue } = getResource(state, childResourceType, childID);
+    if (value) {
+      resultValues.push(value);
+    } else {
+      childIDsToRequest.push(childID);
+    }
+  }
+
+  // some children are missing/expired; request them in a single batch
+  if (childIDsToRequest.length > 0) {
+    return { value: resultValues, requests: [{ type: childResourceType, ids: childIDsToRequest }] };
+  }
+  return { value: resultValues, requests: [] };
+};
