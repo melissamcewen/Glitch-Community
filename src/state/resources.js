@@ -227,9 +227,9 @@ export const { reducer, actions } = createSlice({
     requestedResources: (state, { payload: requests }) => {
       for (const request of requests) {
         if (request.childType) {
-          storePendingChildRequest(request);
+          storePendingChildRequest(state, request);
         } else {
-          storePendingRequest(request);
+          storePendingRequest(state, request);
         }
       }
       state._requestQueue.push(...requests);
@@ -239,9 +239,9 @@ export const { reducer, actions } = createSlice({
     },
     receivedResources: (state, { payload: response }) => {
       if (response.childType) {
-        storeChildResources(response);
+        storeChildResources(state, response);
       } else {
-        storeResources(response);
+        storeResources(state, response);
       }
     },
   },
@@ -267,7 +267,6 @@ export const useResource = (type, id, childType) => {
 
   if (result.requests.length) {
     setTimeout(() => {
-      
       dispatch(actions.requestedResources(result.requests));
     }, 0);
   }

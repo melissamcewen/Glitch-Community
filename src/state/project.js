@@ -57,7 +57,7 @@ const ProjectReloadContext = createContext();
 export const ProjectContextProvider = ({ children }) => children
 
 export function useProjectMembers(projectId) {
-  return useResource('projects', projectId, 'users')
+  return useResources('project', projectId, 'users')
 }
 
 export function useProjectReload() {
