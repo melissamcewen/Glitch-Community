@@ -141,13 +141,11 @@ export const CollectionContextProvider = ({ children }) => {
 export const useCollectionContext = () => useContext(CollectionProjectContext);
 
 export function useCollectionProjects(collection) {
-  const getCollectionProjects = useContext(CollectionProjectContext);
-  return getCollectionProjects(collection);
+  return useResource('collections', collection.id, 'projects')
 }
 
 export function useCollectionReload() {
-  const reloadCollectionProjects = useContext(CollectionReloadContext);
-  return reloadCollectionProjects;
+  return () => {}
 }
 
 export const useCollectionCurator = createAPIHook(async (api, collection) => {

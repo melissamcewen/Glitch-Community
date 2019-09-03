@@ -12,7 +12,7 @@ import Arrow from 'Components/arrow';
 import { UserLink, TeamLink } from 'Components/link';
 import { getDisplayName } from 'Models/user';
 import { getSingleItem } from 'Shared/api';
-import { useCollectionContext, useCollectionCurator } from 'State/collection';
+import { useCollectionCurator } from 'State/collection';
 
 import styles from './styles.styl';
 
@@ -25,35 +25,38 @@ const loadMoreCollectionsFromAuthor = ({ api, collection }) => {
   return getSingleItem(api, `v1/${authorEndpoint}/${authorId}/collections?limit=10&orderKey=createdAt&orderDirection=DESC`, 'items');
 };
 
-function useCollectionsWithProjects(collections) {
-  const getCollectionProjects = useCollectionContext();
-  const responses = collections.map(getCollectionProjects);
-  const [collectionsWithProjects, setCollectionsWithProjects] = useState(null);
-  useEffect(() => {
-    setCollectionsWithProjects((prev) => {
-      if (prev) return prev;
+// FIXME
+// function useCollectionsWithProjects(collections) {
+//   const getCollectionProjects = useCollectionContext();
+//   const responses = collections.map(getCollectionProjects);
+//   const [collectionsWithProjects, setCollectionsWithProjects] = useState(null);
+//   useEffect(() => {
+//     setCollectionsWithProjects((prev) => {
+//       if (prev) return prev;
 
-      const allResponsesComplete = responses.every((r) => r.status !== 'loading');
-      if (!allResponsesComplete) return null;
+//       const allResponsesComplete = responses.every((r) => r.status !== 'loading');
+//       if (!allResponsesComplete) return null;
 
-      const moreCollectionsWithProjects = [];
-      responses.forEach((response, i) => {
-        if (response.status === 'ready' && response.value.length > 0) {
-          moreCollectionsWithProjects.push({ ...collections[i], projects: response.value });
-        }
-      });
+//       const moreCollectionsWithProjects = [];
+//       responses.forEach((response, i) => {
+//         if (response.status === 'ready' && response.value.length > 0) {
+//           moreCollectionsWithProjects.push({ ...collections[i], projects: response.value });
+//         }
+//       });
 
-      const filteredMoreCollectionsWithProjects = moreCollectionsWithProjects.filter((c) => !c.isMyStuff);
+//       const filteredMoreCollectionsWithProjects = moreCollectionsWithProjects.filter((c) => !c.isMyStuff);
 
-      return sampleSize(filteredMoreCollectionsWithProjects, 3);
-    });
-  }, [responses]);
-  return collectionsWithProjects;
-}
+//       return sampleSize(filteredMoreCollectionsWithProjects, 3);
+//     });
+//   }, [responses]);
+//   return collectionsWithProjects;
+// }
+
+const 
 
 const MoreCollections = ({ currentCollection, collections }) => {
   const curator = useCollectionCurator(currentCollection);
-  const collectionsWithProjects = useCollectionsWithProjects(collections);
+  const collectionsWithProjects = collections;
   if (!collectionsWithProjects) return <Loader style={{ width: '25px' }} />;
   if (!collectionsWithProjects.length) return null;
 

@@ -67,8 +67,10 @@ function CollectionsList({
   const { currentUser } = useCurrentUser();
   const [deletedCollectionIds, setDeletedCollectionIds] = useState([]);
   const myStuffEnabled = useDevToggle('My Stuff');
-  const getCollectionProjects = useCollectionContext();
-
+  // TODO: dispatch a fetch; the return value is not used here
+  // const getCollectionProjects = useCollectionContext();
+  const getCollectionProjects = () => {};
+  
   function deleteCollection(collection) {
     setDeletedCollectionIds((ids) => [...ids, collection.id]);
     return deleteItem({ collection });
