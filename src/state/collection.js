@@ -77,68 +77,8 @@ async function getCollectionProjectsFromAPI(api, collection, withCacheBust) {
   return getAllPages(api, `/v1/collections/by/id/projects?id=${collection.id}&limit=100`);
 }
 
-const loadingResponse = { status: 'loading' };
-
-function loadCollectionProjects(api, collections, setResponses, withCacheBust) {
-  setResponses((prev) => {
-    const next = { ...prev };
-    for (const { id } of collections) {
-      if (!next[id] || !next[id].projects) {
-        next[id] = { ...next[id], projects: loadingResponse };
-      }
-    }
-    return next;
-  });
-  collections.forEach(async (collection) => {
-    const projects = await getCollectionProjectsFromAPI(api, collection, withCacheBust);
-    setResponses((prev) => ({
-      ...prev,
-      [collection.id]: {
-        ...prev[collection.id],
-        projects: { status: 'ready', value: projects },
-      },
-    }));
-  });
-}
-
-const CollectionProjectContext = createContext();
-const CollectionReloadContext = createContext();
-
 // we mock out the projects for the placeholder my stuff collections
 const initialResponses = { nullMyStuff: { projects: { status: 'ready', value: [] } } };
-
-export const CollectionContextProvider = ({ children }) => {
-  const [responses, setResponses] = useState(initialResponses);
-  const api = useAPI();
-
-  const getCollectionProjects = useCallback(
-    (collection) => {
-      if (responses[collection.id] && responses[collection.id].projects) {
-        return responses[collection.id].projects;
-      }
-      loadCollectionProjects(api, [collection], setResponses);
-      return loadingResponse;
-    },
-    [responses, api],
-  );
-
-  const reloadCollectionProjects = useCallback(
-    (collections) => {
-      loadCollectionProjects(api, collections, setResponses, true);
-    },
-    [api],
-  );
-
-  return (
-    <CollectionProjectContext.Provider value={getCollectionProjects}>
-      <CollectionReloadContext.Provider value={reloadCollectionProjects}>
-        {children}
-      </CollectionReloadContext.Provider>
-    </CollectionProjectContext.Provider>
-  );
-};
-
-export const useCollectionContext = () => useContext(CollectionProjectContext);
 
 export function useCollectionProjects(collection) {
   return useResource('collections', collection.id, 'projects')

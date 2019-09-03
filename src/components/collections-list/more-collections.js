@@ -52,8 +52,6 @@ const loadMoreCollectionsFromAuthor = ({ api, collection }) => {
 //   return collectionsWithProjects;
 // }
 
-const 
-
 const MoreCollections = ({ currentCollection, collections }) => {
   const curator = useCollectionCurator(currentCollection);
   const collectionsWithProjects = collections;
@@ -85,7 +83,7 @@ const MoreCollections = ({ currentCollection, collections }) => {
         </Heading>
       </div>
       <CoverContainer type={type} item={currentCollection[type]}>
-        <Row items={collectionsWithProjects}>{(collection) => <SmallCollectionItem key={collection.id} collection={collection} />}</Row>
+        <Row items={collectionsWithProjects}>{(collection) => <SmallCollectionItem key={collection.id} collection={{ ...collection, projects: [] }} />}</Row>
       </CoverContainer>
     </>
   );
