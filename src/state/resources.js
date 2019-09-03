@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { mapValues, memoize } from 'lodash';
+import { createSlice } from 'redux-starter-kit'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { API_URL } from 'Utils/constants';
 
@@ -70,7 +72,13 @@ const { reducer, actions } = createSlice({
         }
       }
     },
-    
+    receivedResources: (state, { payload: response }) => {
+      if (response.childType) {
+        storeChildResources(response)
+      } else {
+        storeResources(response)
+      }
+    },
   }
 })
 
@@ -211,6 +219,15 @@ const getAPIForToken = memoize((persistentToken) => {
   }
 })
 
-const useResource = (type, id) => {
-  const { status, value, requests }
+const useResource = (type, id, childType) => {
+  const state = useSelector(state => state.resources)
+  const dispatch = useDispatch()
+  const { status, value, requests } = childType ? getChildResources(state, type, id, childType) : getResource(state, type, id)
+  
+  if (requests.length) {
+    setTimeout(() => {
+      dispatch(actions.requestedResources(requests))  
+    }, 0)
+  }
+  return { status, value }
 }
