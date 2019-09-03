@@ -1,4 +1,7 @@
-import { mapValues } from 'lodash';
+import axios from 'axios';
+import { mapValues, memoize } from 'lodash';
+
+import { API_URL } from 'Utils/constants';
 
 const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
 const status = {
@@ -53,6 +56,23 @@ state shape:
 */
 
 const initialState = mapValues(resourceConfig, () => ({}));
+
+const { reducer, actions } = createSlice({
+  slice: 'resource',
+  initialState,
+  reducers: {
+    requestedResources: (state, { payload: requests }) => {
+      for (const request of requests) {
+        if (request.childType) {
+          storePendingChildRequest(request)
+        } else {
+          storePendingRequest(request)
+        }
+      }
+    },
+    
+  }
+})
 
 const rowIsMissingOrExpired = (row) => {
   if (!row) return true;
@@ -136,7 +156,7 @@ const getOrInitializeRow = (state, type, id) => {
   return state[type][id];
 };
 
-const storePendingRequests = (state, { type, ids }) => {
+const storePendingRequest = (state, { type, ids }) => {
   for (const id of ids) {
     const row = getOrInitializeRow(state, type, id);
     row.status = status.loading;
@@ -145,9 +165,9 @@ const storePendingRequests = (state, { type, ids }) => {
   }
 };
 
-const storePendingChildRequests = (state, { type, id, childType }) => {
+const storePendingChildRequest = (state, { type, id, childType }) => {
   const row = getOrInitializeRow(state, type, id);
-  row.references[childType] = { status:  }
+  row.references[childType] = { status: status.loading, ids: [] };
 };
 
 // { type, values: [{ id, ...fields }] }
@@ -165,8 +185,32 @@ const storeChildResources = (state, { type, id, childType, values }) => {
   const childResourceType = getChildResourceType(type, childType);
   // store IDs on parent
   const row = getOrInitializeRow(state, type, id);
-  row.references[childType] = { status: status.ready, ids: values.map((value) => value.id) };
+  row.references[childType] = {
+    status: status.ready,
+    expirses: Date.now() + DEFAULT_TTL,
+    ids: values.map((value) => value.id),
+  };
 
   // store children
   storeResources(state, { type: childResourceType, values });
 };
+
+// API _without_ caching, since caching is handled by redux
+const getAPIForToken = memoize((persistentToken) => {
+  if (persistentToken) {
+    return axios.create({
+      baseURL: API_URL,
+      headers: {
+        Authorization: persistentToken,
+      },
+    });
+  } else {
+    return axios.create({
+      baseURL: API_URL,
+    });
+  }
+})
+
+const useResource = (type, id) => {
+  const { status, value, requests }
+}
