@@ -74,7 +74,7 @@ const rowIsMissingOrExpired = (row) => {
 };
 
 const getChildResourceType = (type, childType) => {
-  const childResourceType = resourceConfig[type].refernces[childType];
+  const childResourceType = resourceConfig[type].references[childType];
   if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
   return childResourceType;
 };
@@ -267,6 +267,7 @@ export const useResource = (type, id, childType) => {
 
   if (result.requests.length) {
     setTimeout(() => {
+      
       dispatch(actions.requestedResources(result.requests));
     }, 0);
   }

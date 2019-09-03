@@ -3,6 +3,7 @@ import React, { useState, useCallback, useContext, createContext, useEffect } fr
 import useUploader from 'State/uploader';
 import { useAPI, useAPIHandlers } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
+import { useResource, actions as resourceActions } from 'State/resources';
 import * as assets from 'Utils/assets';
 import { allByKeys, getSingleItem, getAllPages } from 'Shared/api';
 
@@ -53,38 +54,14 @@ function loadProjectMembers(api, projectIds, setProjectResponses, withCacheBust)
 const ProjectMemberContext = createContext();
 const ProjectReloadContext = createContext();
 
-export const ProjectContextProvider = ({ children }) => {
-  const [projectResponses, setProjectResponses] = useState({});
-  const api = useAPI();
-
-  const getProjectMembers = useCallback((projectId) => {
-    if (projectResponses[projectId] && projectResponses[projectId].members) {
-      return projectResponses[projectId].members;
-    }
-    loadProjectMembers(api, [projectId], setProjectResponses);
-    return loadingResponse;
-  }, [projectResponses, api]);
-
-  const reloadProjectMembers = useCallback((projectIds) => {
-    loadProjectMembers(api, projectIds, setProjectResponses, true);
-  }, [api]);
-
-  return (
-    <ProjectMemberContext.Provider value={getProjectMembers}>
-      <ProjectReloadContext.Provider value={reloadProjectMembers}>
-        {children}
-      </ProjectReloadContext.Provider>
-    </ProjectMemberContext.Provider>
-  );
-};
+export const ProjectContextProvider = ({ children }) => children
 
 export function useProjectMembers(projectId) {
-  const getProjectMembers = useContext(ProjectMemberContext);
-  return getProjectMembers(projectId);
+  return useResource('projects', projectId, 'users')
 }
 
 export function useProjectReload() {
-  return useContext(ProjectReloadContext);
+  return (ids) => {}
 }
 
 export function useProjectEditor(initialProject) {
