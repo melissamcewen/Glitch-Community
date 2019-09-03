@@ -3,6 +3,7 @@ import { mapValues, memoize } from 'lodash';
 import { createSlice } from 'redux-starter-kit'
 import { useSelector, useDispatch } from 'react-redux'
 
+import runLatest from 'Utils/run-latest';
 import { API_URL } from 'Utils/constants';
 
 const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
@@ -57,11 +58,13 @@ state shape:
 }
 */
 
-const initialState = mapValues(resourceConfig, () => ({}));
-
 const { reducer, actions } = createSlice({
   slice: 'resource',
-  initialState,
+  initialState: {
+    ...mapValues(resourceConfig, () => ({})),
+    _lastRequestAt: 0,
+    _requestQueue: [],
+  },
   reducers: {
     requestedResources: (state, { payload: requests }) => {
       for (const request of requests) {
@@ -71,6 +74,10 @@ const { reducer, actions } = createSlice({
           storePendingRequest(request)
         }
       }
+      state._requestQueue.push(...requests)
+    },
+    flushedRequestQueue: (state) => {
+      state._requestQueue = []
     },
     receivedResources: (state, { payload: response }) => {
       if (response.childType) {
@@ -81,6 +88,13 @@ const { reducer, actions } = createSlice({
     },
   }
 })
+
+const handlers = {
+  requestedResources: runLatest(function* (action, store) {
+    yield * sleep(1000)
+    
+  }),
+}
 
 const rowIsMissingOrExpired = (row) => {
   if (!row) return true;
@@ -231,3 +245,5 @@ const useResource = (type, id, childType) => {
   }
   return { status, value }
 }
+
+const sleep = (timeout) => new Promise()
