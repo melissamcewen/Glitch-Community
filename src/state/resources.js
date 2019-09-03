@@ -187,6 +187,11 @@ const storeChildResources = (state, { type, id, childType, values }) => {
   storeResources(state, { type: childResourceType, values });
 };
 
+function clearChildResources (state, type, id, childType) {
+  const row = getOrInitializeRow(state, type, id);
+  row.references[childType] = null
+}
+
 // API _without_ caching, since caching is handled by redux
 const getAPIForToken = memoize((persistentToken) => {
   if (persistentToken) {
@@ -216,45 +221,6 @@ const handleRequest = async (api, { type, childType, id, ids }) => {
   const { data } = await api.get(`/v1/${type}/by/id?${idString}`);
   return { type, values: Object.values(data) };
 };
-
-export const { reducer, actions } = createSlice({
-  slice: 'resources',
-  initialState: {
-    ...mapValues(resourceConfig, () => ({})),
-    _requestQueue: [],
-  },
-  reducers: {
-    // loading
-    requestedResources: (state, { payload: requests }) => {
-      for (const request of requests) {
-        if (request.childType) {
-          storePendingChildRequest(state, request);
-        } else {
-          storePendingRequest(state, request);
-        }
-      }
-      state._requestQueue.push(...requests);
-    },
-    flushedRequestQueue: (state) => {
-      state._requestQueue = [];
-    },
-    receivedResources: (state, { payload: response }) => {
-      if (response.childType) {
-        storeChildResources(state, response);
-      } else {
-        storeResources(state, response);
-      }
-    },
-    // updates
-    joinTeamProject: (state, { payload: { projectID, userID } }) => {
-      if (state.projects[projectID] && state.projects[projectID].references.users && )
-      state.projects[projectID].references.users.value.push(userID)
-    },
-    leaveProject: (state, { payload: { projectID, userID } }) => {
-      remove(state.projects[projectID].references.users.value, (id) => userID)
-    }, 
-  },
-});
 
 const batchAndDedupeRequests = (requests) => {
   const combined = {}
@@ -288,6 +254,43 @@ const batchAndDedupeRequests = (requests) => {
   return out
 }
 
+export const { reducer, actions } = createSlice({
+  slice: 'resources',
+  initialState: {
+    ...mapValues(resourceConfig, () => ({})),
+    _requestQueue: [],
+  },
+  reducers: {
+    // loading
+    requestedResources: (state, { payload: requests }) => {
+      for (const request of requests) {
+        if (request.childType) {
+          storePendingChildRequest(state, request);
+        } else {
+          storePendingRequest(state, request);
+        }
+      }
+      state._requestQueue.push(...requests);
+    },
+    flushedRequestQueue: (state) => {
+      state._requestQueue = [];
+    },
+    receivedResources: (state, { payload: response }) => {
+      if (response.childType) {
+        storeChildResources(state, response);
+      } else {
+        storeResources(state, response);
+      }
+    },
+    // updates
+    joinTeamProject: (state, { payload: projectID }) => {
+      clearChildResources(state, 'projects', projectID, 'users')
+    },
+    leaveProject: (state, { payload: projectID }) => {
+      clearChildResources(state, 'projects', projectID, 'users')
+    }, 
+  },
+});
 
 export const handlers = {
   [actions.requestedResources]: debounce((_, store) => {

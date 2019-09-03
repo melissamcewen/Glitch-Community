@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import * as assets from 'Utils/assets';
 
@@ -7,7 +8,7 @@ import { useCurrentUser } from 'State/current-user';
 import { useNotifications } from 'State/notifications';
 import useUploader from 'State/uploader';
 import useErrorHandlers from 'State/error-handlers';
-import { useProjectReload } from 'State/project';
+import { actions } from 'State/resources';
 
 const MEMBER_ACCESS_LEVEL = 20;
 const ADMIN_ACCESS_LEVEL = 30;
@@ -18,8 +19,8 @@ export function useTeamEditor(initialTeam) {
   const { uploadAssetSizes } = useUploader();
   const { createNotification } = useNotifications();
   const { handleError, handleErrorForInput } = useErrorHandlers();
+  const dispatch = useDispatch();
   const { getAvatarImagePolicy, getCoverImagePolicy } = assets.useAssetPolicy();
-  const reloadProjectMembers = useProjectReload();
   const {
     updateItem,
     deleteItem,
@@ -122,7 +123,7 @@ export function useTeamEditor(initialTeam) {
         updateCurrentUser({ teams });
       }
       // update projects so that this user no longer appears in member lists
-      reloadProjectMembers(projects.map((project) => project.id));
+      dispatch(actions.removeUserFromTeamProjects(projects))
       removePermissions(user, projects);
     }, handleError),
     uploadAvatar: () =>
@@ -162,7 +163,7 @@ export function useTeamEditor(initialTeam) {
         ...prev,
         projects: [project, ...prev.projects],
       }));
-      reloadProjectMembers([project.id]);
+      dispatch(actions.addProjectToTeam(project));
     }, handleError),
     removeProjectFromTeam: withErrorHandler(async (project) => {
       await removeProjectFromTeam({ project, team });
@@ -170,7 +171,7 @@ export function useTeamEditor(initialTeam) {
         ...prev,
         projects: prev.projects.filter((p) => p.id !== project.id),
       }));
-      reloadProjectMembers([project.id]);
+      dispatch(actions.removeProjectFromTeam(project));
     }, handleError),
     deleteProject: withErrorHandler(async (project) => {
       await deleteItem({ project });
@@ -213,12 +214,12 @@ export function useTeamEditor(initialTeam) {
     joinTeamProject: withErrorHandler(async (project) => {
       const { data: updatedProject } = await joinTeamProject({ team, project });
       updatePermissions(project, updatedProject.users.map((user) => user.projectPermission));
-      reloadProjectMembers([project.id]);
+      dispatch(actions.joinTeamProject(project));
     }, handleError),
     leaveProject: withErrorHandler(async (project) => {
       await removeUserFromProject({ project, user: currentUser });
       removePermissions(currentUser, [project]);
-      reloadProjectMembers([project.id]);
+      dispatch(actions.leaveTeamProject(project));
     }, handleError),
     featureProject: (project) => updateFields({ featured_project_id: project.id }).catch(handleError),
     unfeatureProject: () => updateFields({ featured_project_id: null }).catch(handleError),

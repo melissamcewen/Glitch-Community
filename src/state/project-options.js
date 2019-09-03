@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react';
 import { pickBy } from 'lodash';
+import { useDispatch } from 'react-redux';
 
 import { useCurrentUser } from 'State/current-user';
 import { useAPIHandlers, useAPI } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
 import { userOrTeamIsAuthor, useCollectionReload } from 'State/collection';
-import { useProjectReload } from 'State/project';
+import { actions } from 'State/resources';
 import { userIsOnTeam } from 'Models/team';
 import { userIsProjectMember, userIsProjectAdmin, userIsOnlyProjectAdmin } from 'Models/project';
 import { useNotifications } from 'State/notifications';
@@ -23,10 +24,10 @@ const useDefaultProjectOptions = () => {
   const { addProjectToCollection, joinTeamProject, removeUserFromProject, removeProjectFromCollection } = useAPIHandlers();
   const { currentUser } = useCurrentUser();
   const { handleError, handleCustomError } = useErrorHandlers();
-  const reloadProjectMembers = useProjectReload();
   const reloadCollectionProjects = useCollectionReload();
   const { createNotification } = useNotifications();
   const api = useAPI();
+  const dispatch = useDispatch();
 
   return {
     addProjectToCollection: withErrorHandler(async (project, collection) => {
@@ -35,11 +36,11 @@ const useDefaultProjectOptions = () => {
     }, handleCustomError),
     joinTeamProject: withErrorHandler(async (project, team) => {
       await joinTeamProject({ team, project });
-      reloadProjectMembers([project.id]);
+      dispatch(actions.joinTeamProject(project));
     }, handleError),
     leaveProject: withErrorHandler(async (project) => {
       await removeUserFromProject({ project, user: currentUser });
-      reloadProjectMembers([project.id]);
+      dispatch(actions.leaveProject(project));
     }, handleError),
     // toggleBookmark is defined here and on state/collection and are very similar. Their only differences are how they modify state.
     // we'll probably want to revisit condensing these when we have a centralized state object to work off of.
