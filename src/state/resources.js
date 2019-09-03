@@ -43,6 +43,7 @@ state shape:
       references: { 
         [childType]: {
           status: 'loading' | 'ready',
+          expires,
           ids: [childID]
         }
       } 
@@ -71,19 +72,22 @@ const getResource = (state, type, id) => {
     return { status: status.loading, value: null, requests: [{ type, ids: [id] }] };
   }
   
-  return { status: row.status, value: row.value, _references: row.references, requests: [] };
+  return { status: row.status, value: row.value, requests: [] };
 };
 
 const getChildResources = (state, type, id, childType) => {
+  if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
+  const childResourceType = resourceConfig[type].refernces[childType];
+  if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
+  
+  const parentRow = state[type][id];
   const { status, value, _references: references, requests: parentRequests } = getResource(state, type, id);
   // resource isn't ready; request the children (and resource itself, if applicable)
   if (!value) {
     return { status: status.loading, value: null, requests: [...parentRequests, { type, id, childType }] };
   }
 
-  const childResourceType = resourceConfig[type].refernces[childType];
-  if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
-
+  
   const childIDsRequest = references[childType];
   // resource is present but its children are missing; request all of its children
   if (!childIDsRequest || !childIDsRequest.ids) {
