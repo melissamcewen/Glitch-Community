@@ -54,6 +54,8 @@ state shape:
 
 const initialState = mapValues(resourceConfig, () => ({}));
 
+const hasExpired = (row) => 
+
 /*
 get the cached resource + any requests that we need to make
 returns {
@@ -80,18 +82,20 @@ const getChildResources = (state, type, id, childType) => {
   const childResourceType = resourceConfig[type].refernces[childType];
   if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
   
-  const parentRow = state[type][id];
-  const { status, value, _references: references, requests: parentRequests } = getResource(state, type, id);
-  // resource isn't ready; request the children (and resource itself, if applicable)
-  if (!value) {
-    return { status: status.loading, value: null, requests: [...parentRequests, { type, id, childType }] };
+  const parentRow = state[type][id]
+  // resource isn't present or list of child IDs are expired; request the children
+  if (!parentRow) {
+    return { status: status.loading, value: null, requests: [{ type, id, childType }] };
   }
 
-  
-  const childIDsRequest = references[childType];
-  // resource is present but its children are missing; request all of its children
-  if (!childIDsRequest || !childIDsRequest.ids) {
+  const childIDsRequest = parentRow.references[childType];
+  // resource is present but its children are missing or expired; request all of its children
+  if (!childIDsRequest || childIDsRequest.expires < Date.now()) {
     return { status: status.loading, value: null, requests: [{ type, id, childType }] };
+  }
+  // child IDs request is pending; no request needed but no results yet
+  if (childIDsRequest.status === status.loading) {
+    return { status: status.loading, value: null, requests: [] }
   }
 
   // collect all of the associated children from the child resource table
@@ -99,8 +103,8 @@ const getChildResources = (state, type, id, childType) => {
   const childIDsToRequest = [];
   for (const childID of childIDsRequest.ids) {
     const { value: childValue } = getResource(state, childResourceType, childID);
-    if (value) {
-      resultValues.push(value);
+    if (childValue) {
+      resultValues.push(childValue);
     } else {
       childIDsToRequest.push(childID);
     }
@@ -123,6 +127,18 @@ const getOrInitializeRow = (state, type, id) => {
   return state[type][id]
 }
 
+
+const storePendingRequests = (state, { type, ids }) => {
+  for (const id of ids) {
+    const row = getOrInitializeRow(state, type, id)
+    row.status = status.loading
+    row.expires = null
+  }  
+}
+
+const storePendingChildRequests = (state, { type, id, childType }) => {
+  
+}
 
 // { type, values: [{ id, ...fields }] }
 const storeResources = (state, { type, values }) => {
