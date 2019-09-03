@@ -3,7 +3,7 @@ import React, { useState, useCallback, useContext, createContext, useEffect } fr
 import useUploader from 'State/uploader';
 import { useAPI, useAPIHandlers } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
-import { useResource, actions as resourceActions, allReady } from 'State/resources';
+import { useResource, allReady } from 'State/resources';
 import * as assets from 'Utils/assets';
 import { allByKeys, getSingleItem, getAllPages } from 'Shared/api';
 
@@ -16,17 +16,11 @@ export async function getProjectByDomain(api, domain) {
   return { ...project, teams, users };
 }
 
-export const ProjectContextProvider = ({ children }) => children
-
 export function useProjectMembers(projectId) {
   return allReady({
     users: useResource('projects', projectId, 'users'),
     teams: useResource('projects', projectId, 'teams'),
   })
-}
-
-export function useProjectReload() {
-  return (ids) => {}
 }
 
 export function useProjectEditor(initialProject) {

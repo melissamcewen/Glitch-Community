@@ -219,7 +219,7 @@ export function useTeamEditor(initialTeam) {
     leaveProject: withErrorHandler(async (project) => {
       await removeUserFromProject({ project, user: currentUser });
       removePermissions(currentUser, [project]);
-      dispatch(actions.leaveTeamProject(project));
+      dispatch(actions.leaveProject(project));
     }, handleError),
     featureProject: (project) => updateFields({ featured_project_id: project.id }).catch(handleError),
     unfeatureProject: () => updateFields({ featured_project_id: null }).catch(handleError),

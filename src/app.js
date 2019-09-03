@@ -8,7 +8,6 @@ import { CurrentUserProvider } from 'State/current-user';
 import { APIContextProvider } from 'State/api';
 import { APICacheProvider } from 'State/api-cache';
 import { LocalStorageProvider } from 'State/local-storage';
-import { ProjectContextProvider } from 'State/project';
 import { CollectionContextProvider } from 'State/collection';
 import { NotificationsProvider } from 'State/notifications';
 import OfflineNotice from 'State/offline-notice';
@@ -27,16 +26,14 @@ const App = ({ apiCache }) => (
               <CurrentUserProvider>
                 <APIContextProvider>
                   <APICacheProvider initial={apiCache}>
-                    <ProjectContextProvider>
-                      <CollectionContextProvider>
-                        <>
-                          <RootStyle theme={lightTheme} />
-                          <SuperUserBanner />
-                          <OfflineNotice />
-                          <Router />
-                        </>
-                      </CollectionContextProvider>
-                    </ProjectContextProvider>
+                    <CollectionContextProvider>
+                      <>
+                        <RootStyle theme={lightTheme} />
+                        <SuperUserBanner />
+                        <OfflineNotice />
+                        <Router />
+                      </>
+                    </CollectionContextProvider>
                   </APICacheProvider>
                 </APIContextProvider>
               </CurrentUserProvider>
