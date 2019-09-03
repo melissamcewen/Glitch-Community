@@ -122,7 +122,6 @@ const getChildResources = (state, type, id, childType) => {
   // collect all of the associated children from the child resource table
   const resultValues = [];
   const childIDsToRequest = [];
-  console.log(type, id, childIDsRequest)
   for (const childID of childIDsRequest.ids) {
     const { value: childValue } = getResource(state, childResourceType, childID);
     if (childValue) {
@@ -143,7 +142,7 @@ const getOrInitializeRow = (state, type, id) => {
   // create row with reference map if it doesn't exist already
   if (!state[type][id]) {
     state[type][id] = {
-      references: mapValues(resourceConfig[type].references, () => ({})),
+      references: {},
     };
   }
   return state[type][id];
@@ -248,16 +247,25 @@ export const { reducer, actions } = createSlice({
   },
 });
 
+const batchRequests = (requests) => {
+  const combined = {}
+  for (const req of requests) {
+    const hash = ``
+  }
+}
+
+
 export const handlers = {
   [actions.requestedResources]: debounce((_, store) => {
     const requests = store.getState().resources._requestQueue;
     const token = store.getState().currentUser.persistentToken;
     store.dispatch(actions.flushedRequestQueue());
     const api = getAPIForToken(token);
-    requests.forEach(async (request) => {
-      const response = await handleRequest(api, request);
-      store.dispatch(actions.receivedResources(response));
-    });
+    console.log({ requests });
+    // requests.forEach(async (request) => {
+    //   const response = await handleRequest(api, request);
+    //   store.dispatch(actions.receivedResources(response));
+    // });
   }, 1000),
 };
 
@@ -267,9 +275,7 @@ export const useResource = (type, id, childType) => {
   const result = childType ? getChildResources(resourceState, type, id, childType) : getResource(resourceState, type, id);
 
   if (result.requests.length) {
-    setTimeout(() => {
-      dispatch(actions.requestedResources(result.requests));
-    }, 0);
+    dispatch(actions.requestedResources(result.requests));
   }
   return result;
 };
