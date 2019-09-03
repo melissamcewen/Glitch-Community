@@ -137,8 +137,7 @@ const storeChildResources = (state, { type, id, childType, values }) => {
   
   // store IDs on parent
   const row = getOrInitializeRow(state, type, id)
-  
-  
+  row.references[childType] = { status: status.ready, ids: values.map(value => value.id) }
   
   // store children
   storeResources(state, { type: childResourceType, values })
