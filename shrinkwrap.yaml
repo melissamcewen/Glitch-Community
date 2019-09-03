@@ -36,7 +36,7 @@ dependencies:
   core-js: 3.2.1
   css-loader: 3.2.0
   d3-array: 2.3.1
-  dayjs: 1.8.15
+  dayjs: 1.8.16
   details-element-polyfill: 2.4.0
   dotenv: 8.1.0
   ejs: 2.6.2
@@ -83,11 +83,14 @@ dependencies:
   react-konami: 0.5.1
   react-onclickoutside: 6.9.0
   react-pluralize: 1.6.3
+  react-redux: 7.1.1
   react-router-dom: 5.0.1
   react-select: 3.0.4
   react-sortable-hoc: 1.10.1
   react-tabs: 3.0.0
   react-textarea-autosize: 7.1.0
+  redux: 4.0.4
+  redux-starter-kit: 0.6.3
   speed-measure-webpack-plugin: 1.3.1
   start-server-and-test: 1.10.0
   stats-webpack-plugin: 0.7.0
@@ -97,7 +100,7 @@ dependencies:
   url-join: 4.0.1
   url-search-params-polyfill: 7.0.0
   wcag-contrast: 2.1.1
-  webpack: 4.39.2
+  webpack: 4.39.3
   webpack-cli: 3.3.7
   webpack-dev-middleware: 3.7.0
   winston: 3.2.1
@@ -2309,17 +2312,17 @@ packages:
       common-tags: 1.8.0
       core-js: 3.2.1
       corejs-upgrade-webpack-plugin: 2.2.0
-      css-loader: /css-loader/2.1.1/webpack@4.39.2
+      css-loader: /css-loader/2.1.1/webpack@4.39.3
       detect-port: 1.3.0
-      dotenv-webpack: /dotenv-webpack/1.7.0/webpack@4.39.2
+      dotenv-webpack: /dotenv-webpack/1.7.0/webpack@4.39.3
       ejs: 2.6.2
       express: 4.17.1
-      file-loader: /file-loader/3.0.1/webpack@4.39.2
+      file-loader: /file-loader/3.0.1/webpack@4.39.3
       file-system-cache: 1.0.5
       find-cache-dir: 3.0.0
       fs-extra: 8.1.0
       global: 4.4.0
-      html-webpack-plugin: /html-webpack-plugin/4.0.0-beta.8/webpack@4.39.2
+      html-webpack-plugin: /html-webpack-plugin/4.0.0-beta.8/webpack@4.39.3
       inquirer: 6.5.2
       interpret: 1.2.0
       ip: 1.1.5
@@ -2332,7 +2335,7 @@ packages:
       postcss-loader: 3.0.0
       pretty-hrtime: 1.0.3
       qs: 6.8.0
-      raw-loader: /raw-loader/2.0.0/webpack@4.39.2
+      raw-loader: /raw-loader/2.0.0/webpack@4.39.3
       react-dev-utils: 9.0.3
       regenerator-runtime: 0.12.1
       resolve: 1.12.0
@@ -2341,12 +2344,12 @@ packages:
       serve-favicon: 2.5.0
       shelljs: 0.8.3
       style-loader: 0.23.1
-      terser-webpack-plugin: /terser-webpack-plugin/1.4.1/webpack@4.39.2
+      terser-webpack-plugin: /terser-webpack-plugin/1.4.1/webpack@4.39.3
       unfetch: 4.1.0
-      url-loader: /url-loader/1.1.2/webpack@4.39.2
+      url-loader: /url-loader/1.1.2/webpack@4.39.3
       util-deprecate: 1.0.2
-      webpack: /webpack/4.39.2/webpack@4.39.2
-      webpack-dev-middleware: /webpack-dev-middleware/3.7.0/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
+      webpack-dev-middleware: /webpack-dev-middleware/3.7.0/webpack@4.39.3
       webpack-hot-middleware: 2.25.0
     dev: false
     peerDependencies:
@@ -2381,12 +2384,12 @@ packages:
       core-js: 3.2.1
       global: 4.4.0
       lodash: 4.17.15
-      mini-css-extract-plugin: /mini-css-extract-plugin/0.7.0/webpack@4.39.2
+      mini-css-extract-plugin: /mini-css-extract-plugin/0.7.0/webpack@4.39.3
       prop-types: 15.7.2
       react-dev-utils: 9.0.3
       regenerator-runtime: 0.12.1
       semver: 6.3.0
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
     dev: false
     engines:
       node: '>=8.0.0'
@@ -4780,7 +4783,7 @@ packages:
   /corejs-upgrade-webpack-plugin/2.2.0:
     dependencies:
       resolve-from: 5.0.0
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
     dev: false
     resolution:
       integrity: sha512-J0QMp9GNoiw91Kj/dkIQFZeiCXgXoja/Wlht1SPybxerBWh4NCmb0pOgCv61lrlQZETwvVVfAFAA3IqoEO9aqQ==
@@ -4926,7 +4929,7 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-/qJhbcZ2spYmhrOvjb2+GAskTgU=
-  /css-loader/2.1.1/webpack@4.39.2:
+  /css-loader/2.1.1/webpack@4.39.3:
     dependencies:
       camelcase: 5.3.1
       icss-utils: 4.1.1
@@ -4939,7 +4942,7 @@ packages:
       postcss-modules-values: 2.0.0
       postcss-value-parser: 3.3.1
       schema-utils: 1.0.0
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
     dev: false
     engines:
       node: '>= 6.9.0'
@@ -5087,6 +5090,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-RpFbQGUE74iyPgvr46U9t1xoQBM8T4BL8SxrN66Le2xYAPSaDJJKeztV3awugusb3g3G9iL8StmkBBXhcbbXhg==
+  /curriable/1.3.0:
+    dev: false
+    resolution:
+      integrity: sha512-7kfjDPRSF+pguU0TlfSFBMCd8XlmF29ZAiXcq/zaN4LhZvWdvV0Y72AvaWFqInXZG9Yg1kA1UMkpE9lFBKMpQA==
   /cycle/1.0.3:
     dev: false
     engines:
@@ -5338,10 +5345,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-6vQ5/U1ISK105cx9vvIAZyueNFs=
-  /dayjs/1.8.15:
+  /dayjs/1.8.16:
     dev: false
     resolution:
-      integrity: sha512-HYHCI1nohG52B45vCQg8Re3hNDZbMroWPkhz50yaX7Lu0ATyjGsTdoYZBpjED9ar6chqTx2dmSmM8A51mojnAg==
+      integrity: sha512-XPmqzWz/EJiaRHjBqSJ2s6hE/BUoCIHKgdS2QPtTQtKcS9E4/Qn0WomoH1lXanWCzri+g7zPcuNV4aTZ8PMORQ==
   /debug/2.6.9:
     dependencies:
       ms: 2.0.0
@@ -5692,10 +5699,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
-  /dotenv-webpack/1.7.0/webpack@4.39.2:
+  /dotenv-webpack/1.7.0/webpack@4.39.3:
     dependencies:
       dotenv-defaults: 1.0.2
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
     dev: false
     id: registry.npmjs.org/dotenv-webpack/1.7.0
     peerDependencies:
@@ -6501,6 +6508,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
+  /fast-equals/1.6.3:
+    dev: false
+    resolution:
+      integrity: sha512-4WKW0AL5+WEqO0zWavAfYGY1qwLsBgE//DN4TTcVEN2UlINgkv9b3vm2iHicoenWKSX9mKWmGOsU/iI5IST7pQ==
   /fast-glob/2.2.7:
     dependencies:
       '@mrmlnc/readdir-enhanced': 2.2.1
@@ -6611,11 +6622,11 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-bCg29ictuBaKUwwArK4ouCaqDgLZcysCFLmM/Yn/FDoqndh/9vNuQfXRDvTuXKLxfD/JtZQGKFT8MGcJBK644g==
-  /file-loader/3.0.1/webpack@4.39.2:
+  /file-loader/3.0.1/webpack@4.39.3:
     dependencies:
       loader-utils: 1.2.3
       schema-utils: 1.0.0
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
     dev: false
     engines:
       node: '>= 6.9.0'
@@ -7577,7 +7588,7 @@ packages:
     dev: false
     resolution:
       integrity: sha1-2y4zHc8cugvUMqUH0W6YhgnyV18=
-  /html-webpack-plugin/4.0.0-beta.8/webpack@4.39.2:
+  /html-webpack-plugin/4.0.0-beta.8/webpack@4.39.3:
     dependencies:
       html-minifier: 4.0.0
       loader-utils: 1.2.3
@@ -7585,7 +7596,7 @@ packages:
       pretty-error: 2.1.1
       tapable: 1.1.3
       util.promisify: 1.0.0
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
     dev: false
     engines:
       node: '>=6.9'
@@ -7704,6 +7715,12 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-4aFq7wvWyMHKgxsH8QQtGpvbASCf+eM3wPRLI6R+MgAnTCZ6STYsRvttLvRWK0Nfif5piF394St3HeJDaljGPA==
+  /identitate/1.0.1:
+    dependencies:
+      pathington: 1.1.7
+    dev: false
+    resolution:
+      integrity: sha512-xnDJ0JYhiZjBDuJRKbHoVzj5yP9FhATxLyUYswQyPdnJrwzGVBqS6DOmvKJi1lk7P+4dkL+hhUhuOZIcOUtG5A==
   /ieee754/1.1.13:
     dev: false
     resolution:
@@ -7742,6 +7759,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
+  /immer/2.1.5:
+    dev: false
+    resolution:
+      integrity: sha512-xyjQyTBYIeiz6jd02Hg12jV+9QISwF1crLcwTlzHpWH4e0ryNWj1kacpTwimK3bJV5NKKXw458G2vpqoB/inFA==
   /import-cwd/2.1.0:
     dependencies:
       import-from: 2.1.0
@@ -9335,12 +9356,12 @@ packages:
       react: ^0.14.0 || ^15.0.0 || ^16.0.0
     resolution:
       integrity: sha512-2v+OeetEyliMt5VHMXsBhABoJ0/M4RCe7fatd/fBy6SMiKazUSEt3gxxypfnk2SHMkdBYvorHRoQxuGoiwbzAw==
-  /mini-css-extract-plugin/0.7.0/webpack@4.39.2:
+  /mini-css-extract-plugin/0.7.0/webpack@4.39.3:
     dependencies:
       loader-utils: 1.2.3
       normalize-url: 1.9.1
       schema-utils: 1.0.0
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
       webpack-sources: 1.4.3
     dev: false
     engines:
@@ -10201,6 +10222,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
+  /pathington/1.1.7:
+    dev: false
+    resolution:
+      integrity: sha512-JxzhUzagDfNIOm4qqwQqP3rWeo7rNNOfIahy4n+3GTEdwXLqw5cJHUR0soSopQtNEv763lzxb6eA2xBllpR8zw==
   /pause-stream/0.0.11:
     dependencies:
       through: 2.3.8
@@ -10907,11 +10932,11 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha512-9WmIKF6mkvA0SLmA2Knm9+qj89e+j1zqgyn8aXGd7+nAduPoqgI9lO57SAZNn/Byzo5P7JhXTyg9PzaJbH73bA==
-  /raw-loader/2.0.0/webpack@4.39.2:
+  /raw-loader/2.0.0/webpack@4.39.3:
     dependencies:
       loader-utils: 1.2.3
       schema-utils: 1.0.0
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
     dev: false
     engines:
       node: '>= 6.9.0'
@@ -11175,6 +11200,20 @@ packages:
       react: 0.14.x || ^15.0.0 || ^16.0.0
     resolution:
       integrity: sha512-9AcQB29V+WrBKk6X7p0eojd1f25/oJajVdMZkywIoAV6Ag7hzE1Mhyeup2Q1QnvFRtGQFQvtqfhlEoDAPfKAVA==
+  /react-redux/7.1.1:
+    dependencies:
+      '@babel/runtime': 7.5.5
+      hoist-non-react-statics: 3.3.0
+      invariant: 2.2.4
+      loose-envify: 1.4.0
+      prop-types: 15.7.2
+      react-is: 16.9.0
+    dev: false
+    peerDependencies:
+      react: ^16.8.3
+      redux: ^2.0.0 || ^3.0.0 || ^4.0.0-0
+    resolution:
+      integrity: sha512-QsW0vcmVVdNQzEkrgzh2W3Ksvr8cqpAv5FhEk7tNEft+5pp7rXxAudTz3VOPawRkLIepItpkEIyLcN/VVXzjTg==
   /react-resize-detector/4.2.0/react-dom@16.9.0+react@16.9.0:
     dependencies:
       lodash: 4.17.15
@@ -11457,6 +11496,44 @@ packages:
     dev: false
     resolution:
       integrity: sha512-xX7Fxke/oHO5IfZSk77lvPa/7bjMh9BuCk4OOoX5XTXrM7s0Z+MkPfSDfz0q7r91BhhGSs8gii/VEN/7zhCPpQ==
+  /redux-devtools-extension/2.13.8/redux@4.0.4:
+    dependencies:
+      redux: 4.0.4
+    dev: false
+    id: registry.npmjs.org/redux-devtools-extension/2.13.8
+    peerDependencies:
+      redux: ^3.1.0 || ^4.0.0
+    resolution:
+      integrity: sha512-8qlpooP2QqPtZHQZRhx3x3OP5skEV1py/zUdMY28WNAocbafxdG2tRD1MWE7sp8obGMNYuLWanhhQ7EQvT1FBg==
+  /redux-immutable-state-invariant/2.1.0:
+    dependencies:
+      invariant: 2.2.4
+      json-stringify-safe: 5.0.1
+    dev: false
+    resolution:
+      integrity: sha512-3czbDKs35FwiBRsx/3KabUk5zSOoTXC+cgVofGkpBNv3jQcqIe5JrHcF5AmVt7B/4hyJ8MijBIpCJ8cife6yJg==
+  /redux-starter-kit/0.6.3:
+    dependencies:
+      immer: 2.1.5
+      redux: 4.0.4
+      redux-devtools-extension: /redux-devtools-extension/2.13.8/redux@4.0.4
+      redux-immutable-state-invariant: 2.1.0
+      redux-thunk: 2.3.0
+      selectorator: 4.0.3
+    dev: false
+    resolution:
+      integrity: sha512-A+7UjgmFrWdKksHl8xTGxDw6Bv8QJ+wrTubBscFNs5gIezGHOdwjqTTSVX4xMgQkgPtVfSPj/Bo+5o6f71/eTA==
+  /redux-thunk/2.3.0:
+    dev: false
+    resolution:
+      integrity: sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==
+  /redux/4.0.4:
+    dependencies:
+      loose-envify: 1.4.0
+      symbol-observable: 1.2.0
+    dev: false
+    resolution:
+      integrity: sha512-vKv4WdiJxOWKxK0yRoaK3Y4pxxB0ilzVx6dszU2W8wLxlb2yikRph4iV/ymtdJ6ZxpBLFbyrxklnT5yBbQSl3Q==
   /referrer-policy/1.2.0:
     dev: false
     engines:
@@ -11703,6 +11780,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-79qpjqdFEyTQkrKyFjpqHXqaIUc=
+  /reselect/4.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-qUgANli03jjAyGlnbYVAV5vvnOmJnODyABz51RdBN7M4WaVu8mecZWgyQNkG8Yqe3KRGRt0l4K4B3XVEULC4CA==
   /resize-observer-polyfill/1.5.1:
     dev: false
     resolution:
@@ -11919,6 +12000,15 @@ packages:
     optional: true
     resolution:
       integrity: sha1-DnNQrN7ICxEIUoeG7B1EGNEbOW0=
+  /selectorator/4.0.3:
+    dependencies:
+      fast-equals: 1.6.3
+      identitate: 1.0.1
+      reselect: 4.0.0
+      unchanged: 2.2.0
+    dev: false
+    resolution:
+      integrity: sha512-A8+paRhzTab4Qm/38RAVnCgEZFbpn5xIWLyTCDqvyU3Obhmo94RS6UK1H00bVH7+U609sOhqbFJha09POsWURA==
   /semver-diff/2.1.0:
     dependencies:
       semver: 5.7.1
@@ -12751,7 +12841,7 @@ packages:
       webpack: ^4.0.0
     resolution:
       integrity: sha512-ZXmmfiwtCLfz8WKZyYUuuHf3dMYEjg8NrjHMb0JqHVHVOSkzp3cW2/XG1fP3tRhqEqSzMwzzRQGtAPbs4Cncxg==
-  /terser-webpack-plugin/1.4.1/webpack@4.39.2:
+  /terser-webpack-plugin/1.4.1/webpack@4.39.3:
     dependencies:
       cacache: 12.0.3
       find-cache-dir: 2.1.0
@@ -12760,7 +12850,7 @@ packages:
       serialize-javascript: 1.8.0
       source-map: 0.6.1
       terser: 4.2.1
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
       webpack-sources: 1.4.3
       worker-farm: 1.7.0
     dev: false
@@ -13008,6 +13098,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-W+jrUHJr3DXKhrsS7NUVxn3zqMOFn0hL/Ei6v0anCIMoKC93TjcflTagwIHLW7SfMFfiQuktQyFVCFHGUE0+yg==
+  /unchanged/2.2.0:
+    dependencies:
+      curriable: 1.3.0
+      pathington: 1.1.7
+    dev: false
+    resolution:
+      integrity: sha512-L+MJNfyvFZkjw9WYRbmZBnYncBoASRNxE9eCm5SZWc2whdw19tPVigjJXNwu+/O+nCwp1kYYT8LX+jNuJakF9w==
   /undefsafe/2.0.2:
     dependencies:
       debug: 2.6.9
@@ -13152,12 +13249,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==
-  /url-loader/1.1.2/webpack@4.39.2:
+  /url-loader/1.1.2/webpack@4.39.3:
     dependencies:
       loader-utils: 1.2.3
       mime: 2.4.4
       schema-utils: 1.0.0
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
     dev: false
     engines:
       node: '>= 6.9.0'
@@ -13374,12 +13471,12 @@ packages:
       webpack: ^4.0.0
     resolution:
       integrity: sha512-qvDesR1QZRIAZHOE3iQ4CXLZZSQ1lAUsSpnQmlB1PBfoN/xdRjmge3Dok0W4IdaVLJOGJy3sGI4sZHwjRU0PCA==
-  /webpack-dev-middleware/3.7.0/webpack@4.39.2:
+  /webpack-dev-middleware/3.7.0/webpack@4.39.3:
     dependencies:
       memory-fs: 0.4.1
       mime: 2.4.4
       range-parser: 1.2.1
-      webpack: /webpack/4.39.2/webpack@4.39.2
+      webpack: /webpack/4.39.3/webpack@4.39.3
       webpack-log: 2.0.0
     dev: false
     engines:
@@ -13414,7 +13511,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-lgTS3Xhv1lCOKo7SA5TjKXMjpSM4sBjNV5+q2bqesbSPs5FjGmU6jjtBSkX9b4qW87vDIsCIlUPOEhbZrMdjeQ==
-  /webpack/4.39.2:
+  /webpack/4.39.3:
     dependencies:
       '@webassemblyjs/ast': 1.8.5
       '@webassemblyjs/helper-module-context': 1.8.5
@@ -13444,8 +13541,8 @@ packages:
       node: '>=6.11.5'
     hasBin: true
     resolution:
-      integrity: sha512-AKgTfz3xPSsEibH00JfZ9sHXGUwIQ6eZ9tLN8+VLzachk1Cw2LVmy+4R7ZiwTa9cZZ15tzySjeMui/UnSCAZhA==
-  /webpack/4.39.2/webpack@4.39.2:
+      integrity: sha512-BXSI9M211JyCVc3JxHWDpze85CvjC842EvpRsVTc/d15YJGlox7GIDd38kJgWrb3ZluyvIjgenbLDMBQPDcxYQ==
+  /webpack/4.39.3/webpack@4.39.3:
     dependencies:
       '@webassemblyjs/ast': 1.8.5
       '@webassemblyjs/helper-module-context': 1.8.5
@@ -13467,16 +13564,16 @@ packages:
       node-libs-browser: 2.2.1
       schema-utils: 1.0.0
       tapable: 1.1.3
-      terser-webpack-plugin: /terser-webpack-plugin/1.4.1/webpack@4.39.2
+      terser-webpack-plugin: /terser-webpack-plugin/1.4.1/webpack@4.39.3
       watchpack: 1.6.0
       webpack-sources: 1.4.3
     dev: false
     engines:
       node: '>=6.11.5'
     hasBin: true
-    id: registry.npmjs.org/webpack/4.39.2
+    id: registry.npmjs.org/webpack/4.39.3
     resolution:
-      integrity: sha512-AKgTfz3xPSsEibH00JfZ9sHXGUwIQ6eZ9tLN8+VLzachk1Cw2LVmy+4R7ZiwTa9cZZ15tzySjeMui/UnSCAZhA==
+      integrity: sha512-BXSI9M211JyCVc3JxHWDpze85CvjC842EvpRsVTc/d15YJGlox7GIDd38kJgWrb3ZluyvIjgenbLDMBQPDcxYQ==
   /websocket-driver/0.7.3:
     dependencies:
       http-parser-js: 0.4.10
@@ -13821,11 +13918,14 @@ specifiers:
   react-konami: ^0.5.0
   react-onclickoutside: ^6.8.0
   react-pluralize: ^1.6.3
+  react-redux: ^7.1.1
   react-router-dom: ^5.0.0
   react-select: ^3.0.3
   react-sortable-hoc: ^1.9.1
   react-tabs: ^3.0.0
   react-textarea-autosize: ^7.1.0
+  redux: ^4.0.4
+  redux-starter-kit: ^0.6.3
   speed-measure-webpack-plugin: ^1.3.1
   start-server-and-test: ^1.10.0
   stats-webpack-plugin: ^0.7.0

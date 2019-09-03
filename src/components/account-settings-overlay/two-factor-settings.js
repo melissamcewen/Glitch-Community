@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Loader } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
 import Text from 'Components/text/text';
 import TextInput from 'Components/inputs/text-input';
 import Button from 'Components/buttons/button';
-import Loader from 'Components/loader';
 import Notification from 'Components/notification';
 
 import { useAPI } from 'State/api';
@@ -129,7 +129,7 @@ function TwoFactorSettings() {
               </Button>
             </>
           ) : (
-            <Loader />
+            <Loader style={{ width: '25px' }} />
           )}
         </>
       ) : (

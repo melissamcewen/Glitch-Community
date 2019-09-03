@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { Loader } from '@fogcreek/shared-components';
 
 import Button from 'Components/buttons/button';
 import SignInButton from 'Components/buttons/sign-in-button';
@@ -9,7 +10,6 @@ import Emoji from 'Components/images/emoji';
 import TextInput from 'Components/inputs/text-input';
 import Link from 'Components/link';
 import Notification from 'Components/notification';
-import Loader from 'Components/loader';
 import TwoFactorForm from 'Components/sign-in/two-factor-form';
 import { PopoverWithButton, MultiPopover, MultiPopoverTitle, PopoverDialog, PopoverActions, PopoverInfo } from 'Components/popover';
 import useEmail from 'Hooks/use-email';
@@ -152,7 +152,7 @@ const EmailHandler = ({ align, showView }) => {
             </div>
           </form>
         )}
-        {status === 'loading' && <Loader />}
+        {status === 'loading' && <Loader style={{ width: '25px' }} />}
         {status === 'done' && (
           <>
             <Notification persistent type="success">

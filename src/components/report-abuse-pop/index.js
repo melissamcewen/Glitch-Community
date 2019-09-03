@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { parseOneAddress } from 'email-addresses';
 import { debounce, trimStart } from 'lodash';
 import axios from 'axios';
+import { Loader } from '@fogcreek/shared-components';
 
 import TextArea from 'Components/inputs/text-area';
-import Loader from 'Components/loader';
 import TextInput from 'Components/inputs/text-input';
 import Notification from 'Components/notification';
 import Button from 'Components/buttons/button';
@@ -157,7 +157,7 @@ function ReportAbusePop({ reportedType, reportedModel }) {
       )}
       <PopoverActions>
         {status === 'loading' ? (
-          <Loader />
+          <Loader style={{ width: '25px' }} />
         ) : (
           <Button size="small" onClick={submitReport}>
             Submit Report

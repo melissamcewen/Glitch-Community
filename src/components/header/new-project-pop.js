@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Loader } from '@fogcreek/shared-components';
 
-import Loader from 'Components/loader';
 import Button from 'Components/buttons/button';
 import { PopoverWithButton, PopoverDialog, PopoverSection, PopoverActions } from 'Components/popover';
 import ResultsList from 'Components/containers/results-list';
@@ -57,7 +57,7 @@ const NewProjectPop = ({ projects }) => (
           )}
         </ResultsList>
       ) : (
-        <Loader />
+        <Loader style={{ width: '25px' }} />
       )}
     </PopoverSection>
     <PopoverActions type="secondary">

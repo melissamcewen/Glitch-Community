@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import Loader from 'Components/loader';
+import { Loader } from '@fogcreek/shared-components';
+
 import { PopoverWithButton, PopoverDialog, PopoverActions, PopoverTitle, ActionDescription } from 'Components/popover';
 import Button from 'Components/buttons/button';
 import Image from 'Components/images/image';
@@ -41,7 +42,7 @@ const DeleteTeamPop = withRouter(({ history, team }) => {
       <PopoverActions type="dangerZone">
         <Button size="small" type="dangerZone" emoji="bomb" onClick={deleteTeam}>
           Delete {team.name}
-          {teamIsDeleting && <Loader />}
+          {teamIsDeleting && <Loader style={{ width: '25px' }} />}
         </Button>
       </PopoverActions>
       {/* temp hidden until the email part of this is ready

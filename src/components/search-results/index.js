@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { Loader } from '@fogcreek/shared-components';
 
 import { createAPIHook } from 'State/api';
 
@@ -15,7 +16,6 @@ import CollectionItemSmall from 'Components/collection/collection-item-small';
 import StarterKitItem from 'Components/search/starter-kit-result';
 import Grid from 'Components/containers/grid';
 import NotFound from 'Components/errors/not-found';
-import Loader from 'Components/loader';
 import styles from './search-results.styl';
 
 const FilterContainer = ({ filters, activeFilter, setFilter }) => {
@@ -120,7 +120,7 @@ function SearchResults({ query, searchResults, activeFilter, setActiveFilter }) 
         <FilterContainer filters={filters} setFilter={setActiveFilter} activeFilter={activeFilter} />
       )}
       {activeFilter === 'all' && <h1>All results for {query}</h1>}
-      {!ready && <Loader />}
+      {!ready && <Loader style={{ width: '25px' }} />}
       {showTopResults && (
         <article className={classnames(styles.groupContainer, styles.topResults)}>
           <Heading tagName="h2">Top Results</Heading>
