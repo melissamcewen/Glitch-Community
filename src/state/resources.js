@@ -44,8 +44,8 @@ state shape:
   [type]: { 
     [id]: {
       status: 'loading' | 'ready'
-      expires, 
-      value,
+      expires: timestamp, 
+      value: Object,
       references: { 
         [childType]: {
           status: 'loading' | 'ready',
@@ -54,7 +54,8 @@ state shape:
         }
       } 
     } 
-  } 
+  },
+  _requestQueue: [request],
 }
 */
 
@@ -99,9 +100,9 @@ const getChildResources = (state, type, id, childType) => {
   const childResourceType = getChildResourceType(type, childType);
 
   const parentRow = state[type][id];
-  // resource isn't present or list of child IDs are expired; request the children
+  // resource isn't present; request it + its children
   if (!parentRow) {
-    return { status: status.loading, value: null, requests: [{ type, id, childType }] };
+    return { status: status.loading, value: null, requests: [{ type, ids: [id] }, { type, id, childType }] };
   }
 
   const childIDsRequest = parentRow.references[childType];
@@ -212,7 +213,6 @@ export const { reducer, actions } = createSlice({
   slice: 'resources',
   initialState: {
     ...mapValues(resourceConfig, () => ({})),
-    _lastRequestAt: 0,
     _requestQueue: [],
   },
   reducers: {
