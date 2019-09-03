@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { mapValues, memoize } from 'lodash';
+import { mapValues, memoize, debounce } from 'lodash';
 import { createSlice } from 'redux-starter-kit'
 import { useSelector, useDispatch } from 'react-redux'
 
-import runLatest from 'Utils/run-latest';
+import { getAllPages } from 'Shared/api';
 import { API_URL } from 'Utils/constants';
 
 const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
@@ -59,7 +59,7 @@ state shape:
 */
 
 const { reducer, actions } = createSlice({
-  slice: 'resource',
+  slice: 'resources',
   initialState: {
     ...mapValues(resourceConfig, () => ({})),
     _lastRequestAt: 0,
@@ -90,10 +90,16 @@ const { reducer, actions } = createSlice({
 })
 
 const handlers = {
-  requestedResources: runLatest(function* (action, store) {
-    yield * sleep(1000)
-    
-  }),
+  requestedResources: debounce((action, store) => {
+    const requests = store.getState().resources._requestQueue
+    const token = store.getState().currentUser.persistentToken
+    store.dispatch(actions.flushedRequestQueue())
+    const api = getAPIForToken(token)
+    requests.forEach(async (request) => {
+      const response = await handleRequest(api, request)
+      store.dispatch(actions.receivedResources(response))
+    })
+  }, 1000),
 }
 
 const rowIsMissingOrExpired = (row) => {
@@ -233,6 +239,12 @@ const getAPIForToken = memoize((persistentToken) => {
   }
 })
 
+const handleRequest = async (api, request) => {
+  if (request.childType) {
+    return getAllPages(api, `/v1/${request.type}/by/id/${request.childType}`)
+  }
+}
+
 const useResource = (type, id, childType) => {
   const state = useSelector(state => state.resources)
   const dispatch = useDispatch()
@@ -246,4 +258,4 @@ const useResource = (type, id, childType) => {
   return { status, value }
 }
 
-const sleep = (timeout) => new Promise()
+const sleep = (timeout) => new Promise(resolve => setTimeout(resolve, timeout))
