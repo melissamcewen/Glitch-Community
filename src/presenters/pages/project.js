@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
-
 import Helmet from 'react-helmet';
+import { Loader } from '@fogcreek/shared-components';
 
 import Button from 'Components/buttons/button';
 import Heading from 'Components/text/heading';
-import Loader from 'Components/loader';
 import Markdown from 'Components/text/markdown';
 import NotFound from 'Components/errors/not-found';
 import CollectionItem from 'Components/collection/collection-item';
@@ -91,11 +89,14 @@ function DeleteProjectPopover({ projectDomain, deleteProject }) {
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (done) {
-      window.location = getUserLink(currentUser);
-    }
-  }, [done, currentUser]);
+  useEffect(
+    () => {
+      if (done) {
+        window.location = getUserLink(currentUser);
+      }
+    },
+    [done, currentUser],
+  );
 
   return (
     <section>
@@ -287,16 +288,21 @@ async function addProjectBreadcrumb(projectWithMembers) {
 
 const ProjectPageContainer = ({ name: domain }) => {
   const { status, value: project } = useCachedProject(domain);
-  useEffect(() => {
-    if (project) addProjectBreadcrumb(project);
-  }, [project]);
+  useEffect(
+    () => {
+      if (project) addProjectBreadcrumb(project);
+    },
+    [project],
+  );
   return (
     <Layout>
       <AnalyticsContext properties={{ origin: 'project' }}>
-        {project ? <ProjectPage project={project} /> : (
+        {project ? (
+          <ProjectPage project={project} />
+        ) : (
           <>
             {status === 'ready' && <NotFound name={domain} />}
-            {status === 'loading' && <Loader />}
+            {status === 'loading' && <Loader style={{ width: '25px' }} />}
             {status === 'error' && <NotFound name={domain} />}
           </>
         )}

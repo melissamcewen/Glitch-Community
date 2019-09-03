@@ -35,10 +35,11 @@ window.bootstrap = (container) => {
     <BrowserRouter>
       <GlobalsProvider
         origin={window.location.origin}
+        AB_TESTS={window.AB_TESTS}
         EXTERNAL_ROUTES={window.EXTERNAL_ROUTES}
         HOME_CONTENT={window.HOME_CONTENT}
-        ZINE_POSTS={window.ZINE_POSTS}
         SSR_SIGNED_IN={window.SSR_SIGNED_IN}
+        ZINE_POSTS={window.ZINE_POSTS}
       >
         <App apiCache={window.API_CACHE} />
       </GlobalsProvider>

@@ -2,6 +2,7 @@ import React from 'react';
 import { LiveAnnouncer } from 'react-aria-live';
 import { RootStyle, lightTheme } from '@fogcreek/shared-components';
 
+import Store from 'State/store';
 import { AnalyticsContext } from 'State/segment-analytics';
 import { CurrentUserProvider } from 'State/current-user';
 import { APIContextProvider } from 'State/api';
@@ -19,28 +20,30 @@ import Router from './presenters/pages/router';
 const App = ({ apiCache }) => (
   <ErrorBoundary fallback="Something went very wrong, try refreshing?">
     <LiveAnnouncer>
-      <NotificationsProvider>
-        <LocalStorageProvider>
-          <AnalyticsContext context={{ groupId: '0' }}>
-            <CurrentUserProvider>
-              <APIContextProvider>
-                <APICacheProvider initial={apiCache}>
-                  <ProjectContextProvider>
-                    <CollectionContextProvider>
-                      <>
-                        <RootStyle theme={lightTheme} />
-                        <SuperUserBanner />
-                        <OfflineNotice />
-                        <Router />
-                      </>
-                    </CollectionContextProvider>
-                  </ProjectContextProvider>
-                </APICacheProvider>
-              </APIContextProvider>
-            </CurrentUserProvider>
-          </AnalyticsContext>
-        </LocalStorageProvider>
-      </NotificationsProvider>
+      <Store>
+        <NotificationsProvider>
+          <LocalStorageProvider>
+            <AnalyticsContext context={{ groupId: '0' }}>
+              <CurrentUserProvider>
+                <APIContextProvider>
+                  <APICacheProvider initial={apiCache}>
+                    <ProjectContextProvider>
+                      <CollectionContextProvider>
+                        <>
+                          <RootStyle theme={lightTheme} />
+                          <SuperUserBanner />
+                          <OfflineNotice />
+                          <Router />
+                        </>
+                      </CollectionContextProvider>
+                    </ProjectContextProvider>
+                  </APICacheProvider>
+                </APIContextProvider>
+              </CurrentUserProvider>
+            </AnalyticsContext>
+          </LocalStorageProvider>
+        </NotificationsProvider>
+      </Store>
     </LiveAnnouncer>
   </ErrorBoundary>
 );

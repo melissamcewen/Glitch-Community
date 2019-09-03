@@ -1,8 +1,8 @@
 import React from 'react';
+import { Loader } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
 import ProjectsList from 'Components/containers/projects-list';
-import Loader from 'Components/loader';
 import CoverContainer from 'Components/containers/cover-container';
 import { UserLink, WrappingLink } from 'Components/link';
 import Button from 'Components/buttons/button';
@@ -62,7 +62,7 @@ const RecentProjects = () => {
             {fetched ? (
               <ProjectsList layout="row" projects={currentUser.projects.slice(0, 3)} />
             ) : (
-              <Loader />
+              <Loader style={{ width: '25px' }} />
             )}
           </div>
         </div>

@@ -14,7 +14,7 @@ const getOrFallback = async (label, fallback, func, ...args) => {
 module.exports = (timeout, verb, fallback = null) => {
   const cache = new Cache();
 
-  return async (key, func, ...args) => {
+  const getFromCache = async (key, func, ...args) => {
     let promise = cache.get(key);
     if (!promise) {
       promise = getOrFallback(`${verb} ${key}`, fallback, func, ...args);
@@ -22,4 +22,8 @@ module.exports = (timeout, verb, fallback = null) => {
     }
     return promise;
   };
+
+  const clearCache = () => cache.clear();
+
+  return [getFromCache, clearCache];
 };

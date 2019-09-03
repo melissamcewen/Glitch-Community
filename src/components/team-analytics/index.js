@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import { cloneDeep, sumBy } from 'lodash';
 import sampleAnalytics, { sampleAnalyticsTime } from 'Curated/sample-analytics';
+import { Loader } from '@fogcreek/shared-components';
 
 import Text from 'Components/text/text';
 import SegmentedButtons from 'Components/buttons/segmented-buttons';
-import Loader from 'Components/loader';
 import { createAPIHook } from 'State/api';
 import { captureException } from 'Utils/sentry';
 
@@ -87,7 +87,7 @@ function TeamAnalytics({ id, projects }) {
   if (!analytics) {
     return (
       <section className={styles.container}>
-        <Loader />
+        <Loader style={{ width: '25px' }} />
       </section>
     );
   }

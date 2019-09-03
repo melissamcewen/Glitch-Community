@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import * as assets from 'Utils/assets';
 import { useAPI, useAPIHandlers } from 'State/api';
@@ -36,6 +36,11 @@ export function useUserEditor(initialUser) {
   const { getDeletedProject, getProject } = useUserPageGetters();
 
   const isCurrentUser = !!currentUser && user.id === currentUser.id;
+  useEffect(() => {
+    if (isCurrentUser) {
+      setUser((prev) => ({ ...prev, ...currentUser }));
+    }
+  }, [currentUser]);
 
   async function updateFields(changes) {
     const { data } = await updateItem({ user }, changes);

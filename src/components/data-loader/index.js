@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Loader from 'Components/loader';
+import { Loader } from '@fogcreek/shared-components';
+
 import { useAPI } from 'State/api';
 import { captureException } from 'Utils/sentry';
 
@@ -45,7 +46,7 @@ DataLoader.propTypes = {
 };
 DataLoader.defaultProps = {
   renderError: () => 'Something went wrong, try refreshing?',
-  renderLoader: () => <Loader />,
+  renderLoader: () => <Loader style={{ width: '25px' }} />,
   captureException: undefined,
   args: undefined,
 };

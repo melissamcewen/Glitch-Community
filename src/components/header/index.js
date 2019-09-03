@@ -22,7 +22,7 @@ const ResumeCoding = () => (
 );
 
 const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay }) => {
-  const { currentUser, clear, superUserHelpers } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const { SSR_SIGNED_IN } = useGlobals();
   // signedIn and signedOut are both false on the server so the sign in button doesn't render
   const fakeSignedIn = !currentUser.id && SSR_SIGNED_IN;
@@ -59,11 +59,8 @@ const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay }
           {signedIn && (
             <li className={styles.buttonWrap}>
               <UserOptionsPop
-                user={currentUser}
-                signOut={clear}
                 showAccountSettingsOverlay={showAccountSettingsOverlay}
                 showNewStuffOverlay={showNewStuffOverlay}
-                superUserHelpers={superUserHelpers}
               />
             </li>
           )}

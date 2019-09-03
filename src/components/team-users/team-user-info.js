@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Loader } from '@fogcreek/shared-components';
 
 import { getDisplayName } from 'Models/user';
 import { userIsTeamAdmin, userIsOnlyTeamAdmin } from 'Models/team';
@@ -10,7 +11,6 @@ import Thanks from 'Components/thanks';
 import { PopoverContainer, PopoverDialog, PopoverActions, PopoverInfo, MultiPopover, MultiPopoverTitle, ActionDescription } from 'Components/popover';
 import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
-import Loader from 'Components/loader';
 
 import { useTrackedFunc, useTracker } from 'State/segment-analytics';
 import { createAPIHook } from 'State/api';

@@ -4,9 +4,9 @@
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Loader } from '@fogcreek/shared-components';
 
 import { getAllPages } from 'Shared/api';
-import Loader from 'Components/loader';
 import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
 import AnimationContainer from 'Components/animation-container';
@@ -114,7 +114,7 @@ function DeletedProjects({ deletedProjects, setDeletedProjects, undelete, user }
     );
   }
   if (state === 'loading') {
-    return <Loader />;
+    return <Loader style={{ width: '25px' }} />;
   }
   if (!deletedProjects.length) {
     return 'nothing found';

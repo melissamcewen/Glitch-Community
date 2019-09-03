@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
+import { Loader } from '@fogcreek/shared-components';
 
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import Text from 'Components/text/text';
 import { ProjectLink } from 'Components/link';
 import { ProjectAvatar } from 'Components/images/avatar';
-import Loader from 'Components/loader';
 import { createAPIHook } from 'State/api';
 
 import styles from './styles.styl';
@@ -95,7 +95,7 @@ const useProjectDetails = createAPIHook(async (api, id, currentProjectDomain) =>
 
 function TeamAnalyticsProjectDetails({ activeFilter, id, currentProjectDomain }) {
   const { value: projectDetails } = useProjectDetails(id, currentProjectDomain);
-  if (!projectDetails) return <Loader />;
+  if (!projectDetails) return <Loader style={{ width: '25px' }} />;
 
   const projectRemixes = projectDetails.remixes.slice(0, RECENT_REMIXES_COUNT);
   return (
