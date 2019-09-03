@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { mapValues, memoize, debounce } from 'lodash';
-import { createSlice } from 'redux-starter-kit'
-import { useSelector, useDispatch } from 'react-redux'
+import { createSlice } from 'redux-starter-kit';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { getAllPages } from 'Shared/api';
 import { API_URL } from 'Utils/constants';
@@ -58,49 +58,8 @@ state shape:
 }
 */
 
-const { reducer, actions } = createSlice({
-  slice: 'resources',
-  initialState: {
-    ...mapValues(resourceConfig, () => ({})),
-    _lastRequestAt: 0,
-    _requestQueue: [],
-  },
-  reducers: {
-    requestedResources: (state, { payload: requests }) => {
-      for (const request of requests) {
-        if (request.childType) {
-          storePendingChildRequest(request)
-        } else {
-          storePendingRequest(request)
-        }
-      }
-      state._requestQueue.push(...requests)
-    },
-    flushedRequestQueue: (state) => {
-      state._requestQueue = []
-    },
-    receivedResources: (state, { payload: response }) => {
-      if (response.childType) {
-        storeChildResources(response)
-      } else {
-        storeResources(response)
-      }
-    },
-  }
-})
 
-const handlers = {
-  requestedResources: debounce((action, store) => {
-    const requests = store.getState().resources._requestQueue
-    const token = store.getState().currentUser.persistentToken
-    store.dispatch(actions.flushedRequestQueue())
-    const api = getAPIForToken(token)
-    requests.forEach(async (request) => {
-      const response = await handleRequest(api, request)
-      store.dispatch(actions.receivedResources(response))
-    })
-  }, 1000),
-}
+const sleep = (timeout) => new Promise((resolve) => setTimeout(resolve, timeout));
 
 const rowIsMissingOrExpired = (row) => {
   if (!row) return true;
@@ -215,7 +174,7 @@ const storeChildResources = (state, { type, id, childType, values }) => {
   const row = getOrInitializeRow(state, type, id);
   row.references[childType] = {
     status: status.ready,
-    expirses: Date.now() + DEFAULT_TTL,
+    expires: Date.now() + DEFAULT_TTL,
     ids: values.map((value) => value.id),
   };
 
@@ -237,25 +196,71 @@ const getAPIForToken = memoize((persistentToken) => {
       baseURL: API_URL,
     });
   }
-})
+});
 
-const handleRequest = async (api, request) => {
-  if (request.childType) {
-    return getAllPages(api, `/v1/${request.type}/by/id/${request.childType}`)
+const handleRequest = async (api, { type, childType, id, ids }) => {
+  if (childType) {
+    // TODO: order
+    const values = await getAllPages(api, `/v1/${type}/by/id/${childType}?id=${id}&limit=100`);
+    return { type, id, childType, values }
   }
-}
+  const { data } = await api.get(`/v1/${type}/by/id?${ids.map((id) => `id=${id}`).join('&')}`);
+  return { type, values: Object.values(data) }
+};
 
-const useResource = (type, id, childType) => {
-  const state = useSelector(state => state.resources)
-  const dispatch = useDispatch()
-  const { status, value, requests } = childType ? getChildResources(state, type, id, childType) : getResource(state, type, id)
-  
+export const { reducer, actions } = createSlice({
+  slice: 'resources',
+  initialState: {
+    ...mapValues(resourceConfig, () => ({})),
+    _lastRequestAt: 0,
+    _requestQueue: [],
+  },
+  reducers: {
+    requestedResources: (state, { payload: requests }) => {
+      for (const request of requests) {
+        if (request.childType) {
+          storePendingChildRequest(request);
+        } else {
+          storePendingRequest(request);
+        }
+      }
+      state._requestQueue.push(...requests);
+    },
+    flushedRequestQueue: (state) => {
+      state._requestQueue = [];
+    },
+    receivedResources: (state, { payload: response }) => {
+      if (response.childType) {
+        storeChildResources(response);
+      } else {
+        storeResources(response);
+      }
+    },
+  },
+});
+
+export const handlers = {
+  [actions.requestedResources]: debounce((_, store) => {
+    const requests = store.getState().resources._requestQueue;
+    const token = store.getState().currentUser.persistentToken;
+    store.dispatch(actions.flushedRequestQueue());
+    const api = getAPIForToken(token);
+    requests.forEach(async (request) => {
+      const response = await handleRequest(api, request);
+      store.dispatch(actions.receivedResources(response));
+    });
+  }, 1000),
+};
+
+export const useResource = (type, id, childType) => {
+  const state = useSelector((state) => state.resources);
+  const dispatch = useDispatch();
+  const { status, value, requests } = childType ? getChildResources(state, type, id, childType) : getResource(state, type, id);
+
   if (requests.length) {
     setTimeout(() => {
-      dispatch(actions.requestedResources(requests))  
-    }, 0)
+      dispatch(actions.requestedResources(requests));
+    }, 0);
   }
-  return { status, value }
-}
-
-const sleep = (timeout) => new Promise(resolve => setTimeout(resolve, timeout))
+  return { status, value };
+};
