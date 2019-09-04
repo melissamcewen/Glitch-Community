@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useContext, createContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import useUploader from 'State/uploader';
-import { useAPI, useAPIHandlers } from 'State/api';
+import { useAPIHandlers } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
 import { useResource, allReady } from 'State/resources';
 import * as assets from 'Utils/assets';
@@ -20,7 +20,7 @@ export function useProjectMembers(projectId) {
   return allReady({
     users: useResource('projects', projectId, 'users'),
     teams: useResource('projects', projectId, 'teams'),
-  })
+  });
 }
 
 export function useProjectEditor(initialProject) {

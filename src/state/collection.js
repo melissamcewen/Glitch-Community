@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useContext, createContext } from 'react';
+import React, { useState } from 'react';
 
 import { useAPI, useAPIHandlers, createAPIHook } from 'State/api';
-import { useResource, allReady } from 'State/resources';
+import { useResource } from 'State/resources';
 import useErrorHandlers from 'State/error-handlers';
 import { getSingleItem, getAllPages } from 'Shared/api';
 import { captureException } from 'Utils/sentry';
@@ -36,10 +36,9 @@ export const toggleBookmark = async ({
       }
       await addProjectToCollection({ project, collection: myStuffCollection });
       const url = myStuffCollection.fullUrl || `${currentUser.login}/${myStuffCollection.url}`;
-      createNotification(
-        <AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={`/@${url}`} />,
-        { type: 'success' },
-      );
+      createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={`/@${url}`} />, {
+        type: 'success',
+      });
     }
     reloadCollectionProjects([myStuffCollection]);
   } catch (error) {
@@ -78,11 +77,11 @@ async function getCollectionProjectsFromAPI(api, collection, withCacheBust) {
 }
 
 export function useCollectionProjects(collection) {
-  return useResource('collections', collection.id, 'projects')
+  return useResource('collections', collection.id, 'projects');
 }
 
 export function useCollectionReload() {
-  return () => {}
+  return () => {};
 }
 
 export const useCollectionCurator = createAPIHook(async (api, collection) => {
@@ -279,9 +278,12 @@ export function useCollectionEditor(initialCollection) {
           myStuffCollection = await createCollection({ api, name: 'My Stuff', createNotification, myStuffEnabled: true });
         }
         await funcs.addProjectToCollection(project, myStuffCollection);
-        createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={getCollectionLink(myStuffCollection)} />, {
-          type: 'success',
-        });
+        createNotification(
+          <AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={getCollectionLink(myStuffCollection)} />,
+          {
+            type: 'success',
+          },
+        );
       }
     }, handleError),
   };

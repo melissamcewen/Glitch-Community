@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
-import { mapValues, memoize, debounce, chunk, remove } from 'lodash';
+import { mapValues, memoize, debounce, chunk } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -187,9 +187,9 @@ const storeChildResources = (state, { type, id, childType, values }) => {
   storeResources(state, { type: childResourceType, values });
 };
 
-function clearChildResources (state, type, id, childType) {
+function clearChildResources(state, type, id, childType) {
   const row = getOrInitializeRow(state, type, id);
-  row.references[childType] = null
+  row.references[childType] = null;
 }
 
 // API _without_ caching, since caching is handled by redux
@@ -223,36 +223,36 @@ const handleRequest = async (api, { type, childType, id, ids }) => {
 };
 
 const batchAndDedupeRequests = (requests) => {
-  const combined = {}
-  
+  const combined = {};
+
   // dedupe
   for (const req of requests) {
-    const hash = `${req.type} ${req.id || ''} ${req.childType || ''}`
+    const hash = `${req.type} ${req.id || ''} ${req.childType || ''}`;
     // consolidate multiple requests for a single resource type
     if (combined[hash] && combined[hash].ids) {
-      combined[hash] = { 
-        ...combined[hash], 
+      combined[hash] = {
+        ...combined[hash],
         ids: combined[hash].ids.concat(req.ids),
-      }
+      };
     } else {
-      combined[hash] = req
+      combined[hash] = req;
     }
   }
-  
+
   // batch
-  const out = []
+  const out = [];
   for (const item of Object.values(combined)) {
     if (item.ids) {
-      chunk(item.ids, 100).forEach(idChunk => {
-        out.push({ ...item, ids: idChunk })
-      })
+      chunk(item.ids, 100).forEach((idChunk) => {
+        out.push({ ...item, ids: idChunk });
+      });
     } else {
-      out.push(item)
+      out.push(item);
     }
   }
-  
-  return out
-}
+
+  return out;
+};
 
 export const { reducer, actions } = createSlice({
   slice: 'resources',
@@ -289,21 +289,21 @@ export const { reducer, actions } = createSlice({
     // - get `currentUser` ID from state; maybe this needs to be in a `reduceReducers` that has _both_ currentUser and resources
     // - do the inverse changes (e.g. add the user to the project's references AND add the project to the user's references)
     joinTeamProject: (state, { payload: project }) => {
-      clearChildResources(state, 'projects', project.id, 'users')
+      clearChildResources(state, 'projects', project.id, 'users');
     },
     leaveProject: (state, { payload: project }) => {
-      clearChildResources(state, 'projects', project.id, 'users')
+      clearChildResources(state, 'projects', project.id, 'users');
     },
     removeUserFromTeamProjects: (state, { payload: projects }) => {
-      projects.forEach(project => {
-        clearChildResources(state, 'projects', project.id, 'users')
-      })
+      projects.forEach((project) => {
+        clearChildResources(state, 'projects', project.id, 'users');
+      });
     },
     addProjectToTeam: (state, { payload: project }) => {
-      clearChildResources(state, 'projects', project.id, 'users')
+      clearChildResources(state, 'projects', project.id, 'users');
     },
     removeProjectFromTeam: (state, { payload: project }) => {
-      clearChildResources(state, 'projects', project.id, 'users')
+      clearChildResources(state, 'projects', project.id, 'users');
     },
   },
 });
@@ -324,7 +324,7 @@ export const handlers = {
 export const getResource = (state, type, id, childType) => {
   if (childType) return getChildResources(state, type, id, childType);
   return getBaseResource(state, type, id);
-}
+};
 
 export const useResource = (type, id, childType) => {
   const result = useSelector((state) => getResource(state.resources, type, id, childType));
@@ -342,11 +342,11 @@ export const useResource = (type, id, childType) => {
   Can take an object or an array.
 */
 export const allReady = (reqs) => {
-  if (Object.values(reqs).every(req => req.status === status.ready)) {
+  if (Object.values(reqs).every((req) => req.status === status.ready)) {
     return {
       status: status.ready,
       value: Array.isArray(reqs) ? reqs.map((req) => req.value) : mapValues(reqs, (req) => req.value),
-    }
+    };
   }
-  return { status: status.loading }
-}
+  return { status: status.loading };
+};

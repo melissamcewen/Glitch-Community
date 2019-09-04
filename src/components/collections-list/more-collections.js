@@ -30,59 +30,31 @@ const loadMoreCollectionsFromAuthor = ({ api, collection }) => {
 const useCollectionsWithProjects = (collections) => {
   const resourceState = useSelector((state) => state.resources);
   const dispatch = useDispatch();
-  
-  collections = collections.filter(coll => !coll.isMyStuff);
-  if (!collections.length) return [];  
-  
-  const responses = collections.map(collection => getResource('collections', collection.id, 'projects'))
-  const requests = flatMap(responses, response => response.requests)
+
+  collections = collections.filter((coll) => !coll.isMyStuff);
+  if (!collections.length) return [];
+
+  const responses = collections.map((collection) => getResource(resourceState, 'collections', collection.id, 'projects'));
+  const requests = flatMap(responses, (response) => response.requests);
 
   if (requests.length) {
     dispatch(resourceActions.requestedResources(requests));
   }
-  
+
   const allProjects = allReady(responses);
   if (!allProjects.value) return null;
-  
+
   const collectionsWithProjects = zipWith(collections, allProjects.value, (coll, projects) => ({
     ...coll,
-    projects
-  })).filter(coll => coll.projects.length > 0)
-  
-  
+    projects,
+  })).filter((coll) => coll.projects.length > 0);
+
   return sampleSize(collectionsWithProjects, 3);
-}
-
-// FIXME
-// function useCollectionsWithProjects(collections) {
-//   const getCollectionProjects = useCollectionContext();
-//   const responses = collections.map(getCollectionProjects);
-//   const [collectionsWithProjects, setCollectionsWithProjects] = useState(null);
-//   useEffect(() => {
-//     setCollectionsWithProjects((prev) => {
-//       if (prev) return prev;
-
-//       const allResponsesComplete = responses.every((r) => r.status !== 'loading');
-//       if (!allResponsesComplete) return null;
-
-//       const moreCollectionsWithProjects = [];
-//       responses.forEach((response, i) => {
-//         if (response.status === 'ready' && response.value.length > 0) {
-//           moreCollectionsWithProjects.push({ ...collections[i], projects: response.value });
-//         }
-//       });
-
-//       const filteredMoreCollectionsWithProjects = moreCollectionsWithProjects.filter((c) => !c.isMyStuff);
-
-//       return sampleSize(filteredMoreCollectionsWithProjects, 3);
-//     });
-//   }, [responses]);
-//   return collectionsWithProjects;
-// }
+};
 
 const MoreCollections = ({ currentCollection, collections }) => {
   const curator = useCollectionCurator(currentCollection);
-  const collectionsWithProjects = collections;
+  const collectionsWithProjects = useCollectionsWithProjects(collections);
   if (!collectionsWithProjects) return <Loader style={{ width: '25px' }} />;
   if (!collectionsWithProjects.length) return null;
 
@@ -111,7 +83,7 @@ const MoreCollections = ({ currentCollection, collections }) => {
         </Heading>
       </div>
       <CoverContainer type={type} item={currentCollection[type]}>
-        <Row items={collectionsWithProjects}>{(collection) => <SmallCollectionItem key={collection.id} collection={{ ...collection, projects: [] }} />}</Row>
+        <Row items={collectionsWithProjects}>{(collection) => <SmallCollectionItem key={collection.id} collection={collection} />}</Row>
       </CoverContainer>
     </>
   );

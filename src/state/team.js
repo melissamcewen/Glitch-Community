@@ -123,7 +123,7 @@ export function useTeamEditor(initialTeam) {
         updateCurrentUser({ teams });
       }
       // update projects so that this user no longer appears in member lists
-      dispatch(actions.removeUserFromTeamProjects(projects))
+      dispatch(actions.removeUserFromTeamProjects(projects));
       removePermissions(user, projects);
     }, handleError),
     uploadAvatar: () =>
