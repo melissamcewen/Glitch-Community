@@ -22,9 +22,10 @@ import { isDarkColor } from 'Utils/color';
 import { CDN_URL } from 'Utils/constants';
 
 import { useAPI } from 'State/api';
-import { useCollectionProjects, useCollectionCurator } from 'State/collection';
+import { useCollectionCurator } from 'State/collection';
 import { useNotifications } from 'State/notifications';
 import { useCurrentUser } from 'State/current-user';
+import { useResource } from 'State/resources';
 
 import { createCollection } from 'Models/collection';
 
@@ -46,7 +47,7 @@ const ProjectsLoading = () => (
 const MY_STUFF_PLACEHOLDER = `${CDN_URL}/ee609ed3-ee18-495d-825a-06fc588a4d4c%2Fplaceholder.svg?v=1564432183051`;
 
 const CollectionProjects = ({ collection, isAuthorized }) => {
-  const { value: projects } = useCollectionProjects(collection);
+  const { value: projects } = useResource('collections', collection.id, 'projects');
   if (!projects) return <ProjectsLoading />;
 
   // show placeholder text/image to encourage people to add projects to my stuff

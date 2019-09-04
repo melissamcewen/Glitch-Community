@@ -10,7 +10,7 @@ import CreateCollectionButton from 'Components/collection/create-collection-pop'
 import SkipSectionButtons from 'Components/containers/skip-section-buttons';
 import { useAPIHandlers } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
-import { useCollectionProjects } from 'State/collection';
+import { useResource } from 'State/resources';
 import { getCollectionsWithMyStuff } from 'Models/collection';
 import useDevToggle from 'State/dev-toggles';
 
@@ -34,7 +34,7 @@ function MyStuffController({ children, collections, isAuthorized, maybeTeam }) {
   const collectionsWithMyStuff = getCollectionsWithMyStuff({ collections });
 
   // fetch projects for myStuff
-  const { value: myStuffProjects, status } = useCollectionProjects(collectionsWithMyStuff[0]);
+  const { value: myStuffProjects, status } = useResource('collections', collectionsWithMyStuff[0].id, 'projects');
 
   if (status === 'loading') {
     return children([]);

@@ -66,11 +66,12 @@ export const getCollectionWithProjects = async (api, { owner, name }) => {
   }
 };
 
-export function useCollectionProjects(collection) {
-  return useResource('collections', collection.id, 'projects');
-}
-
-export const useCollectionCurator = createAPIHook(async (api, collection) => {
+export const useCollectionCurator = (collection) => {
+  const resource = collection.teamId > 0 ? 'teams' : 'users'
+  const id = collection.teamId > 0 ? collection.teamId : collection.userId
+  
+  return useResource(resource, id)
+  
   if (collection.teamId > 0) {
     const team = await getSingleItem(api, `/v1/teams/by/id?id=${collection.teamId}`, collection.teamId);
     return { team };
