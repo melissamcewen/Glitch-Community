@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { useAPI, useAPIHandlers } from 'State/api';
-import { getResource, useResource, actions, allReady } from 'State/resources';
+import { useResource, actions, allReady } from 'State/resources';
 import useErrorHandlers from 'State/error-handlers';
 import { getSingleItem, getAllPages } from 'Shared/api';
 import { captureException } from 'Utils/sentry';
@@ -66,10 +66,11 @@ export const getCollectionWithProjects = async (api, { owner, name }) => {
   }
 };
 
-export const useCollectionCurator = (collection) => allReady({
-  team: useResource('teams', collection.teamId),
-  user: useResource('users', collection.userId)
-});
+export const useCollectionCurator = (collection) =>
+  allReady({
+    team: useResource('teams', collection.teamId),
+    user: useResource('users', collection.userId),
+  });
 
 export function userOrTeamIsAuthor({ collection, user }) {
   if (!user) return false;
