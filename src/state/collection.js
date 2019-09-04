@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { useAPI, useAPIHandlers, createAPIHook } from 'State/api';
-import { useResource, actions } from 'State/resources';
+import { useAPI, useAPIHandlers } from 'State/api';
+import { useResource, actions, allReady } from 'State/resources';
 import useErrorHandlers from 'State/error-handlers';
 import { getSingleItem, getAllPages } from 'Shared/api';
 import { captureException } from 'Utils/sentry';
@@ -70,18 +70,11 @@ export const useCollectionCurator = (collection) => {
   const resource = collection.teamId > 0 ? 'teams' : 'users'
   const id = collection.teamId > 0 ? collection.teamId : collection.userId
   
-  return useResource(resource, id)
-  
-  if (collection.teamId > 0) {
-    const team = await getSingleItem(api, `/v1/teams/by/id?id=${collection.teamId}`, collection.teamId);
-    return { team };
-  }
-  if (collection.userId > 0) {
-    const user = await getSingleItem(api, `/v1/users/by/id?id=${collection.userId}`, collection.userId);
-    return { user };
-  }
-  return {};
-});
+  return allReady({
+    team: useResource('teams', collection.teamId),
+    user: useResource('users', collection.userId)
+  });
+};
 
 export function userOrTeamIsAuthor({ collection, user }) {
   if (!user) return false;

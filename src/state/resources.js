@@ -15,16 +15,19 @@ const status = {
 
 const resourceConfig = {
   collections: {
-    secondaryKeys: ['fullUrl'],
-    references: { projects: 'projects' },
+    references: {
+      projects: 'projects',
+    },
   },
   projects: {
-    secondaryKeys: ['domain'],
     orderBy: 'domain',
-    references: { collections: 'collections', teams: 'teams', users: 'users' },
+    references: {
+      collections: 'collections',
+      teams: 'teams',
+      users: 'users',
+    },
   },
   teams: {
-    secondaryKeys: ['url'],
     orderBy: 'url',
     references: {
       collections: 'collections',
@@ -34,7 +37,6 @@ const resourceConfig = {
     },
   },
   users: {
-    secondaryKeys: ['login'],
     orderBy: 'login',
     references: {
       collections: 'collections',
@@ -181,9 +183,11 @@ const storeChildResources = (state, { type, id, childType, values }) => {
   storeResources(state, { type: childResourceType, values });
 };
 
-function clearChildResources(state, type, id, childType) {
+function expireChildResources(state, type, id, childType) {
   const row = getOrInitializeRow(state, type, id);
-  row.references[childType] = null;
+  if (row.references[childType]) {
+    row.references[childType].expires = 0;
+  }
 }
 
 // API _without_ caching, since caching is handled by redux
@@ -283,30 +287,31 @@ export const { reducer, actions } = createSlice({
     // - get `currentUser` & `My Stuff` IDs from state; maybe this needs to be in a `reduceReducers` that has _both_ currentUser and resources
     // - do the inverse changes (e.g. add the user to the project's references AND add the project to the user's references)
     joinTeamProject: (state, { payload: project }) => {
-      clearChildResources(state, 'projects', project.id, 'users');
+      expireChildResources(state, 'projects', project.id, 'users');
     },
     leaveProject: (state, { payload: project }) => {
-      clearChildResources(state, 'projects', project.id, 'users');
+      expireChildResources(state, 'projects', project.id, 'users');
     },
     removeUserFromTeamProjects: (state, { payload: projects }) => {
+      // TODO: pass in _team_ here, use that to get projects
       projects.forEach((project) => {
-        clearChildResources(state, 'projects', project.id, 'users');
+        expireChildResources(state, 'projects', project.id, 'users');
       });
     },
     addProjectToTeam: (state, { payload: project }) => {
-      clearChildResources(state, 'projects', project.id, 'users');
+      expireChildResources(state, 'projects', project.id, 'users');
     },
     removeProjectFromTeam: (state, { payload: project }) => {
-      clearChildResources(state, 'projects', project.id, 'users');
+      expireChildResources(state, 'projects', project.id, 'users');
     },
     addProjectToCollection: (state, { payload: { collection } }) => {
-      clearChildResources(state, 'collections', collection.id, 'projects');
+      expireChildResources(state, 'collections', collection.id, 'projects');
     },
     removeProjectFromCollection: (state, { payload: { collection } }) => {
-      clearChildResources(state, 'collections', collection.id, 'projects');
+      expireChildResources(state, 'collections', collection.id, 'projects');
     },
     toggleBookmark: (state, { payload: { collection } }) => {
-      clearChildResources(state, 'collections', collection.id, 'projects');
+      expireChildResources(state, 'collections', collection.id, 'projects');
     },
   },
 });
@@ -325,6 +330,10 @@ export const handlers = {
 };
 
 export const getResource = (state, type, id, childType) => {
+  if (id === -1) {
+    return { status: status.ready, value: null, requests: [] };
+  }
+
   if (childType) return getChildResources(state, type, id, childType);
   return getBaseResource(state, type, id);
 };
