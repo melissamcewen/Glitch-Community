@@ -17,10 +17,11 @@ export async function getProjectByDomain(api, domain) {
 }
 
 export function useProjectMembers(projectId) {
-  return allReady({
+  const res = allReady({
     users: useResource('projects', projectId, 'users'),
     teams: useResource('projects', projectId, 'teams'),
   });
+  return res.status === 'ready' ? res : { status: 'loading' }
 }
 
 export function useProjectEditor(initialProject) {

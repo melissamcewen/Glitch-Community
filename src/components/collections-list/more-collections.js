@@ -42,14 +42,14 @@ const useCollectionsWithProjects = (collections) => {
   }
 
   const allProjects = allReady(responses);
-  if (!allProjects.value) return null;
+  if (allProjects.status === 'loading') return null;
 
   const collectionsWithProjects = zipWith(collections, allProjects.value, (coll, projects) => ({
     ...coll,
     projects,
   })).filter((coll) => coll.projects.length > 0);
 
-  return sampleSize(collectionsWithProjects, 3);
+  sampleSize(collectionsWithProjects, 3);
 };
 
 const MoreCollections = ({ currentCollection, collections }) => {
