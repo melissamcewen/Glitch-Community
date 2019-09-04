@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { sampleSize } from 'lodash';
+import { sampleSize, flatMap, zipWith } from 'lodash';
 import { Loader } from '@fogcreek/shared-components';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -14,7 +14,7 @@ import { UserLink, TeamLink } from 'Components/link';
 import { getDisplayName } from 'Models/user';
 import { getSingleItem } from 'Shared/api';
 import { useCollectionCurator } from 'State/collection';
-import { getResource } from 'State/resources';
+import { getResource, allReady, actions as resourceActions } from 'State/resources';
 
 import styles from './styles.styl';
 
@@ -31,15 +31,26 @@ const useCollectionsWithProjects = (collections) => {
   const resourceState = useSelector((state) => state.resources);
   const dispatch = useDispatch();
   
-  const results = []
-  const requests = []
+  collections = collections.filter(coll => !coll.isMyStuff);
+  if (!collections.length) return [];  
   
-  for const 
+  const responses = collections.map(collection => getResource('collections', collection.id, 'projects'))
+  const requests = flatMap(responses, response => response.requests)
 
-  if (result.requests.length) {
-    dispatch(actions.requestedResources(result.requests));
+  if (requests.length) {
+    dispatch(resourceActions.requestedResources(requests));
   }
-  return result;
+  
+  const allProjects = allReady(responses);
+  if (!allProjects.value) return null;
+  
+  const collectionsWithProjects = zipWith(collections, allProjects.value, (coll, projects) => ({
+    ...coll,
+    projects
+  })).filter(coll => coll.projects.length > 0)
+  
+  
+  return sampleSize(collectionsWithProjects, 3);
 }
 
 // FIXME
