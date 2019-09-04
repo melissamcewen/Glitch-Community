@@ -194,7 +194,7 @@ export function useCollectionEditor(initialCollection) {
       // make api call to remove from collection
       await removeProjectFromCollection({ project, collection: selectedCollection });
 
-      dispatch(actions.removeProjectFromCollection({ project, collction: selectedCollection }));
+      dispatch(actions.removeProjectFromCollection({ project, collection: selectedCollection }));
     }, handleError),
 
     deleteCollection: () => deleteItem({ collection }).catch(handleError),
