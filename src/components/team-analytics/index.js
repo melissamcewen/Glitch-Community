@@ -6,7 +6,6 @@ import sampleAnalytics, { sampleAnalyticsTime } from 'Curated/sample-analytics';
 import { Loader, SegmentedButton } from '@fogcreek/shared-components';
 
 import Text from 'Components/text/text';
-import SegmentedButtons from 'Components/buttons/segmented-buttons';
 
 import { createAPIHook } from 'State/api';
 import { captureException } from 'Utils/sentry';

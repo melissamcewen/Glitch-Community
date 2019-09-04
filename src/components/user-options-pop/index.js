@@ -186,7 +186,7 @@ export default function UserOptionsAndCreateTeamPopContainer({ showAccountSettin
         <PopoverContainer startOpen={createTeamOpen} triggerButtonRef={buttonRef}>
           {({ togglePopover, visible }) => {
             const userOptionsButton = (
-              <UnstyledButton type="dropDown" onClick={togglePopover} decorative={!props.user.id} ref={buttonRef}>
+              <UnstyledButton type="dropDown" onClick={togglePopover} decorative={!user.id} ref={buttonRef}>
                 <span className={styles.userOptionsWrap}>
                   <span className={styles.userOptionsButtonAvatar}>
                     <UserAvatar user={user} hideTooltip withinButton style={avatarStyle} />
