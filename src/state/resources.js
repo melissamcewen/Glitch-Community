@@ -7,8 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAllPages } from 'Shared/api';
 import { API_URL } from 'Utils/constants';
 
-// const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
-const DEFAULT_TTL = 1000 * 30;
+const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
 const status = {
   loading: 'loading',
   ready: 'ready',
@@ -91,7 +90,9 @@ returns {
   requests: [{ type, ids: [id] } | { type, id, childType }],
 }
 */
-const getBaseResource = (state, type, id) => {
+const noRequests = [];
+
+const getBaseResource = memo((state, type, id) => {
   const row = state[type][id];
   // resource is missing; request the resource
   if (!row) {
@@ -102,8 +103,8 @@ const getBaseResource = (state, type, id) => {
     return { status: status.loading, value: row.value, requests: [{ type, ids: [id] }] };
   }
 
-  return { status: row.status, value: row.value, requests: [] };
-};
+  return { status: row.status, value: row.value, requests: noRequests };
+}, (state, type, id) => state[type][id]);
 
 const getChildResources = (state, type, id, childType) => {
   const childResourceType = getChildResourceType(type, childType);
@@ -134,12 +135,12 @@ const getChildResources = (state, type, id, childType) => {
   // return any available children
   const resultValues = childResources.map((resource) => resource.value).filter(Boolean);
 
-  return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] };
+  return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : noRequests };
 };
 
 export const getResource = (state, type, id, childType) => {
   if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
-  
+
   // Handle resources with optional references (e.g. collection -> user)
   if (id === -1 || id === null) {
     return { status: status.ready, value: null, requests: [] };
@@ -193,7 +194,9 @@ const storeResources = (state, { type, values }) => {
 const storeChildResources = (state, { type, id, childType, values }) => {
   // store IDs on parent
   const rowChild = getOrInitializeRowChild(state, type, id, childType);
-  (rowChild.status = status.ready), (rowChild.expires = Date.now() + DEFAULT_TTL), (rowChild.ids = values.map((value) => value.id));
+  rowChild.status = status.ready;
+  rowChild.expires = Date.now() + DEFAULT_TTL;
+  rowChild.ids = values.map((value) => value.id);
 
   // store children
   const childResourceType = getChildResourceType(type, childType);
@@ -294,7 +297,7 @@ export const { reducer, actions } = createSlice({
     receivedResources: (state, { payload: response }) => {
       state._responseQueue.push(response);
     },
-    flushedResponseQueue: (state, { payload: response }) => {
+    flushedResponseQueue: (state) => {
       for (const response of state._responseQueue) {
         if (response.childType) {
           storeChildResources(state, response);
