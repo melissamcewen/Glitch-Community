@@ -69,16 +69,21 @@ state shape:
 }
 */
 
+
+// utilities
+
+// 
 const getChildResourceType = (type, childType) => {
   const childResourceType = resourceConfig[type].references[childType];
   if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
   return childResourceType;
 };
 
+// check if row data is present, but stale, and doesn't yet have a request pending
 const rowNeedsRefresh = (row) => row && row.status === status.ready && row.expires < Date.now();
 
 /*
-get the cached resource + any requests that we need to make
+getResource gets the cached resource or resources + any requests that we need to make.
 returns {
   status: 'loading' | 'ready'
   value,
@@ -134,7 +139,7 @@ const getChildResources = (state, type, id, childType) => {
 export const getResource = (state, type, id, childType) => {
   if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
   
-  // since hooks have to be called unconditionally, it 
+  // Handle resources with optional references (e.g. collection -> user)
   if (id === -1 || id === null) {
     return { status: status.ready, value: null, requests: [] };
   }
@@ -142,9 +147,6 @@ export const getResource = (state, type, id, childType) => {
   if (childType) return getChildResources(state, type, id, childType);
   return getBaseResource(state, type, id);
 };
-
-
-
 
 const getOrInitializeRow = (state, type, id) => {
   // create row with reference map if it doesn't exist already
