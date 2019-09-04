@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
-import { mapValues, memoize, debounce, chunk } from 'lodash';
+import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -294,11 +294,17 @@ export const { reducer, actions } = createSlice({
       state._requestQueue = [];
     },
     receivedResources: (state, { payload: response }) => {
-      if (response.childType) {
-        storeChildResources(state, response);
-      } else {
-        storeResources(state, response);
+      state._responseQueue.push(response);
+    },
+    flushedResponseQueue: (state, { payload: response }) => {
+      for (const response of state._responseQueue) {
+        if (response.childType) {
+          storeChildResources(state, response);
+        } else {
+          storeResources(state, response);
+        }
       }
+      state._responseQueue = [];
     },
     // updates
     // TODO:
@@ -347,12 +353,15 @@ export const handlers = {
       store.dispatch(actions.receivedResources(response));
     });
   }, 1000),
+  [actions.receivedResources]: debounce((_, store) => {
+    store.dispatch(actions.flushedResponseQueue())
+  }, 1000),
 };
 
 export const useResource = (type, id, childType) => {
   const result = useSelector(
     (state) => getResource(state.resources, type, id, childType),
-    (prev, next) => prev.status === next.status && prev.value === next.value && prev.requests === next.requests,
+    isEqual
   );
   const dispatch = useDispatch();
 
