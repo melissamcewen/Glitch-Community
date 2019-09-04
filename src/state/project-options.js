@@ -45,6 +45,7 @@ const useDefaultProjectOptions = () => {
     // we'll probably want to revisit condensing these when we have a centralized state object to work off of.
     toggleBookmark: withErrorHandler(async (project, hasBookmarked, setHasBookmarked) => {
       let myStuffCollection = currentUser.collections.find((c) => c.isMyStuff);
+      dispatch(actions.toggleBookmark({ project, collection: myStuffCollection }));
       if (hasBookmarked) {
         if (setHasBookmarked) setHasBookmarked(false);
         await removeProjectFromCollection({ project, collection: myStuffCollection });
@@ -55,7 +56,6 @@ const useDefaultProjectOptions = () => {
           myStuffCollection = await createCollection({ api, name: 'My Stuff', createNotification, myStuffEnabled: true });
         }
         await addProjectToCollection({ project, collection: myStuffCollection });
-        dispatch(actions.toggleBookmark({ project, collection: myStuffCollection }));
         const url = myStuffCollection.fullUrl || `${currentUser.login}/${myStuffCollection.url}`;
         createNotification(
           <AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={`/@${url}`} />,
