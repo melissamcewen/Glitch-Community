@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
-import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
+import { mapValues, memoize, debounce, chunk } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -8,7 +8,7 @@ import { getAllPages } from 'Shared/api';
 import { API_URL } from 'Utils/constants';
 
 // const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
-const DEFAULT_TTL = 1000 * 30
+const DEFAULT_TTL = 1000 * 30;
 const status = {
   loading: 'loading',
   ready: 'ready',
@@ -67,13 +67,13 @@ state shape:
     }
   },
   _requestQueue: [request],
+  _responseQueue: [response],
 }
 */
 
-
 // utilities
 
-// 
+//
 const getChildResourceType = (type, childType) => {
   const childResourceType = resourceConfig[type].references[childType];
   if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
@@ -137,9 +137,11 @@ const getChildResources = (state, type, id, childType) => {
   return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] };
 };
 
+
+
 export const getResource = (state, type, id, childType) => {
   if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
-  
+
   // Handle resources with optional references (e.g. collection -> user)
   if (id === -1 || id === null) {
     return { status: status.ready, value: null, requests: [] };
@@ -190,12 +192,10 @@ const storeResources = (state, { type, values }) => {
   }
 };
 
-const storeChildResources = (state, { type, id, childType, values }) => {  
+const storeChildResources = (state, { type, id, childType, values }) => {
   // store IDs on parent
   const rowChild = getOrInitializeRowChild(state, type, id, childType);
-  rowChild.status = status.ready,
-  rowChild.expires = Date.now() + DEFAULT_TTL,
-  rowChild.ids = values.map((value) => value.id)
+  (rowChild.status = status.ready), (rowChild.expires = Date.now() + DEFAULT_TTL), (rowChild.ids = values.map((value) => value.id));
 
   // store children
   const childResourceType = getChildResourceType(type, childType);
@@ -354,14 +354,13 @@ export const handlers = {
     });
   }, 1000),
   [actions.receivedResources]: debounce((_, store) => {
-    store.dispatch(actions.flushedResponseQueue())
+    store.dispatch(actions.flushedResponseQueue());
   }, 1000),
 };
 
 export const useResource = (type, id, childType) => {
   const result = useSelector(
-    (state) => getResource(state.resources, type, id, childType),
-    isEqual
+    (state) => getResource(state.resources, type, id, childType)
   );
   const dispatch = useDispatch();
 
