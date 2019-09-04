@@ -67,12 +67,6 @@ state shape:
 }
 */
 
-const rowIsMissingOrExpired = (row) => {
-  if (!row) return true;
-  if (row.status === status.loading) return false;
-  return row.expires < Date.now();
-};
-
 const getChildResourceType = (type, childType) => {
   const childResourceType = resourceConfig[type].references[childType];
   if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
@@ -92,8 +86,8 @@ const getBaseResource = (state, type, id) => {
 
   const row = state[type][id];
   // resource is missing; request the resource
-  if (!row) {
-    return { status: status.loading, value: null, requests: [{ type, ids: [id] }] };
+  if (!row || row.status === status.loading) {
+    return { status: status.loading, value: row && row.value, requests: [{ type, ids: [id] }] };
   }
   // resource is stale; return it but also create a new request
   if (row.expires < Date.now()) {
@@ -114,32 +108,30 @@ const getChildResources = (state, type, id, childType) => {
   }
 
   const childIDsRequest = parentRow.references[childType];
-  // resource is present but its children are missing or expired; request all of its children
-  if (rowIsMissingOrExpired(childIDsRequest)) {
+  // resource is present but its children are missing; request all of its children
+  if (!childIDsRequest) {
     return { status: status.loading, value: null, requests: [{ type, id, childType }] };
   }
   // child IDs request is pending; no request needed but no results yet
   if (childIDsRequest.status === status.loading) {
     return { status: status.loading, value: null, requests: [] };
   }
+  
+  // child IDs request is stale; use IDs but also create a new request
+  let refreshChildren = childIDsRequest.expires < Date.now();
 
   // collect all of the associated children from the child resource table
-  const resultValues = [];
-  const childIDsToRequest = [];
-  for (const childID of childIDsRequest.ids) {
-    const { value: childValue } = getBaseResource(state, childResourceType, childID);
-    if (childValue) {
-      resultValues.push(childValue);
-    } else {
-      childIDsToRequest.push(childID);
-    }
+  const childResources = childIDsRequest.ids.map(childID => getBaseResource(state, childResourceType, childID));
+  
+  // if _any_ children have pending requests, just reload the whole batch
+  if (childResources.some(resource => resource.requests.length)) {
+    refreshChildren = true;
   }
-
-  // some children are missing/expired; request them in a single batch
-  if (childIDsToRequest.length > 0) {
-    return { status: status.loading, value: resultValues, requests: [{ type: childResourceType, ids: childIDsToRequest }] };
-  }
-  return { status: status.ready, value: resultValues, requests: [] };
+  
+  // return any available children
+  const resultValues = childResources.map(resource => resource.value).filter(Boolean);
+  
+  return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] }
 };
 
 const getOrInitializeRow = (state, type, id) => {
