@@ -33,11 +33,15 @@ const paginationReducer = (oldState, action) => {
       };
     case 'numberOfPagesChanged':
       if (oldState.page > action.totalPages) {
+        let pageToReturnTo = 1;
+        if (oldState.page > 1) {
+          pageToReturnTo = oldState.page - 1;
+        }
         return {
           ...oldState,
-          page: oldState.page - 1,
+          page: pageToReturnTo,
           totalPages: action.totalPages,
-          announce: `Showing page ${oldState.page - 1} of ${action.totalPages}`,
+          announce: `Showing page ${action.totalPages - 1} of ${action.totalPages}`,
         };
       }
       return oldState;
