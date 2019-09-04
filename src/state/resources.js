@@ -86,8 +86,6 @@ returns {
 }
 */
 const getBaseResource = (state, type, id) => {
-  if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
-
   const row = state[type][id];
   // resource is missing; request the resource
   if (!row) {
@@ -102,7 +100,6 @@ const getBaseResource = (state, type, id) => {
 };
 
 const getChildResources = (state, type, id, childType) => {
-  if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
   const childResourceType = getChildResourceType(type, childType);
 
   const parentRow = state[type][id];
@@ -134,6 +131,21 @@ const getChildResources = (state, type, id, childType) => {
   return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] };
 };
 
+export const getResource = (state, type, id, childType) => {
+  if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
+  
+  // since hooks have to be called unconditionally, it 
+  if (id === -1 || id === null) {
+    return { status: status.ready, value: null, requests: [] };
+  }
+
+  if (childType) return getChildResources(state, type, id, childType);
+  return getBaseResource(state, type, id);
+};
+
+
+
+
 const getOrInitializeRow = (state, type, id) => {
   // create row with reference map if it doesn't exist already
   if (!state[type][id]) {
@@ -144,18 +156,24 @@ const getOrInitializeRow = (state, type, id) => {
   return state[type][id];
 };
 
+const getOrInitializeRowChild = (state, type, id, childType) => {
+  const row = getOrInitializeRow(state, type, id);
+  if (!row.references[childType]) {
+    row.references[childType] = { ids: [] };
+  }
+  return row.references[childType];
+};
+
 const storePendingRequest = (state, { type, ids }) => {
   for (const id of ids) {
     const row = getOrInitializeRow(state, type, id);
     row.status = status.loading;
-    row.expires = null;
-    row.value = null;
   }
 };
 
 const storePendingChildRequest = (state, { type, id, childType }) => {
-  const row = getOrInitializeRow(state, type, id);
-  row.references[childType] = { status: status.loading, ids: [] };
+  const rowChild = getOrInitializeRowChild(state, type, id, childType);
+  rowChild.status = status.loading;
 };
 
 // { type, values: [{ id, ...fields }] }
@@ -169,17 +187,15 @@ const storeResources = (state, { type, values }) => {
   }
 };
 
-const storeChildResources = (state, { type, id, childType, values }) => {
-  const childResourceType = getChildResourceType(type, childType);
+const storeChildResources = (state, { type, id, childType, values }) => {  
   // store IDs on parent
-  const row = getOrInitializeRow(state, type, id);
-  row.references[childType] = {
-    status: status.ready,
-    expires: Date.now() + DEFAULT_TTL,
-    ids: values.map((value) => value.id),
-  };
+  const rowChild = getOrInitializeRowChild(state, type, id, childType);
+  rowChild.status = status.ready,
+  rowChild.expires = Date.now() + DEFAULT_TTL,
+  rowChild.ids = values.map((value) => value.id)
 
   // store children
+  const childResourceType = getChildResourceType(type, childType);
   storeResources(state, { type: childResourceType, values });
 };
 
@@ -327,15 +343,6 @@ export const handlers = {
       store.dispatch(actions.receivedResources(response));
     });
   }, 1000),
-};
-
-export const getResource = (state, type, id, childType) => {
-  if (id === -1) {
-    return { status: status.ready, value: null, requests: [] };
-  }
-
-  if (childType) return getChildResources(state, type, id, childType);
-  return getBaseResource(state, type, id);
 };
 
 export const useResource = (type, id, childType) => {
