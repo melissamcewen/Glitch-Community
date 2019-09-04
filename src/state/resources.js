@@ -87,7 +87,7 @@ returns {
   requests: [{ type, ids: [id] } | { type, id, childType }],
 }
 */
-const getResource = (state, type, id) => {
+const getBaseResource = (state, type, id) => {
   if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
 
   const row = state[type][id];
@@ -123,7 +123,7 @@ const getChildResources = (state, type, id, childType) => {
   const resultValues = [];
   const childIDsToRequest = [];
   for (const childID of childIDsRequest.ids) {
-    const { value: childValue } = getResource(state, childResourceType, childID);
+    const { value: childValue } = getBaseResource(state, childResourceType, childID);
     if (childValue) {
       resultValues.push(childValue);
     } else {
@@ -321,10 +321,14 @@ export const handlers = {
   }, 1000),
 };
 
+export const getResource = (state, type, id, childType) => {
+  if (childType) return getChildResources(state, type, id, childType);
+  return getBaseResource(state, type, id);
+}
+
 export const useResource = (type, id, childType) => {
-  const resourceState = useSelector((state) => state.resources);
+  const result = useSelector((state) => getResource(state.resources, type, id, childType));
   const dispatch = useDispatch();
-  const result = childType ? getChildResources(resourceState, type, id, childType) : getResource(resourceState, type, id);
 
   if (result.requests.length) {
     dispatch(actions.requestedResources(result.requests));

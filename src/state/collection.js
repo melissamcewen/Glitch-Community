@@ -77,9 +77,6 @@ async function getCollectionProjectsFromAPI(api, collection, withCacheBust) {
   return getAllPages(api, `/v1/collections/by/id/projects?id=${collection.id}&limit=100`);
 }
 
-// we mock out the projects for the placeholder my stuff collections
-const initialResponses = { nullMyStuff: { projects: { status: 'ready', value: [] } } };
-
 export function useCollectionProjects(collection) {
   return useResource('collections', collection.id, 'projects')
 }

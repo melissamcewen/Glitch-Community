@@ -8,7 +8,6 @@ import { CurrentUserProvider } from 'State/current-user';
 import { APIContextProvider } from 'State/api';
 import { APICacheProvider } from 'State/api-cache';
 import { LocalStorageProvider } from 'State/local-storage';
-import { CollectionContextProvider } from 'State/collection';
 import { NotificationsProvider } from 'State/notifications';
 import OfflineNotice from 'State/offline-notice';
 import SuperUserBanner from 'Components/banners/super-user';
@@ -26,14 +25,12 @@ const App = ({ apiCache }) => (
               <CurrentUserProvider>
                 <APIContextProvider>
                   <APICacheProvider initial={apiCache}>
-                    <CollectionContextProvider>
-                      <>
-                        <RootStyle theme={lightTheme} />
-                        <SuperUserBanner />
-                        <OfflineNotice />
-                        <Router />
-                      </>
-                    </CollectionContextProvider>
+                    <>
+                      <RootStyle theme={lightTheme} />
+                      <SuperUserBanner />
+                      <OfflineNotice />
+                      <Router />
+                    </>
                   </APICacheProvider>
                 </APIContextProvider>
               </CurrentUserProvider>

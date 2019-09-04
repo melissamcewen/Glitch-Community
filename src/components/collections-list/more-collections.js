@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { sampleSize } from 'lodash';
 import { Loader } from '@fogcreek/shared-components';
+import { useSelector, useDispatch } from 'react-redux';
 
 import CoverContainer from 'Components/containers/cover-container';
 import DataLoader from 'Components/data-loader';
@@ -13,6 +14,7 @@ import { UserLink, TeamLink } from 'Components/link';
 import { getDisplayName } from 'Models/user';
 import { getSingleItem } from 'Shared/api';
 import { useCollectionCurator } from 'State/collection';
+import { getResource } from 'State/resources';
 
 import styles from './styles.styl';
 
@@ -24,6 +26,21 @@ const loadMoreCollectionsFromAuthor = ({ api, collection }) => {
   // get up to 10 collections from the author
   return getSingleItem(api, `v1/${authorEndpoint}/${authorId}/collections?limit=10&orderKey=createdAt&orderDirection=DESC`, 'items');
 };
+
+const useCollectionsWithProjects = (collections) => {
+  const resourceState = useSelector((state) => state.resources);
+  const dispatch = useDispatch();
+  
+  const results = []
+  const requests = []
+  
+  for const 
+
+  if (result.requests.length) {
+    dispatch(actions.requestedResources(result.requests));
+  }
+  return result;
+}
 
 // FIXME
 // function useCollectionsWithProjects(collections) {
