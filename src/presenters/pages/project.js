@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { Loader } from '@fogcreek/shared-components';
-import { useDispatch } from 'react-redux;'
+import { useDispatch } from 'react-redux';
 
 import Button from 'Components/buttons/button';
 import Heading from 'Components/text/heading';
@@ -90,14 +90,11 @@ function DeleteProjectPopover({ projectDomain, deleteProject }) {
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(
-    () => {
-      if (done) {
-        window.location = getUserLink(currentUser);
-      }
-    },
-    [done, currentUser],
-  );
+  useEffect(() => {
+    if (done) {
+      window.location = getUserLink(currentUser);
+    }
+  }, [done, currentUser]);
 
   return (
     <section>
@@ -289,12 +286,9 @@ async function addProjectBreadcrumb(projectWithMembers) {
 
 const ProjectPageContainer = ({ name: domain }) => {
   const { status, value: project } = useCachedProject(domain);
-  useEffect(
-    () => {
-      if (project) addProjectBreadcrumb(project);
-    },
-    [project],
-  );
+  useEffect(() => {
+    if (project) addProjectBreadcrumb(project);
+  }, [project]);
   return (
     <Layout>
       <AnalyticsContext properties={{ origin: 'project' }}>

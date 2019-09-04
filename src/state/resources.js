@@ -73,6 +73,8 @@ const getChildResourceType = (type, childType) => {
   return childResourceType;
 };
 
+const rowNeedsRefresh = (row) => row && row.status === status.ready && row.expires < Date.now();
+
 /*
 get the cached resource + any requests that we need to make
 returns {
@@ -86,14 +88,14 @@ const getBaseResource = (state, type, id) => {
 
   const row = state[type][id];
   // resource is missing; request the resource
-  if (!row || row.status === status.loading) {
-    return { status: status.loading, value: row && row.value, requests: [{ type, ids: [id] }] };
+  if (!row) {
+    return { status: status.loading, value: null, requests: [{ type, ids: [id] }] };
   }
   // resource is stale; return it but also create a new request
-  if (row.expires < Date.now()) {
-    return { status: status.ready, value: row.value, requests: [{ type, ids: [id] }] };
+  if (rowNeedsRefresh(row)) {
+    return { status: status.loading, value: row.value, requests: [{ type, ids: [id] }] };
   }
-  
+
   return { status: row.status, value: row.value, requests: [] };
 };
 
@@ -112,26 +114,22 @@ const getChildResources = (state, type, id, childType) => {
   if (!childIDsRequest) {
     return { status: status.loading, value: null, requests: [{ type, id, childType }] };
   }
-  // child IDs request is pending; no request needed but no results yet
-  if (childIDsRequest.status === status.loading) {
-    return { status: status.loading, value: null, requests: [] };
-  }
-  
+
   // child IDs request is stale; use IDs but also create a new request
-  let refreshChildren = childIDsRequest.expires < Date.now();
+  let refreshChildren = rowNeedsRefresh(childIDsRequest);
 
   // collect all of the associated children from the child resource table
-  const childResources = childIDsRequest.ids.map(childID => getBaseResource(state, childResourceType, childID));
-  
+  const childResources = (childIDsRequest.ids || []).map((childID) => getBaseResource(state, childResourceType, childID));
+
   // if _any_ children have pending requests, just reload the whole batch
-  if (childResources.some(resource => resource.requests.length)) {
+  if (childResources.some((resource) => resource.requests.length)) {
     refreshChildren = true;
   }
-  
+
   // return any available children
-  const resultValues = childResources.map(resource => resource.value).filter(Boolean);
-  
-  return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] }
+  const resultValues = childResources.map((resource) => resource.value).filter(Boolean);
+
+  return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] };
 };
 
 const getOrInitializeRow = (state, type, id) => {
@@ -346,12 +344,7 @@ export const useResource = (type, id, childType) => {
   (like Promise.all or allByKeys).
   Can take an object or an array.
 */
-export const allReady = (reqs) => {
-  if (Object.values(reqs).every((req) => req.status === status.ready)) {
-    return {
-      status: status.ready,
-      value: Array.isArray(reqs) ? reqs.map((req) => req.value) : mapValues(reqs, (req) => req.value),
-    };
-  }
-  return { status: status.loading };
-};
+export const allReady = (reqs) => ({
+  status: Object.values(reqs).every((req) => req.status === status.ready) ? status.ready : status.value,
+  value: Array.isArray(reqs) ? reqs.map((req) => req.value) : mapValues(reqs, (req) => req.value),
+});
