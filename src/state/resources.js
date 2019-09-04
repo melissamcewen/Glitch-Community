@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
-import { mapValues, memoize, debounce, chunk } from 'lodash';
+import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -137,11 +137,9 @@ const getChildResources = (state, type, id, childType) => {
   return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] };
 };
 
-
-
 export const getResource = (state, type, id, childType) => {
   if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
-
+  
   // Handle resources with optional references (e.g. collection -> user)
   if (id === -1 || id === null) {
     return { status: status.ready, value: null, requests: [] };
@@ -359,9 +357,8 @@ export const handlers = {
 };
 
 export const useResource = (type, id, childType) => {
-  const result = useSelector(
-    (state) => getResource(state.resources, type, id, childType)
-  );
+  // TODO: figure out best balance between cost of `isEqual` vs cost of wasted renders here
+  const result = useSelector((state) => getResource(state.resources, type, id, childType), isEqual);
   const dispatch = useDispatch();
 
   if (result.requests.length) {
