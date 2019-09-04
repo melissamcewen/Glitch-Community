@@ -180,7 +180,7 @@ export default function UserOptionsAndCreateTeamPopContainer({ showAccountSettin
   const avatarStyle = { backgroundColor: user.color };
   const buttonRef = useRef();
 
-  return (
+  return ( 
     <CheckForCreateTeamHash>
       {(createTeamOpen) => (
         <PopoverContainer startOpen={createTeamOpen} triggerButtonRef={buttonRef}>
