@@ -91,11 +91,15 @@ const getBaseResource = (state, type, id) => {
   if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
 
   const row = state[type][id];
-  // resource is missing or expired; request the resource
-  if (rowIsMissingOrExpired(row)) {
+  // resource is missing; request the resource
+  if (!row) {
     return { status: status.loading, value: null, requests: [{ type, ids: [id] }] };
   }
-
+  // resource is stale; return it but also create a new request
+  if (row.expires < Date.now()) {
+    return { status: status.ready, value: row.value, requests: [{ type, ids: [id] }] };
+  }
+  
   return { status: row.status, value: row.value, requests: [] };
 };
 
