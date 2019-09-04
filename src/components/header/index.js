@@ -13,13 +13,22 @@ import NewProjectPop from './new-project-pop';
 import Logo from './logo';
 import styles from './header.styl';
 
-const ResumeCoding = () => (
-  <TrackedExternalLink name="Resume Coding clicked" to={EDITOR_URL}>
-    <Button type="cta" size="small" decorative>
-      Resume Coding
-    </Button>
-  </TrackedExternalLink>
-);
+const ResumeCoding = () => {
+  const { location } = useGlobals();
+  // project names can't contain ~ so this will work
+  const [, projectName] = location.pathname.split('~');
+  let editorUrl = EDITOR_URL;
+  if (projectName) {
+    editorUrl = `${EDITOR_URL}#!/${projectName}`;
+  }
+  return (
+    <TrackedExternalLink name="Resume Coding clicked" to={editorUrl}>
+      <Button type="cta" size="small" decorative>
+        Resume Coding
+      </Button>
+    </TrackedExternalLink>
+  );
+};
 
 const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay }) => {
   const { currentUser } = useCurrentUser();
@@ -31,7 +40,9 @@ const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay }
   const hasProjects = currentUser.projects.length > 0 || fakeSignedIn;
   return (
     <header role="banner" className={styles.header}>
-      <Button href="#main" className={styles.visibleOnFocus}>Skip to Main Content</Button>
+      <Button href="#main" className={styles.visibleOnFocus}>
+        Skip to Main Content
+      </Button>
       <Link to="/" className={styles.logoWrap}>
         <Logo />
       </Link>
@@ -58,10 +69,7 @@ const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay }
           )}
           {signedIn && (
             <li className={styles.buttonWrap}>
-              <UserOptionsPop
-                showAccountSettingsOverlay={showAccountSettingsOverlay}
-                showNewStuffOverlay={showNewStuffOverlay}
-              />
+              <UserOptionsPop showAccountSettingsOverlay={showAccountSettingsOverlay} showNewStuffOverlay={showNewStuffOverlay} />
             </li>
           )}
         </ul>
