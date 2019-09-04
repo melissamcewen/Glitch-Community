@@ -90,9 +90,8 @@ returns {
   requests: [{ type, ids: [id] } | { type, id, childType }],
 }
 */
-const noRequests = [];
 
-const getBaseResource = memo((state, type, id) => {
+const getBaseResource = (state, type, id) => {
   const row = state[type][id];
   // resource is missing; request the resource
   if (!row) {
@@ -103,8 +102,8 @@ const getBaseResource = memo((state, type, id) => {
     return { status: status.loading, value: row.value, requests: [{ type, ids: [id] }] };
   }
 
-  return { status: row.status, value: row.value, requests: noRequests };
-}, (state, type, id) => state[type][id]);
+  return { status: row.status, value: row.value, requests: [] };
+};
 
 const getChildResources = (state, type, id, childType) => {
   const childResourceType = getChildResourceType(type, childType);
@@ -115,17 +114,17 @@ const getChildResources = (state, type, id, childType) => {
     return { status: status.loading, value: null, requests: [{ type, ids: [id] }, { type, id, childType }] };
   }
 
-  const childIDsRequest = parentRow.references[childType];
+  const childRow = parentRow.references[childType];
   // resource is present but its children are missing; request all of its children
-  if (!childIDsRequest) {
+  if (!childRow) {
     return { status: status.loading, value: null, requests: [{ type, id, childType }] };
   }
 
   // child IDs request is stale; use IDs but also create a new request
-  let refreshChildren = rowNeedsRefresh(childIDsRequest);
+  let refreshChildren = rowNeedsRefresh(childRow);
 
   // collect all of the associated children from the child resource table
-  const childResources = (childIDsRequest.ids || []).map((childID) => getBaseResource(state, childResourceType, childID));
+  const childResources = (childRow.ids || []).map((childID) => getBaseResource(state, childResourceType, childID));
 
   // if _any_ children have pending requests, just reload the whole batch
   if (childResources.some((resource) => resource.requests.length)) {
@@ -135,7 +134,7 @@ const getChildResources = (state, type, id, childType) => {
   // return any available children
   const resultValues = childResources.map((resource) => resource.value).filter(Boolean);
 
-  return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : noRequests };
+  return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] };
 };
 
 export const getResource = (state, type, id, childType) => {
