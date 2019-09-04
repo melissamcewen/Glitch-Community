@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { sampleSize, flatMap, zipWith } from 'lodash';
+import { sampleSize, range, flatMap, zipWith } from 'lodash';
 import { Loader } from '@fogcreek/shared-components';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -44,17 +44,25 @@ const useCollectionsWithProjects = (collections) => {
   const allProjects = allReady(responses);
   if (allProjects.status === 'loading') return null;
 
-  const collectionsWithProjects = zipWith(collections, allProjects.value, (coll, projects) => ({
+  console.log(allProjects)
+  
+  return zipWith(collections, allProjects.value, (coll, projects) => ({
     ...coll,
     projects,
   })).filter((coll) => coll.projects.length > 0);
-
-  sampleSize(collectionsWithProjects, 3);
 };
+
+// a version of sampleSize that uses the same indices as long as the input array's length is stable
+const useSample = (items, size) => {
+  const indices = React.useMemo(() => sampleSize(range(items.length), size), [items.length, size])
+  return indices.map(idx => items[idx])
+}
 
 const MoreCollections = ({ currentCollection, collections }) => {
   const curator = useCollectionCurator(currentCollection);
   const collectionsWithProjects = useCollectionsWithProjects(collections);
+  const sampledCollections = useSample(collectionsWithProjects || [], 3);
+  
   if (!collectionsWithProjects) return <Loader style={{ width: '25px' }} />;
   if (!collectionsWithProjects.length) return null;
 
@@ -83,7 +91,7 @@ const MoreCollections = ({ currentCollection, collections }) => {
         </Heading>
       </div>
       <CoverContainer type={type} item={currentCollection[type]}>
-        <Row items={collectionsWithProjects}>{(collection) => <SmallCollectionItem key={collection.id} collection={collection} />}</Row>
+        <Row items={sampledCollections}>{(collection) => <SmallCollectionItem key={collection.id} collection={collection} />}</Row>
       </CoverContainer>
     </>
   );
