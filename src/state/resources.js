@@ -7,7 +7,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAllPages } from 'Shared/api';
 import { API_URL } from 'Utils/constants';
 
-const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
+// const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
+const DEFAULT_TTL = 1000 * 30
 const status = {
   loading: 'loading',
   ready: 'ready',
@@ -275,6 +276,7 @@ export const { reducer, actions } = createSlice({
   initialState: {
     ...mapValues(resourceConfig, () => ({})),
     _requestQueue: [],
+    _responseQueue: [],
   },
   reducers: {
     // loading
@@ -348,7 +350,10 @@ export const handlers = {
 };
 
 export const useResource = (type, id, childType) => {
-  const result = useSelector((state) => getResource(state.resources, type, id, childType));
+  const result = useSelector(
+    (state) => getResource(state.resources, type, id, childType),
+    (prev, next) => prev.status === next.status && prev.value === next.value && prev.requests === next.requests,
+  );
   const dispatch = useDispatch();
 
   if (result.requests.length) {
