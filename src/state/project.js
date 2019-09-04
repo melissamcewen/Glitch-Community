@@ -24,7 +24,7 @@ export function useProjectMembers(projectId) {
     teams: useResource('projects', projectId, 'teams'),
   });
   if (res.value.users && res.value.teams) return res;
-  return { status: 'loading' }
+  return { status: 'loading' };
 }
 
 export function useProjectEditor(initialProject) {
