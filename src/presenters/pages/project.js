@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { Loader } from '@fogcreek/shared-components';
+import { useDispatch } from 'react-redux;'
 
 import Button from 'Components/buttons/button';
 import Heading from 'Components/text/heading';
@@ -25,7 +26,7 @@ import { PrivateBadge, PrivateToggle } from 'Components/private-badge';
 import BookmarkButton from 'Components/buttons/bookmark-button';
 import { AnalyticsContext, useTrackedFunc } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
-import { toggleBookmark, useCollectionReload } from 'State/collection';
+import { toggleBookmark } from 'State/collection';
 import { useProjectEditor } from 'State/project';
 import { getUserLink } from 'Models/user';
 import { userIsProjectMember } from 'Models/project';
@@ -138,6 +139,7 @@ DeleteProjectPopover.propTypes = {
 };
 
 const ProjectPage = ({ project: initialProject }) => {
+  const dispatch = useDispatch();
   const myStuffEnabled = useDevToggle('My Stuff');
   const [project, { updateDomain, updateDescription, updatePrivate, deleteProject, uploadAvatar }] = useProjectEditor(initialProject);
   useFocusFirst();
@@ -150,7 +152,6 @@ const ProjectPage = ({ project: initialProject }) => {
   const { addProjectToCollection, removeProjectFromCollection } = useAPIHandlers();
   const { createNotification } = useNotifications();
   const [hasBookmarked, setHasBookmarked] = useState(initialProject.authUserHasBookmarked);
-  const reloadCollectionProjects = useCollectionReload();
 
   const bookmarkAction = useTrackedFunc(
     () =>
@@ -164,7 +165,7 @@ const ProjectPage = ({ project: initialProject }) => {
         removeProjectFromCollection,
         setHasBookmarked,
         hasBookmarked,
-        reloadCollectionProjects,
+        dispatch,
       }),
     `Project ${hasBookmarked ? 'removed from my stuff' : 'added to my stuff'}`,
     (inherited) => ({ ...inherited, projectName: project.domain, baseProjectId: project.baseId, userId: currentUser.id }),

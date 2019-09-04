@@ -308,6 +308,9 @@ export const { reducer, actions } = createSlice({
     addProjectToCollection: (state, { payload: { collection } }) => {
       clearChildResources(state, 'collections', collection.id, 'projects');
     },
+    removeProjectFromCollection: (state, { payload: { collection } }) => {
+      clearChildResources(state, 'collections', collection.id, 'projects');
+    },
     toggleBookmark: (state, { payload: { collection } }) => {
       clearChildResources(state, 'collections', collection.id, 'projects');
     },

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import Heading from 'Components/text/heading';
 import ProjectEmbed from 'Components/project/project-embed';
@@ -11,7 +12,7 @@ import BookmarkButton from 'Components/buttons/bookmark-button';
 import { useAPI, useAPIHandlers } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
 import { useNotifications } from 'State/notifications';
-import { toggleBookmark, useCollectionReload } from 'State/collection';
+import { toggleBookmark } from 'State/collection';
 import useDevToggle from 'State/dev-toggles';
 import { useTrackedFunc } from 'State/segment-analytics';
 
@@ -68,9 +69,9 @@ const FeaturedProject = ({
   updateNote,
   unfeatureProject,
 }) => {
+  const dispatch = useDispatch();
   const myStuffEnabled = useDevToggle('My Stuff');
   const { currentUser } = useCurrentUser();
-  const reloadCollectionProjects = useCollectionReload();
   const [hasBookmarked, setHasBookmarked] = useState(featuredProject.authUserHasBookmarked);
   const { createNotification } = useNotifications();
   const isAnonymousUser = !currentUser.login;
@@ -93,7 +94,7 @@ const FeaturedProject = ({
         removeProjectFromCollection,
         setHasBookmarked,
         hasBookmarked,
-        reloadCollectionProjects,
+        dispatch,
       }),
     `Project ${hasBookmarked ? 'removed from my stuff' : 'added to my stuff'}`,
     (inherited) => ({

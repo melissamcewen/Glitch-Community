@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useAPI, useAPIHandlers, createAPIHook } from 'State/api';
-import { useResource } from 'State/resources';
+import { useResource, actions } from 'State/resources';
 import useErrorHandlers from 'State/error-handlers';
 import { getSingleItem, getAllPages } from 'Shared/api';
 import { captureException } from 'Utils/sentry';
@@ -22,7 +22,7 @@ export const toggleBookmark = async ({
   removeProjectFromCollection,
   setHasBookmarked,
   hasBookmarked,
-  reloadCollectionProjects,
+  dispatch,
 }) => {
   try {
     let myStuffCollection = currentUser.collections.find((c) => c.isMyStuff);
@@ -41,7 +41,7 @@ export const toggleBookmark = async ({
         type: 'success',
       });
     }
-    reloadCollectionProjects([myStuffCollection]);
+    dispatch(actions.toggleBookmark({ collection: myStuffCollection }));
   } catch (error) {
     captureException(error);
     createNotification('Something went wrong, try refreshing?', { type: 'error' });
@@ -95,6 +95,7 @@ export function userOrTeamIsAuthor({ collection, user }) {
 
 export function useCollectionEditor(initialCollection) {
   const [collection, setCollection] = useState(initialCollection);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     setCollection(initialCollection);
@@ -199,8 +200,7 @@ export function useCollectionEditor(initialCollection) {
       // make api call to remove from collection
       await removeProjectFromCollection({ project, collection: selectedCollection });
 
-      // reload collection projects, this will ensure next time we navigate to this page, the state is up to date and caches are busted if necessary
-      reloadCollectionProjects([selectedCollection, collection]);
+      dispatch(actions.removeProjectFromCollection({ project, collction: selectedCollection }));
     }, handleError),
 
     deleteCollection: () => deleteItem({ collection }).catch(handleError),
