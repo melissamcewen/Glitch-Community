@@ -37,15 +37,13 @@ const useCollectionsWithProjects = (collections) => {
   const responses = collections.map((collection) => getResource(resourceState, 'collections', collection.id, 'projects'));
   const requests = flatMap(responses, (response) => response.requests);
 
-  if (requests.length) {
+  if (requests.length > 0) {
     dispatch(resourceActions.requestedResources(requests));
   }
 
   const allProjects = allReady(responses);
   if (allProjects.status === 'loading') return null;
 
-  console.log(allProjects)
-  
   return zipWith(collections, allProjects.value, (coll, projects) => ({
     ...coll,
     projects,
@@ -54,15 +52,15 @@ const useCollectionsWithProjects = (collections) => {
 
 // a version of sampleSize that uses the same indices as long as the input array's length is stable
 const useSample = (items, size) => {
-  const indices = React.useMemo(() => sampleSize(range(items.length), size), [items.length, size])
-  return indices.map(idx => items[idx])
-}
+  const indices = React.useMemo(() => sampleSize(range(items.length), size), [items.length, size]);
+  return indices.map((idx) => items[idx]);
+};
 
 const MoreCollections = ({ currentCollection, collections }) => {
   const curator = useCollectionCurator(currentCollection);
   const collectionsWithProjects = useCollectionsWithProjects(collections);
   const sampledCollections = useSample(collectionsWithProjects || [], 3);
-  
+
   if (!collectionsWithProjects) return <Loader style={{ width: '25px' }} />;
   if (!collectionsWithProjects.length) return null;
 

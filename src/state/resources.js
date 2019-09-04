@@ -345,6 +345,6 @@ export const useResource = (type, id, childType) => {
   Can take an object or an array.
 */
 export const allReady = (reqs) => ({
-  status: Object.values(reqs).every((req) => req.status === status.ready) ? status.ready : status.value,
+  status: Object.values(reqs).every((req) => req.status === status.ready) ? status.ready : status.loading,
   value: Array.isArray(reqs) ? reqs.map((req) => req.value) : mapValues(reqs, (req) => req.value),
 });

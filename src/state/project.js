@@ -16,12 +16,15 @@ export async function getProjectByDomain(api, domain) {
   return { ...project, teams, users };
 }
 
+// only show project members if both teams and users are available,
+// but allow it to show stale data (e.g. right after a user has been added to a project)
 export function useProjectMembers(projectId) {
   const res = allReady({
     users: useResource('projects', projectId, 'users'),
     teams: useResource('projects', projectId, 'teams'),
   });
-  return res.status === 'ready' ? res : { status: 'loading' }
+  if (res.value.users && res.value.teams) return res;
+  return { status: 'loading' }
 }
 
 export function useProjectEditor(initialProject) {
