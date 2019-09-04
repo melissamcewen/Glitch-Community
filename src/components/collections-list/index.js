@@ -10,7 +10,7 @@ import CreateCollectionButton from 'Components/collection/create-collection-pop'
 import SkipSectionButtons from 'Components/containers/skip-section-buttons';
 import { useAPIHandlers } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
-import { useCollectionContext, useCollectionProjects } from 'State/collection';
+import { useCollectionProjects } from 'State/collection';
 import { getCollectionsWithMyStuff } from 'Models/collection';
 import useDevToggle from 'State/dev-toggles';
 
@@ -70,7 +70,7 @@ function CollectionsList({
   // TODO: dispatch a fetch; the return value is not used here
   // const getCollectionProjects = useCollectionContext();
   const getCollectionProjects = () => {};
-  
+
   function deleteCollection(collection) {
     setDeletedCollectionIds((ids) => [...ids, collection.id]);
     return deleteItem({ collection });

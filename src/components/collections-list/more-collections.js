@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { sampleSize, flatMap, zipWith } from 'lodash';
 import { Loader } from '@fogcreek/shared-components';

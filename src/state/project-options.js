@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useCurrentUser } from 'State/current-user';
 import { useAPIHandlers, useAPI } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
-import { userOrTeamIsAuthor, useCollectionReload } from 'State/collection';
+import { userOrTeamIsAuthor } from 'State/collection';
 import { actions } from 'State/resources';
 import { userIsOnTeam } from 'Models/team';
 import { userIsProjectMember, userIsProjectAdmin, userIsOnlyProjectAdmin } from 'Models/project';
@@ -24,7 +24,6 @@ const useDefaultProjectOptions = () => {
   const { addProjectToCollection, joinTeamProject, removeUserFromProject, removeProjectFromCollection } = useAPIHandlers();
   const { currentUser } = useCurrentUser();
   const { handleError, handleCustomError } = useErrorHandlers();
-  const reloadCollectionProjects = useCollectionReload();
   const { createNotification } = useNotifications();
   const api = useAPI();
   const dispatch = useDispatch();
@@ -32,7 +31,7 @@ const useDefaultProjectOptions = () => {
   return {
     addProjectToCollection: withErrorHandler(async (project, collection) => {
       await addProjectToCollection({ project, collection });
-      reloadCollectionProjects([collection]);
+      dispatch(actions.addProjectToCollection({ project, collection }));
     }, handleCustomError),
     joinTeamProject: withErrorHandler(async (project, team) => {
       await joinTeamProject({ team, project });
@@ -56,7 +55,7 @@ const useDefaultProjectOptions = () => {
           myStuffCollection = await createCollection({ api, name: 'My Stuff', createNotification, myStuffEnabled: true });
         }
         await addProjectToCollection({ project, collection: myStuffCollection });
-        reloadCollectionProjects([myStuffCollection]);
+        dispatch(actions.toggleBookmark({ project, collection: myStuffCollection }));
         const url = myStuffCollection.fullUrl || `${currentUser.login}/${myStuffCollection.url}`;
         createNotification(
           <AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={`/@${url}`} />,

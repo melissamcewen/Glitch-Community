@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { useAPI, useAPIHandlers, createAPIHook } from 'State/api';
 import { useResource } from 'State/resources';
@@ -65,23 +66,8 @@ export const getCollectionWithProjects = async (api, { owner, name }) => {
   }
 };
 
-async function getCollectionProjectsFromAPI(api, collection, withCacheBust) {
-  if (withCacheBust) {
-    // busts cache for collection projects by both url and by id
-    api.bustCache(createAPICallForCollectionProjects(encodeURIComponent(collection.fullUrl)));
-    api.bustCache(`/v1/collections/by/id/projects?id=${collection.id}&limit=100`);
-  }
-
-  // then get the latest collection projects
-  return getAllPages(api, `/v1/collections/by/id/projects?id=${collection.id}&limit=100`);
-}
-
 export function useCollectionProjects(collection) {
   return useResource('collections', collection.id, 'projects');
-}
-
-export function useCollectionReload() {
-  return () => {};
 }
 
 export const useCollectionCurator = createAPIHook(async (api, collection) => {
@@ -125,7 +111,6 @@ export function useCollectionEditor(initialCollection) {
   const api = useAPI();
 
   const { handleError, handleErrorForInput, handleCustomError } = useErrorHandlers();
-  const reloadCollectionProjects = useCollectionReload();
   const { createNotification } = useNotifications();
   const { currentUser } = useCurrentUser();
 
@@ -181,8 +166,7 @@ export function useCollectionEditor(initialCollection) {
         await orderProjectInCollection({ project, collection }, 0);
       }
 
-      // reload collection projects, this will ensure next time we navigate to this page, the state is up to date and caches are busted if necessary
-      reloadCollectionProjects([selectedCollection, collection]);
+      dispatch(actions.addProjectToCollection({ project, collection }));
     }, handleCustomError),
 
     removeProjectFromCollection: withErrorHandler(async (project, selectedCollection) => {
