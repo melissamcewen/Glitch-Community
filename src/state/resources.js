@@ -328,24 +328,23 @@ const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType
   changeFn(rightIDs, rightID);
 };
 
-// updates
-// TODO:
-// - do the complete action (not just project->user management)
-// - do these actions efficiently (i.e. selectively add/remove users, don't just blow the resource away)
-// - get `currentUser` & `My Stuff` IDs from state; maybe this needs to be in a `reduceReducers` that has _both_ currentUser and resources
-// - do the inverse changes (e.g. add the user to the project's references AND add the project to the user's references)
 const topLevelSlice = createSlice({
   reducers: {
     joinTeamProject: (state, { payload: { project } }) => {
-      expireChildResources(state.resources, 'projects', project.id, 'users');
+      const { currentUser } = state;
+      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, remove);
+      // TODO: can we get rid of currentUser.projects?
+      currentUser.projects.push(project);
     },
     leaveProject: (state, { payload: { project } }) => {
-      expireChildResources(state.resources, 'projects', project.id, 'users');
+      const { currentUser } = state;
+      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, remove);
+      currentUser.projects = currentUser.projects.filter(p => p.id !== project.id);
     },
-    removeUserFromTeamProjects: (state, { payload: { projects } }) => {
-      // TODO: pass in _team_ here, use that to get projects
+    removeUserFromTeamAndProjects: (state, { payload: { user, team, projects } }) => {
+      changeRelation(state.resources, { type: 'teams', id: team.id }, { type: 'users', id: user.id }, remove);
       projects.forEach((project) => {
-        expireChildResources(state.resources, 'projects', project.id, 'users');
+        changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: user.id }, remove);
       });
     },
     addProjectToTeam: (state, { payload: { project, team } }) => {
@@ -353,7 +352,6 @@ const topLevelSlice = createSlice({
     },
     removeProjectFromTeam: (state, { payload: { project, team } }) => {
       changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, remove);
-      expireChildResources(state.resources, 'projects', project.id, 'users');
     },
     addProjectToCollection: (state, { payload: { project, collection } }) => {
       changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, add);
