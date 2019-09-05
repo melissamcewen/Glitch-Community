@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Loader } from '@fogcreek/shared-components';
+import { Loader, TextInput } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
 import Text from 'Components/text/text';
-import TextInput from 'Components/inputs/text-input';
 import Button from 'Components/buttons/button';
 import Notification from 'Components/notification';
 
@@ -146,8 +145,7 @@ function TwoFactorSettings() {
             <form className={styles.accountSettingsForm} onSubmit={verifyCode}>
               <img alt="QR Code" src={secret} />
               <TextInput
-                labelText="Enter Authenticator Code"
-                placeholder="Enter Authenticator Code"
+                label="Enter Authenticator Code"
                 maxLength={6}
                 value={code}
                 disabled={working}

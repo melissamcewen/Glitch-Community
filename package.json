@@ -38,7 +38,7 @@
     "@babel/register": "7.5.5",
     "@babel/runtime": "^7.5.4",
     "@babel/runtime-corejs3": "^7.5.5",
-    "@fogcreek/shared-components": "^0.5.0",
+    "@fogcreek/shared-components": "^0.6.0",
     "@percy/cypress": "^1.0.9",
     "@sentry/browser": "^4.6.6",
     "@sentry/minimal": "^5.6.1",
