@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { memoize } from 'lodash';
+import { mapKeys, memoize } from 'lodash';
 import { createSlice, createAction } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -44,6 +44,7 @@ function identifyUser(user) {
           login: user.login,
           email,
           created_at: user.createdAt,
+          ...mapKeys(window.AB_TESTS, (assignment, test) => `abtest-${test}`),
         },
         { groupId: '0' },
       );

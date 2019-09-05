@@ -2,7 +2,6 @@ import React from 'react';
 import { Progress } from '@fogcreek/shared-components';
 
 import { uploadAsset, uploadAssetSizes } from 'Utils/assets';
-import { captureException } from 'Utils/sentry';
 import { useNotifications } from 'State/notifications';
 import Text from 'Components/text/text';
 
@@ -35,10 +34,9 @@ async function uploadWrapper(notifications, upload) {
       updateNotification(<NotifyUploading progress={progress} />);
     });
   } catch (error) {
-    captureException(error);
-    notifications.createErrorNotification(<NotifyError error={error} />);
     removeNotification();
-    return result;
+    notifications.createErrorNotification(<NotifyError error={error} />);
+    return false;
   }
 
   removeNotification();

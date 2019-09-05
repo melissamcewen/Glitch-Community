@@ -18,8 +18,12 @@ export function useTeamEditor(initialTeam) {
   const { currentUser, update: updateCurrentUser } = useCurrentUser();
   const { uploadAssetSizes } = useUploader();
   const { createNotification } = useNotifications();
+<<<<<<< HEAD
   const { handleError, handleErrorForInput } = useErrorHandlers();
   const dispatch = useDispatch();
+=======
+  const { handleError, handleErrorForInput, handleImageUploadError } = useErrorHandlers();
+>>>>>>> eb45d1b4d4720a278420360d07d77f449197fb23
   const { getAvatarImagePolicy, getCoverImagePolicy } = assets.useAssetPolicy();
   const {
     updateItem,
@@ -130,7 +134,10 @@ export function useTeamEditor(initialTeam) {
       assets.requestFile(
         withErrorHandler(async (blob) => {
           const { data: policy } = await getAvatarImagePolicy({ team });
-          await uploadAssetSizes(blob, policy, assets.AVATAR_SIZES);
+          const success = await uploadAssetSizes(blob, policy, assets.AVATAR_SIZES);
+          if (!success) {
+            return;
+          }
 
           const image = await assets.blobToImage(blob);
           const color = assets.getDominantColor(image);
@@ -139,13 +146,16 @@ export function useTeamEditor(initialTeam) {
             backgroundColor: color,
           });
           setTeam((prev) => ({ ...prev, updatedAt: Date.now() }));
-        }, handleError),
+        }, handleImageUploadError),
       ),
     uploadCover: () =>
       assets.requestFile(
         withErrorHandler(async (blob) => {
           const { data: policy } = await getCoverImagePolicy({ team });
-          await uploadAssetSizes(blob, policy, assets.COVER_SIZES);
+          const success = await uploadAssetSizes(blob, policy, assets.COVER_SIZES);
+          if (!success) {
+            return;
+          }
 
           const image = await assets.blobToImage(blob);
           const color = assets.getDominantColor(image);
@@ -154,7 +164,7 @@ export function useTeamEditor(initialTeam) {
             coverColor: color,
           });
           setTeam((prev) => ({ ...prev, updatedAt: Date.now() }));
-        }, handleError),
+        }, handleImageUploadError),
       ),
     clearCover: () => updateFields({ hasCoverImage: false }).catch(handleError),
     addProject: withErrorHandler(async (project) => {

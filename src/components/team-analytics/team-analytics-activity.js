@@ -74,7 +74,6 @@ const dateFormat = (currentTimeFrame) => {
 };
 
 const renderChart = (activeFilter, c3, analytics, currentTimeFrame) => {
-  console.log(analytics);
   let columns = [];
   if (!isEmpty(analytics)) {
     columns = chartColumns(analytics, currentTimeFrame);

@@ -21,12 +21,20 @@ function handleCustomError(notify, error) {
   return Promise.reject(error);
 }
 
+function handleImageUploadError(notify, error) {
+  console.error(error);
+  notify('Unable to process image. Please try another image.');
+  // swallow the error
+  return false;
+}
+
 const useErrorHandlers = () => {
   const { createErrorNotification } = useNotifications();
   return {
     handleError: (error) => handleError(createErrorNotification, error),
     handleErrorForInput: (error) => handleErrorForInput(createErrorNotification, error),
     handleCustomError: (error) => handleCustomError(createErrorNotification, error),
+    handleImageUploadError: (error) => handleImageUploadError(createErrorNotification, error),
   };
 };
 

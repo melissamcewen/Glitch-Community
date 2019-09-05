@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useAPI, useAPIHandlers } from 'State/api';
@@ -10,43 +10,7 @@ import { createCollection, getCollectionLink } from 'Models/collection';
 import { AddProjectToCollectionMsg } from 'Components/notification';
 import { useNotifications } from 'State/notifications';
 import { useCurrentUser } from 'State/current-user';
-
-// used by featured-project and pages/project
-export const toggleBookmark = async ({
-  api,
-  project,
-  currentUser,
-  createNotification,
-  myStuffEnabled,
-  addProjectToCollection,
-  removeProjectFromCollection,
-  setHasBookmarked,
-  hasBookmarked,
-  dispatch,
-}) => {
-  try {
-    let myStuffCollection = currentUser.collections.find((c) => c.isMyStuff);
-    if (hasBookmarked) {
-      setHasBookmarked(false);
-      await removeProjectFromCollection({ project, collection: myStuffCollection });
-      createNotification(`Removed ${project.domain} from collection My Stuff`);
-    } else {
-      setHasBookmarked(true);
-      if (!myStuffCollection) {
-        myStuffCollection = await createCollection({ api, name: 'My Stuff', createNotification, myStuffEnabled });
-      }
-      await addProjectToCollection({ project, collection: myStuffCollection });
-      const url = myStuffCollection.fullUrl || `${currentUser.login}/${myStuffCollection.url}`;
-      createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={`/@${url}`} />, {
-        type: 'success',
-      });
-    }
-    dispatch(actions.toggleBookmark({ collection: myStuffCollection }));
-  } catch (error) {
-    captureException(error);
-    createNotification('Something went wrong, try refreshing?', { type: 'error' });
-  }
-};
+import useDevToggle from 'State/dev-toggles';
 
 const createAPICallForCollectionProjects = (encodedFullUrl) =>
   `/v1/collections/by/fullUrl/projects?fullUrl=${encodedFullUrl}&orderKey=projectOrder&limit=100`;
@@ -71,6 +35,49 @@ export const useCollectionCurator = (collection) =>
     team: useResource('teams', collection.teamId),
     user: useResource('users', collection.userId),
   });
+
+// used by featured-project and pages/project
+export const useToggleBookmark = (project) => {
+  const api = useAPI();
+  const { currentUser } = useCurrentUser();
+  const dispatch = useDispatch();
+
+  const myStuffEnabled = useDevToggle('My Stuff');
+  const { createNotification } = useNotifications();
+
+  const { addProjectToCollection, removeProjectFromCollection } = useAPIHandlers();
+
+  const [hasBookmarked, setHasBookmarked] = useState(project.authUserHasBookmarked);
+  useEffect(() => {
+    setHasBookmarked(project.authUserHasBookmarked);
+  }, [project.authUserHasBookmarked]);
+
+  const toggleBookmarked = async () => {
+    try {
+      let myStuffCollection = currentUser.collections.find((c) => c.isMyStuff);
+      if (hasBookmarked) {
+        setHasBookmarked(false);
+        await removeProjectFromCollection({ project, collection: myStuffCollection });
+        createNotification(`Removed ${project.domain} from collection My Stuff`);
+      } else {
+        setHasBookmarked(true);
+        if (!myStuffCollection) {
+          myStuffCollection = await createCollection({ api, name: 'My Stuff', createNotification, myStuffEnabled });
+        }
+        await addProjectToCollection({ project, collection: myStuffCollection });
+        const url = myStuffCollection.fullUrl || `${currentUser.login}/${myStuffCollection.url}`;
+        createNotification(<AddProjectToCollectionMsg projectDomain={project.domain} collectionName="My Stuff" url={`/@${url}`} />, {
+          type: 'success',
+        });
+      }
+      dispatch(actions.toggleBookmark({ project, collection: myStuffCollection }))
+    } catch (error) {
+      captureException(error);
+      createNotification('Something went wrong, try refreshing?', { type: 'error' });
+    }
+  };
+  return [hasBookmarked, toggleBookmarked, setHasBookmarked];
+};
 
 export function userOrTeamIsAuthor({ collection, user }) {
   if (!user) return false;

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 
 import Heading from 'Components/text/heading';
 import ProjectEmbed from 'Components/project/project-embed';
@@ -9,10 +8,8 @@ import Note from 'Components/collection/note';
 import AnimationContainer from 'Components/animation-container';
 import BookmarkButton from 'Components/buttons/bookmark-button';
 
-import { useAPI, useAPIHandlers } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
-import { useNotifications } from 'State/notifications';
-import { toggleBookmark } from 'State/collection';
+import { useToggleBookmark } from 'State/collection';
 import useDevToggle from 'State/dev-toggles';
 import { useTrackedFunc } from 'State/segment-analytics';
 
@@ -72,16 +69,12 @@ const FeaturedProject = ({
   const dispatch = useDispatch();
   const myStuffEnabled = useDevToggle('My Stuff');
   const { currentUser } = useCurrentUser();
-  const [hasBookmarked, setHasBookmarked] = useState(featuredProject.authUserHasBookmarked);
-  const { createNotification } = useNotifications();
+  const [hasBookmarked, toggleBookmark] = useToggleBookmark();
+>>>>>>> eb45d1b4d4720a278420360d07d77f449197fb23
+
   const isAnonymousUser = !currentUser.login;
-  const api = useAPI();
-  const { addProjectToCollection: addProjectToCollectionAPI, removeProjectFromCollection } = useAPIHandlers();
 
-  useEffect(() => {
-    setHasBookmarked(featuredProject.authUserHasBookmarked);
-  }, [featuredProject.authUserHasBookmarked]);
-
+<<<<<<< HEAD
   const bookmarkAction = useTrackedFunc(
     () =>
       toggleBookmark({
@@ -105,6 +98,15 @@ const FeaturedProject = ({
       origin: `${inherited.origin}-featured-project`,
     }),
   );
+=======
+  const bookmarkAction = useTrackedFunc(toggleBookmark, `Project ${hasBookmarked ? 'removed from my stuff' : 'added to my stuff'}`, (inherited) => ({
+    ...inherited,
+    projectName: featuredProject.domain,
+    baseProjectId: featuredProject.baseId || featuredProject.baseProject,
+    userId: currentUser.id,
+    origin: `${inherited.origin}-featured-project`,
+  }));
+>>>>>>> eb45d1b4d4720a278420360d07d77f449197fb23
 
   return (
     <div data-cy="featured-project">

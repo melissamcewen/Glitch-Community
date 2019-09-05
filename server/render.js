@@ -44,7 +44,7 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const { Helmet } = require('react-helmet');
 
-const render = async (url, { API_CACHE, EXTERNAL_ROUTES, HOME_CONTENT, SSR_SIGNED_IN, ZINE_POSTS }) => {
+const render = async (url, { AB_TESTS, API_CACHE, EXTERNAL_ROUTES, HOME_CONTENT, SSR_SIGNED_IN, ZINE_POSTS }) => {
   if (!isRequireCached) console.log('Transpiling for SSR...');
   const startTime = performance.now();
   const { Page, resetState } = require('../src/server');
@@ -58,6 +58,7 @@ const render = async (url, { API_CACHE, EXTERNAL_ROUTES, HOME_CONTENT, SSR_SIGNE
   const page = React.createElement(Page, {
     origin: url.origin,
     route: url.pathname + url.search + url.hash,
+    AB_TESTS, 
     API_CACHE,
     ZINE_POSTS,
     HOME_CONTENT,
@@ -67,8 +68,15 @@ const render = async (url, { API_CACHE, EXTERNAL_ROUTES, HOME_CONTENT, SSR_SIGNE
 
   const html = ReactDOMServer.renderToString(page);
   const helmet = Helmet.renderStatic();
-  const context = { API_CACHE, EXTERNAL_ROUTES, HOME_CONTENT, SSR_SIGNED_IN, ZINE_POSTS };
+  const context = { AB_TESTS, API_CACHE, EXTERNAL_ROUTES, HOME_CONTENT, SSR_SIGNED_IN, ZINE_POSTS };
   return { html, helmet, context };
 };
 
-module.exports = (url, context) => getFromCache(`signed ${context.SSR_SIGNED_IN ? 'in' : 'out'} ${url}`, render, url, context);
+module.exports = (url, context) => {
+  const key = [
+    context.SSR_SIGNED_IN ? 'signed-in' : 'signed-out',
+    ...Object.entries(context.AB_TESTS).map(([test, assignment]) => `${test}=${assignment}`),
+    url,
+  ];
+  return getFromCache(key.join(' '), render, url, context)
+};

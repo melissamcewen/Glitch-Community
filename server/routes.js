@@ -15,6 +15,7 @@ const { getProject, getTeam, getUser, getCollection, getZine } = require('./api'
 const initWebpack = require('./webpack');
 const constants = require('./constants');
 const renderPage = require('./render');
+const getAssignments = require('./ab-tests');
 const { defaultProjectDescriptionPattern } = require('../shared/regex');
 const { getData, saveDataToFile } = require('./home');
 
@@ -83,6 +84,7 @@ module.exports = function(external) {
       built = false;
     }
 
+    const assignments = getAssignments(req, res);
     const signedIn = !!req.cookies.hasLogin;
     const [zine, homeContent] = await Promise.all([getZine(), getData('home')]);
 
@@ -91,6 +93,7 @@ module.exports = function(external) {
       try {
         const url = new URL(req.url, `${req.protocol}://${req.hostname}`);
         const { html, context } = await renderPage(url, {
+          AB_TESTS: assignments,
           API_CACHE: cache,
           EXTERNAL_ROUTES: external,
           HOME_CONTENT: homeContent,
@@ -122,6 +125,7 @@ module.exports = function(external) {
       ZINE_POSTS: zine || [],
       HOME_CONTENT: homeContent,
       SSR_SIGNED_IN: signedIn,
+      AB_TESTS: assignments,
       PROJECT_DOMAIN: process.env.PROJECT_DOMAIN,
       ENVIRONMENT: process.env.NODE_ENV || 'dev',
       RUNNING_ON: process.env.RUNNING_ON,
@@ -298,6 +302,12 @@ module.exports = function(external) {
     const image = `${CDN_URL}/50f784d9-9995-4fa4-a185-b4b1ea6e77c0/create-illustration.png?v=1562612212463`;
     const canonicalUrl = `${APP_URL}/create`;
     await render(req, res, { title, socialTitle, description, image, canonicalUrl, wistiaVideoId: '2vcr60pnx9' }, true);
+  });
+
+  app.get('/secret', async (req, res) => {
+    const description = "It's a secret to everybody";
+    const title = `Glitch - ${description}`;
+    await render(req, res, { title, description }, true);
   });
   
 
