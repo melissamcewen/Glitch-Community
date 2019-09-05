@@ -141,7 +141,7 @@ export const getResource = (state, type, id, childType) => {
   if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
 
   // Handle resources with optional references (e.g. collection -> user)
-  if (id === -1 || id === null) {
+  if (id === -1 || id === null || id === 'nullMyStuff') {
     return { status: status.ready, value: null, requests: [] };
   }
 
@@ -309,16 +309,16 @@ export const { reducer, actions } = createSlice({
   },
 });
 
-const add = (list, value) => {
-  if (!list.includes(value)) {
-    list.push(value);
-  }
+const unshift = (list, value) => {
+  if (!list.includes(value)) list.unshift(value);
+}
+
+const push = (list, value) => {
+  if (!list.includes(value)) list.push(value);
 };
 
 const remove = (list, value) => {
-  if (list.includes(value)) {
-    list.splice(list.indexOf(value), 1);
-  }
+  if (list.includes(value)) list.splice(list.indexOf(value), 1);
 };
 
 const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
@@ -332,7 +332,7 @@ const topLevelSlice = createSlice({
   reducers: {
     joinTeamProject: (state, { payload: { project } }) => {
       const { currentUser } = state;
-      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, add);
+      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, push);
       // TODO: can we get rid of currentUser.projects?
       currentUser.projects.push(project);
     },
@@ -348,13 +348,13 @@ const topLevelSlice = createSlice({
       });
     },
     addProjectToTeam: (state, { payload: { project, team } }) => {
-      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, add);
+      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, unshift);
     },
     removeProjectFromTeam: (state, { payload: { project, team } }) => {
       changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, remove);
     },
     addProjectToCollection: (state, { payload: { project, collection } }) => {
-      changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, add);
+      changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, unshift);
     },
     removeProjectFromCollection: (state, { payload: { project, collection } }) => {
       changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, remove);
@@ -362,7 +362,7 @@ const topLevelSlice = createSlice({
     toggleBookmark: (state, { payload: { project } }) => {
       const myStuffCollection = state.currentUser.collections.find((c) => c.isMyStuff);
       const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffCollection.id, 'projects');
-      const changeFn = projectIDs.includes(project.id) ? remove : add;
+      const changeFn = projectIDs.includes(project.id) ? remove : push;
       changeRelation(state.resources, { type: 'collections', id: myStuffCollection.id }, { type: 'projects', id: project.id }, changeFn);
     },
   },
