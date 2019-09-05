@@ -37,6 +37,9 @@ const paginationReducer = (oldState, action) => {
         if (oldState.page > 1) {
           pageToReturnTo = oldState.page - 1;
         }
+        if (pageToReturnTo > action.totalPages) {
+          pageToReturnTo = action.totalPages - 1;
+        }
         return {
           ...oldState,
           page: pageToReturnTo,
