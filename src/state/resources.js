@@ -309,6 +309,19 @@ export const { reducer, actions } = createSlice({
   },
 });
 
+const addRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }) => {
+  const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
+  const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
+  rightIDs.push(rightID)
+  leftIDs.push(leftID)
+}
+
+const removeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }) => {
+  const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
+  const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
+}
+
+
 // updates
 // TODO:
 // - do the complete action (not just project->user management)
@@ -338,12 +351,13 @@ const topLevelSlice = createSlice({
     addProjectToCollection: (state, { payload: { collection } }) => {
       expireChildResources(state.resources, 'collections', collection.id, 'projects');
     },
-    removeProjectFromCollection: (state, { payload: { collection } }) => {
+    removeProjectFromCollection: (state, { payload: { project, collection } }) => {
       expireChildResources(state.resources, 'collections', collection.id, 'projects');
     },
     toggleBookmark: (state, { payload: { project } }) => {
       const myStuffCollection = state.currentUser.collections.find((c) => c.isMyStuff);
       const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffCollection.id, 'projects');
+      const { ids: collectionIDs } = getOrInitializeRowChild(state.resources, 'projects', project.id, 'collections');
       const index = projectIDs.indexOf(project.id)
       if (index >= 0) {
         projectIDs.splice(index, 1)
