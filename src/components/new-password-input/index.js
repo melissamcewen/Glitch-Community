@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pluralize from 'react-pluralize';
+import { TextInput } from '@fogcreek/shared-components';
 
 import useDebouncedValue from 'Hooks/use-debounced-value';
-import TextInput from 'Components/inputs/text-input';
 import PasswordStrength from './password-strength';
 
 import styles from './new-password-input.styl';
@@ -66,7 +66,7 @@ const NewPasswordInput = ({ disabled, onChange }) => {
       <TextInput
         value={password}
         type="password"
-        labelText="password"
+        label="password"
         placeholder="new password"
         onChange={setPassword}
         disabled={disabled}

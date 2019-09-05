@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import Text from 'Components/text/text';
-import TextInput from 'Components/inputs/text-input';
+import { TextInput } from '@fogcreek/shared-components';
 
 import { Aquarium } from 'Components/errors/not-found';
 
@@ -41,7 +41,7 @@ function FilterController({ matchFn, enabled, placeholder, items, children, sear
         onChange={setFilter}
         opaque
         placeholder={searchPrompt}
-        labelText={label}
+        label={label}
         type="search"
         value={filter}
       />

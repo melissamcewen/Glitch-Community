@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { TextArea } from '@fogcreek/shared-components';
 
-import TextArea from './text-area';
 import Markdown from '../text/markdown';
 
 import styles from './markdown-input.styl';
@@ -21,7 +21,7 @@ const MarkdownInput = ({ allowImages, error, onBlur: outerOnBlur, onChange, plac
         onBlur={onBlur}
         onChange={onChange}
         onFocus={onFocus}
-        placeholder={placeholder}
+        label={placeholder}
         value={value}
       />
     );

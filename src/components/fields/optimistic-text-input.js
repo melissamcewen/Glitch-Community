@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { TextInput } from '@fogcreek/shared-components';
 
-import TextInput from '../inputs/text-input';
 import usePassivelyTrimmedInput from './use-passively-trimmed-input';
 import useOptimisticValue from './use-optimistic-value';
 
