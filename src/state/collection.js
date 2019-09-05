@@ -167,11 +167,11 @@ export function useCollectionEditor(initialCollection) {
     }, handleCustomError),
 
     removeProjectFromCollection: withErrorHandler(async (project, selectedCollection) => {      
-      dispatch(actions.removeProjectFromCollection({ project, collection: selectedCollection }));
       // if no collection is passed in, assume the current page is the collection we're removing from
       if (!selectedCollection.id) {
         selectedCollection = collection;
       }
+      dispatch(actions.removeProjectFromCollection({ project, collection: selectedCollection }));
 
       // if collection we're removing from is same as current collection page, remove it from the page
       if (selectedCollection.id === collection.id) {

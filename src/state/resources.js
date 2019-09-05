@@ -333,13 +333,10 @@ const topLevelSlice = createSlice({
     joinTeamProject: (state, { payload: { project } }) => {
       const { currentUser } = state;
       changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, push);
-      // TODO: can we get rid of currentUser.projects?
-      currentUser.projects.push(project);
     },
     leaveProject: (state, { payload: { project } }) => {
       const { currentUser } = state;
       changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, remove);
-      currentUser.projects = currentUser.projects.filter(p => p.id !== project.id);
     },
     removeUserFromTeamAndProjects: (state, { payload: { user, team, projects } }) => {
       changeRelation(state.resources, { type: 'teams', id: team.id }, { type: 'users', id: user.id }, remove);
