@@ -135,6 +135,7 @@ export function useCollectionEditor(initialCollection) {
 
   const funcs = {
     addProjectToCollection: withErrorHandler(async (project, selectedCollection) => {
+      dispatch(actions.addProjectToCollection({ project, collection }));
       // if it's the same collection as the page you're on, add the project to it
       if (selectedCollection.id === collection.id) {
         setCollection((oldCollection) => ({
@@ -163,11 +164,10 @@ export function useCollectionEditor(initialCollection) {
       if (selectedCollection.id === collection.id) {
         await orderProjectInCollection({ project, collection }, 0);
       }
-
-      dispatch(actions.addProjectToCollection({ project, collection }));
     }, handleCustomError),
 
-    removeProjectFromCollection: withErrorHandler(async (project, selectedCollection) => {
+    removeProjectFromCollection: withErrorHandler(async (project, selectedCollection) => {      
+      dispatch(actions.removeProjectFromCollection({ project, collection: selectedCollection }));
       // if no collection is passed in, assume the current page is the collection we're removing from
       if (!selectedCollection.id) {
         selectedCollection = collection;
@@ -196,8 +196,6 @@ export function useCollectionEditor(initialCollection) {
 
       // make api call to remove from collection
       await removeProjectFromCollection({ project, collection: selectedCollection });
-
-      dispatch(actions.removeProjectFromCollection({ project, collection: selectedCollection }));
     }, handleError),
 
     deleteCollection: () => deleteItem({ collection }).catch(handleError),
