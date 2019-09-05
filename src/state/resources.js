@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
-import { mapValues, memoize, debounce, chunk, isEqual, remove } from 'lodash';
+import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -309,18 +309,24 @@ export const { reducer, actions } = createSlice({
   },
 });
 
-const addRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }) => {
+const add = (list, value) => {
+  if (!list.includes(value)) {
+    list.push(value);
+  }
+};
+
+const remove = (list, value) => {
+  if (list.includes(value)) {
+    list.splice(list.indexOf(value), 1);
+  }
+};
+
+const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
   const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
   const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
-  rightIDs.push(rightID)
-  leftIDs.push(leftID)
-}
-
-const removeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }) => {
-  const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
-  const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
-}
-
+  changeFn(leftIDs, leftID);
+  changeFn(rightIDs, rightID);
+};
 
 // updates
 // TODO:
@@ -342,28 +348,24 @@ const topLevelSlice = createSlice({
         expireChildResources(state.resources, 'projects', project.id, 'users');
       });
     },
-    addProjectToTeam: (state, { payload: { project } }) => {
+    addProjectToTeam: (state, { payload: { project, team } }) => {
+      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, add);
+    },
+    removeProjectFromTeam: (state, { payload: { project, team } }) => {
+      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, remove);
       expireChildResources(state.resources, 'projects', project.id, 'users');
     },
-    removeProjectFromTeam: (state, { payload: { project } }) => {
-      expireChildResources(state.resources, 'projects', project.id, 'users');
-    },
-    addProjectToCollection: (state, { payload: { collection } }) => {
-      expireChildResources(state.resources, 'collections', collection.id, 'projects');
+    addProjectToCollection: (state, { payload: { project, collection } }) => {
+      changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, add);
     },
     removeProjectFromCollection: (state, { payload: { project, collection } }) => {
-      expireChildResources(state.resources, 'collections', collection.id, 'projects');
+      changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, remove);
     },
     toggleBookmark: (state, { payload: { project } }) => {
       const myStuffCollection = state.currentUser.collections.find((c) => c.isMyStuff);
       const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffCollection.id, 'projects');
-      const { ids: collectionIDs } = getOrInitializeRowChild(state.resources, 'projects', project.id, 'collections');
-      const index = projectIDs.indexOf(project.id)
-      if (index >= 0) {
-        projectIDs.splice(index, 1)
-      } else {
-        projectIDs.push(project.id)
-      }
+      const changeFn = projectIDs.includes(project.id) ? remove : add;
+      changeRelation(state.resources, { type: 'collections', id: myStuffCollection.id }, { type: 'projects', id: project.id }, changeFn);
     },
   },
 });
