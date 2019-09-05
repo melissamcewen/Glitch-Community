@@ -357,10 +357,10 @@ const topLevelSlice = createSlice({
       changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, remove);
     },
     toggleBookmark: (state, { payload: { project } }) => {
-      const myStuffCollectionID = state.currentUser.myStuffID;
-      const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffCollectionID, 'projects');
+      const { myStuffID } = state.currentUser;
+      const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffID, 'projects');
       const changeFn = projectIDs.includes(project.id) ? remove : push;
-      changeRelation(state.resources, { type: 'collections', id: myStuffCollectionID }, { type: 'projects', id: project.id }, changeFn);
+      changeRelation(state.resources, { type: 'collections', id: myStuffID }, { type: 'projects', id: project.id }, changeFn);
     },
   },
 });

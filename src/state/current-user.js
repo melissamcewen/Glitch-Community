@@ -9,7 +9,7 @@ import { sortProjectsByLastAccess } from 'Models/project';
 import { configureScope, captureException, captureMessage, addBreadcrumb } from 'Utils/sentry';
 import runLatest from 'Utils/run-latest';
 import { getStorage, readFromStorage, writeToStorage } from './local-storage';
-import { useResource, allReady, getAPIForToken } from './resources'
+import { getAPIForToken } from './api'; // eslint-disable-line import/no-cycle
 
 const getStorageMemo = memoize(getStorage);
 const getFromStorage = (key) => readFromStorage(getStorageMemo(), key);
@@ -104,10 +104,11 @@ async function getCachedUser(sharedUser) {
     const { baseUser, emails, projects, teams, collections } = await allByKeys({
       baseUser: getSingleItem(api, `v1/users/by/id?id=${sharedUser.id}&cache=${Date.now()}`, sharedUser.id),
       emails: getAllPages(api, makeUrl('emails')),
-      myStuff: getSingleItem(api, ),
+      projects: getAllPages(api, makeOrderedUrl('projects', 'domain', 'ASC')),
+      teams: getAllPages(api, makeOrderedUrl('teams', 'url', 'ASC')),
+      collections: getAllPages(api, makeUrl('collections')),
     });
-    const myStuffID
-    const user = { ...baseUser, emails,  collections };
+    const user = { ...baseUser, emails, projects: sortProjectsByLastAccess(projects), teams, collections };
     if (!usersMatch(sharedUser, user)) return 'error';
     return user;
   } catch (error) {
@@ -148,9 +149,11 @@ const defaultUser = {
   avatarThumbnailUrl: null,
   hasCoverImage: false,
   coverColor: null,
-  myStuffId: null,
   emails: [],
   features: [],
+  projects: [],
+  teams: [],
+  collections: [],
 };
 
 const pageMounted = createAction('app/pageMounted');
@@ -255,11 +258,6 @@ export const handlers = {
 
 export const useCurrentUser = () => {
   const currentUser = useSelector((state) => state.currentUser);
-  const resources = allReady({
-    teams: useResource('users', currentUser.id, 'teams'),
-    projects: useResource('users', currentUser.id, 'projects'),
-    collections: useResource('users', currentUser.id, 'collections'),
-  })
   
   const dispatch = useDispatch();
   return {
