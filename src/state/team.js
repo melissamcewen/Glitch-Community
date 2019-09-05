@@ -18,12 +18,8 @@ export function useTeamEditor(initialTeam) {
   const { currentUser, update: updateCurrentUser } = useCurrentUser();
   const { uploadAssetSizes } = useUploader();
   const { createNotification } = useNotifications();
-<<<<<<< HEAD
-  const { handleError, handleErrorForInput } = useErrorHandlers();
-  const dispatch = useDispatch();
-=======
   const { handleError, handleErrorForInput, handleImageUploadError } = useErrorHandlers();
->>>>>>> eb45d1b4d4720a278420360d07d77f449197fb23
+  const dispatch = useDispatch();
   const { getAvatarImagePolicy, getCoverImagePolicy } = assets.useAssetPolicy();
   const {
     updateItem,

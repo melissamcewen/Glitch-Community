@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { Loader } from '@fogcreek/shared-components';
-import { useDispatch } from 'react-redux';
 
 import Button from 'Components/buttons/button';
 import Heading from 'Components/text/heading';

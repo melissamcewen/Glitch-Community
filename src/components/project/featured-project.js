@@ -66,39 +66,12 @@ const FeaturedProject = ({
   updateNote,
   unfeatureProject,
 }) => {
-  const dispatch = useDispatch();
   const myStuffEnabled = useDevToggle('My Stuff');
   const { currentUser } = useCurrentUser();
   const [hasBookmarked, toggleBookmark] = useToggleBookmark();
->>>>>>> eb45d1b4d4720a278420360d07d77f449197fb23
 
   const isAnonymousUser = !currentUser.login;
 
-<<<<<<< HEAD
-  const bookmarkAction = useTrackedFunc(
-    () =>
-      toggleBookmark({
-        api,
-        project: featuredProject,
-        currentUser,
-        createNotification,
-        myStuffEnabled,
-        addProjectToCollection: addProjectToCollectionAPI,
-        removeProjectFromCollection,
-        setHasBookmarked,
-        hasBookmarked,
-        dispatch,
-      }),
-    `Project ${hasBookmarked ? 'removed from my stuff' : 'added to my stuff'}`,
-    (inherited) => ({
-      ...inherited,
-      projectName: featuredProject.domain,
-      baseProjectId: featuredProject.baseId || featuredProject.baseProject,
-      userId: currentUser.id,
-      origin: `${inherited.origin}-featured-project`,
-    }),
-  );
-=======
   const bookmarkAction = useTrackedFunc(toggleBookmark, `Project ${hasBookmarked ? 'removed from my stuff' : 'added to my stuff'}`, (inherited) => ({
     ...inherited,
     projectName: featuredProject.domain,
@@ -106,7 +79,6 @@ const FeaturedProject = ({
     userId: currentUser.id,
     origin: `${inherited.origin}-featured-project`,
   }));
->>>>>>> eb45d1b4d4720a278420360d07d77f449197fb23
 
   return (
     <div data-cy="featured-project">
