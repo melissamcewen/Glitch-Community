@@ -30,22 +30,22 @@ const useDefaultProjectOptions = () => {
 
   return {
     addProjectToCollection: withErrorHandler(async (project, collection) => {
-      await addProjectToCollection({ project, collection });
       dispatch(actions.addProjectToCollection({ project, collection }));
+      await addProjectToCollection({ project, collection });
     }, handleCustomError),
     joinTeamProject: withErrorHandler(async (project, team) => {
-      await joinTeamProject({ team, project });
       dispatch(actions.joinTeamProject({ project }));
+      await joinTeamProject({ team, project });
     }, handleError),
     leaveProject: withErrorHandler(async (project) => {
-      await removeUserFromProject({ project, user: currentUser });
       dispatch(actions.leaveProject({ project }));
+      await removeUserFromProject({ project, user: currentUser });
     }, handleError),
     // toggleBookmark is defined here and on state/collection and are very similar. Their only differences are how they modify state.
     // we'll probably want to revisit condensing these when we have a centralized state object to work off of.
     toggleBookmark: withErrorHandler(async (project, hasBookmarked, setHasBookmarked) => {
+      dispatch(actions.toggleBookmark({ project }));
       let myStuffCollection = currentUser.collections.find((c) => c.isMyStuff);
-      dispatch(actions.toggleBookmark({ project, collection: myStuffCollection }));
       if (hasBookmarked) {
         if (setHasBookmarked) setHasBookmarked(false);
         await removeProjectFromCollection({ project, collection: myStuffCollection });

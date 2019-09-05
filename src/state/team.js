@@ -108,6 +108,8 @@ export function useTeamEditor(initialTeam) {
     inviteEmail: (email) => inviteEmailToTeam({ team }, email).catch(handleError),
     inviteUser: (user) => inviteUserToTeam({ user, team }).catch(handleError),
     removeUserFromTeam: withErrorHandler(async (user, projects) => {
+      // update projects so that this user no longer appears in member lists
+      dispatch(actions.removeUserFromTeamAndProjects({ user, team, projects }));
       // Kick them out of every project at once, and wait until it's all done
       await Promise.all(projects.map((project) => removeUserFromProject({ project, user })));
       // Now remove them from the team. Remove them last so if something goes wrong you can do this over again
@@ -122,8 +124,6 @@ export function useTeamEditor(initialTeam) {
         const teams = currentUser.teams.filter(({ id }) => id !== team.id);
         updateCurrentUser({ teams });
       }
-      // update projects so that this user no longer appears in member lists
-      dispatch(actions.removeUserFromTeamAndProjects({ user, team, projects }));
       removePermissions(user, projects);
     }, handleError),
     uploadAvatar: () =>
@@ -164,20 +164,20 @@ export function useTeamEditor(initialTeam) {
       ),
     clearCover: () => updateFields({ hasCoverImage: false }).catch(handleError),
     addProject: withErrorHandler(async (project) => {
+      dispatch(actions.addProjectToTeam({ project, team }));
       await addProjectToTeam({ project, team });
       setTeam((prev) => ({
         ...prev,
         projects: [project, ...prev.projects],
       }));
-      dispatch(actions.addProjectToTeam({ project, team }));
     }, handleError),
     removeProjectFromTeam: withErrorHandler(async (project) => {
+      dispatch(actions.removeProjectFromTeam({ project, team }));
       await removeProjectFromTeam({ project, team });
       setTeam((prev) => ({
         ...prev,
         projects: prev.projects.filter((p) => p.id !== project.id),
       }));
-      dispatch(actions.removeProjectFromTeam({ project, team }));
     }, handleError),
     deleteProject: withErrorHandler(async (project) => {
       await deleteItem({ project });
@@ -218,14 +218,14 @@ export function useTeamEditor(initialTeam) {
       return null;
     }, handleError),
     joinTeamProject: withErrorHandler(async (project) => {
+      dispatch(actions.joinTeamProject({ project }));
       const { data: updatedProject } = await joinTeamProject({ team, project });
       updatePermissions(project, updatedProject.users.map((user) => user.projectPermission));
-      dispatch(actions.joinTeamProject({ project }));
     }, handleError),
     leaveProject: withErrorHandler(async (project) => {
+      dispatch(actions.leaveProject({ project }));
       await removeUserFromProject({ project, user: currentUser });
       removePermissions(currentUser, [project]);
-      dispatch(actions.leaveProject({ project }));
     }, handleError),
     featureProject: (project) => updateFields({ featured_project_id: project.id }).catch(handleError),
     unfeatureProject: () => updateFields({ featured_project_id: null }).catch(handleError),

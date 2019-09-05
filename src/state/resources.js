@@ -332,7 +332,7 @@ const topLevelSlice = createSlice({
   reducers: {
     joinTeamProject: (state, { payload: { project } }) => {
       const { currentUser } = state;
-      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, remove);
+      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, add);
       // TODO: can we get rid of currentUser.projects?
       currentUser.projects.push(project);
     },
