@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Loader } from '@fogcreek/shared-components';
+import { Loader, TextInput } from '@fogcreek/shared-components';
 
 import Text from 'Components/text/text';
 import Button from 'Components/buttons/button';
-import TextInput from 'Components/inputs/text-input';
 import Notification from 'Components/notification';
 import { useAPI } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
@@ -49,7 +48,7 @@ const UseMagicCode = () => {
             value={code}
             onChange={setCode}
             type="text"
-            labelText="sign in code"
+            label="sign in code"
             placeholder="cute-unique-cosmos"
             testingId="sign-in-code"
           />

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Loader } from '@fogcreek/shared-components';
+import { Loader, TextInput } from '@fogcreek/shared-components';
 
 import Text from 'Components/text/text';
 import Button from 'Components/buttons/button';
-import TextInput from 'Components/inputs/text-input';
 import Notification from 'Components/notification';
 import useEmail from 'Hooks/use-email';
 import { useAPI } from 'State/api';
@@ -49,7 +48,7 @@ const GetMagicCode = () => {
         <form onSubmit={onSubmit} style={{ marginBottom: 10 }}>
           <TextInput
             type="email"
-            labelText="Email address"
+            label="Email address"
             value={email}
             onChange={setEmail}
             onBlur={() => setIsFocused(false)}

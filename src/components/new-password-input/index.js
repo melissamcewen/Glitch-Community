@@ -88,8 +88,7 @@ const NewPasswordInput = ({ disabled, onChange }) => {
       <TextInput
         value={password2}
         type="password"
-        labelText="confirm new password"
-        placeholder="confirm new password"
+        label="confirm new password"
         onChange={setPassword2}
         disabled={disabled}
         error={passwordConfirmError ? matchErrorMsg : null}

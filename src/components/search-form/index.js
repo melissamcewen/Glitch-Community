@@ -2,6 +2,7 @@ import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { mapValues, flatMap } from 'lodash';
+import { TextInput } from '@fogcreek/shared-components';
 
 import { PopoverContainer } from 'Components/popover';
 import { getProjectLink } from 'Models/project';
@@ -10,7 +11,6 @@ import { getTeamLink } from 'Models/team';
 import { useAlgoliaSearch } from 'State/search';
 import useDebouncedValue from 'Hooks/use-debounced-value';
 
-import TextInput from '../inputs/text-input';
 import AutocompleteSearch from './autocomplete';
 import styles from './search-form.styl';
 
@@ -142,7 +142,7 @@ const AlgoliaSearchController = withRouter(({ history, visible, openPopover, def
   return (
     <form className={styles.container} role="search" onSubmit={onSubmit} autoComplete="off" autoCapitalize="off" action="/search" method="get">
       <TextInput
-        labelText="Search Glitch"
+        label="Search Glitch"
         name="q"
         onChange={onChange}
         onKeyDown={onKeyDown}

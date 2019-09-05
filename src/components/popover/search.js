@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Loader } from '@fogcreek/shared-components';
+import { Loader, TextInput } from '@fogcreek/shared-components';
 
 import Emoji from 'Components/images/emoji';
-import TextInput from 'Components/inputs/text-input';
 import ResultsList from 'Components/containers/results-list';
 import { PopoverActions, PopoverInfo, PopoverSection, InfoDescription } from './base';
 
@@ -97,7 +96,7 @@ function PopoverSearch({
         <TextInput
           ref={inputRef}
           autoFocus
-          labelText={labelText}
+          label={labelText}
           value={value}
           onChange={onChange}
           opaque
