@@ -105,4 +105,3 @@ MoreCollectionsContainer.propTypes = {
 };
 
 export default MoreCollectionsContainer;
-
