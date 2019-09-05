@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from 'axios';
-import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
+import { mapValues, memoize, debounce, chunk, isEqual, remove } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -341,8 +341,15 @@ const topLevelSlice = createSlice({
     removeProjectFromCollection: (state, { payload: { collection } }) => {
       expireChildResources(state.resources, 'collections', collection.id, 'projects');
     },
-    toggleBookmark: (state, { payload: { collection } }) => {
-      expireChildResources(state.resources, 'collections', collection.id, 'projects');
+    toggleBookmark: (state, { payload: { project } }) => {
+      const myStuffCollection = state.currentUser.collections.find((c) => c.isMyStuff);
+      const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffCollection.id, 'projects');
+      const index = projectIDs.indexOf(project.id)
+      if (index >= 0) {
+        projectIDs.splice(index, 1)
+      } else {
+        projectIDs.push(project.id)
+      }
     },
   },
 });

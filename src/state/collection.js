@@ -53,6 +53,7 @@ export const useToggleBookmark = (project) => {
   }, [project.authUserHasBookmarked]);
 
   const toggleBookmarked = async () => {
+    dispatch(actions.toggleBookmark({ project }));
     try {
       let myStuffCollection = currentUser.collections.find((c) => c.isMyStuff);
       if (hasBookmarked) {
@@ -70,7 +71,6 @@ export const useToggleBookmark = (project) => {
           type: 'success',
         });
       }
-      dispatch(actions.toggleBookmark({ project, collection: myStuffCollection }));
     } catch (error) {
       captureException(error);
       createNotification('Something went wrong, try refreshing?', { type: 'error' });
@@ -250,6 +250,7 @@ export function useCollectionEditor(initialCollection) {
 
     // used on the collection page
     toggleBookmark: withErrorHandler(async (project) => {
+      dispatch(actions.toggleBookmark({ project }));
       let myStuffCollection = currentUser.collections.find((c) => c.isMyStuff);
       if (project.authUserHasBookmarked) {
         await funcs.removeProjectFromCollection(project, myStuffCollection);
