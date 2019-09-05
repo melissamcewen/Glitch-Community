@@ -306,7 +306,6 @@ export const { reducer, actions } = createSlice({
       }
       state._responseQueue = [];
     },
-    
   },
 });
 
@@ -345,10 +344,10 @@ const topLevelSlice = createSlice({
     toggleBookmark: (state, { payload: { collection } }) => {
       expireChildResources(state.resources, 'collections', collection.id, 'projects');
     },
-  }
-})
+  },
+});
 
-Object.assign(actions, topLevelSlice.actions)
+Object.assign(actions, topLevelSlice.actions);
 
 export const topLevelReducer = topLevelSlice.reducer;
 
