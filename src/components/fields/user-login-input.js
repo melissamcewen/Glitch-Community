@@ -10,6 +10,7 @@ const UserLoginInput = ({ login, onChange }) => (
     onChange={onChange}
     placeholder="Nickname?"
     prefix="@"
+    style={{ fontWeight: 'bold' }}
   />
 );
 

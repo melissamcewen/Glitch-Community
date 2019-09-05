@@ -9,6 +9,7 @@ const CollectionNameInput = ({ name, onChange }) => (
     value={name}
     onChange={onChange}
     placeholder="Name your collection"
+    style={{ fontWeight: 'bold' }}
   />
 );
 

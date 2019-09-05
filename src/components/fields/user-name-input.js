@@ -9,6 +9,7 @@ const UserNameInput = ({ name, onChange }) => (
     value={name}
     onChange={onChange}
     placeholder="What's your name?"
+    style={{ fontWeight: 'bold' }}
   />
 );
 
