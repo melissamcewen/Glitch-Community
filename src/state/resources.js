@@ -209,8 +209,27 @@ function expireChildResources(state, type, id, childType) {
   }
 }
 
+const unshift = (list, value) => {
+  if (!list.includes(value)) list.unshift(value);
+};
+
+const push = (list, value) => {
+  if (!list.includes(value)) list.push(value);
+};
+
+const remove = (list, value) => {
+  if (list.includes(value)) list.splice(list.indexOf(value), 1);
+};
+
+const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
+  const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
+  const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
+  changeFn(leftIDs, leftID);
+  changeFn(rightIDs, rightID);
+};
+
 // API _without_ caching, since caching is handled by redux
-const getAPIForToken = memoize((persistentToken) => {
+export const getAPIForToken = memoize((persistentToken) => {
   if (persistentToken) {
     return axios.create({
       baseURL: API_URL,
@@ -309,25 +328,6 @@ export const { reducer, actions } = createSlice({
   },
 });
 
-const unshift = (list, value) => {
-  if (!list.includes(value)) list.unshift(value);
-}
-
-const push = (list, value) => {
-  if (!list.includes(value)) list.push(value);
-};
-
-const remove = (list, value) => {
-  if (list.includes(value)) list.splice(list.indexOf(value), 1);
-};
-
-const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
-  const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
-  const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
-  changeFn(leftIDs, leftID);
-  changeFn(rightIDs, rightID);
-};
-
 const topLevelSlice = createSlice({
   reducers: {
     joinTeamProject: (state, { payload: { project } }) => {
@@ -357,10 +357,10 @@ const topLevelSlice = createSlice({
       changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, remove);
     },
     toggleBookmark: (state, { payload: { project } }) => {
-      const myStuffCollection = state.currentUser.collections.find((c) => c.isMyStuff);
-      const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffCollection.id, 'projects');
+      const myStuffCollectionID = state.currentUser.myStuffID;
+      const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffCollectionID, 'projects');
       const changeFn = projectIDs.includes(project.id) ? remove : push;
-      changeRelation(state.resources, { type: 'collections', id: myStuffCollection.id }, { type: 'projects', id: project.id }, changeFn);
+      changeRelation(state.resources, { type: 'collections', id: myStuffCollectionID }, { type: 'projects', id: project.id }, changeFn);
     },
   },
 });
