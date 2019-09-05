@@ -123,7 +123,7 @@ export function useTeamEditor(initialTeam) {
         updateCurrentUser({ teams });
       }
       // update projects so that this user no longer appears in member lists
-      dispatch(actions.removeUserFromTeamProjects(projects));
+      dispatch(actions.removeUserFromTeamProjects({ team, projects }));
       removePermissions(user, projects);
     }, handleError),
     uploadAvatar: () =>
@@ -169,7 +169,7 @@ export function useTeamEditor(initialTeam) {
         ...prev,
         projects: [project, ...prev.projects],
       }));
-      dispatch(actions.addProjectToTeam(project));
+      dispatch(actions.addProjectToTeam({ project, team }));
     }, handleError),
     removeProjectFromTeam: withErrorHandler(async (project) => {
       await removeProjectFromTeam({ project, team });
@@ -177,7 +177,7 @@ export function useTeamEditor(initialTeam) {
         ...prev,
         projects: prev.projects.filter((p) => p.id !== project.id),
       }));
-      dispatch(actions.removeProjectFromTeam(project));
+      dispatch(actions.removeProjectFromTeam({ project, team }));
     }, handleError),
     deleteProject: withErrorHandler(async (project) => {
       await deleteItem({ project });
@@ -220,12 +220,12 @@ export function useTeamEditor(initialTeam) {
     joinTeamProject: withErrorHandler(async (project) => {
       const { data: updatedProject } = await joinTeamProject({ team, project });
       updatePermissions(project, updatedProject.users.map((user) => user.projectPermission));
-      dispatch(actions.joinTeamProject(project));
+      dispatch(actions.joinTeamProject({ project }));
     }, handleError),
     leaveProject: withErrorHandler(async (project) => {
       await removeUserFromProject({ project, user: currentUser });
       removePermissions(currentUser, [project]);
-      dispatch(actions.leaveProject(project));
+      dispatch(actions.leaveProject({ project }));
     }, handleError),
     featureProject: (project) => updateFields({ featured_project_id: project.id }).catch(handleError),
     unfeatureProject: () => updateFields({ featured_project_id: null }).catch(handleError),

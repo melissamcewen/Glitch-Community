@@ -35,11 +35,11 @@ const useDefaultProjectOptions = () => {
     }, handleCustomError),
     joinTeamProject: withErrorHandler(async (project, team) => {
       await joinTeamProject({ team, project });
-      dispatch(actions.joinTeamProject(project));
+      dispatch(actions.joinTeamProject({ project }));
     }, handleError),
     leaveProject: withErrorHandler(async (project) => {
       await removeUserFromProject({ project, user: currentUser });
-      dispatch(actions.leaveProject(project));
+      dispatch(actions.leaveProject({ project }));
     }, handleError),
     // toggleBookmark is defined here and on state/collection and are very similar. Their only differences are how they modify state.
     // we'll probably want to revisit condensing these when we have a centralized state object to work off of.

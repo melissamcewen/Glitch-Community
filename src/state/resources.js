@@ -306,41 +306,51 @@ export const { reducer, actions } = createSlice({
       }
       state._responseQueue = [];
     },
-    // updates
-    // TODO:
-    // - do the complete action (not just project->user management)
-    // - do these actions efficiently (i.e. selectively add/remove users, don't just blow the resource away)
-    // - get `currentUser` & `My Stuff` IDs from state; maybe this needs to be in a `reduceReducers` that has _both_ currentUser and resources
-    // - do the inverse changes (e.g. add the user to the project's references AND add the project to the user's references)
-    joinTeamProject: (state, { payload: project }) => {
-      expireChildResources(state, 'projects', project.id, 'users');
-    },
-    leaveProject: (state, { payload: project }) => {
-      expireChildResources(state, 'projects', project.id, 'users');
-    },
-    removeUserFromTeamProjects: (state, { payload: projects }) => {
-      // TODO: pass in _team_ here, use that to get projects
-      projects.forEach((project) => {
-        expireChildResources(state, 'projects', project.id, 'users');
-      });
-    },
-    addProjectToTeam: (state, { payload: project }) => {
-      expireChildResources(state, 'projects', project.id, 'users');
-    },
-    removeProjectFromTeam: (state, { payload: project }) => {
-      expireChildResources(state, 'projects', project.id, 'users');
-    },
-    addProjectToCollection: (state, { payload: { collection } }) => {
-      expireChildResources(state, 'collections', collection.id, 'projects');
-    },
-    removeProjectFromCollection: (state, { payload: { collection } }) => {
-      expireChildResources(state, 'collections', collection.id, 'projects');
-    },
-    toggleBookmark: (state, { payload: { collection } }) => {
-      expireChildResources(state, 'collections', collection.id, 'projects');
-    },
+    
   },
 });
+
+// updates
+// TODO:
+// - do the complete action (not just project->user management)
+// - do these actions efficiently (i.e. selectively add/remove users, don't just blow the resource away)
+// - get `currentUser` & `My Stuff` IDs from state; maybe this needs to be in a `reduceReducers` that has _both_ currentUser and resources
+// - do the inverse changes (e.g. add the user to the project's references AND add the project to the user's references)
+const topLevelSlice = createSlice({
+  reducers: {
+    joinTeamProject: (state, { payload: { project } }) => {
+      expireChildResources(state.resources, 'projects', project.id, 'users');
+    },
+    leaveProject: (state, { payload: { project } }) => {
+      expireChildResources(state.resources, 'projects', project.id, 'users');
+    },
+    removeUserFromTeamProjects: (state, { payload: { projects } }) => {
+      // TODO: pass in _team_ here, use that to get projects
+      projects.forEach((project) => {
+        expireChildResources(state.resources, 'projects', project.id, 'users');
+      });
+    },
+    addProjectToTeam: (state, { payload: { project } }) => {
+      expireChildResources(state.resources, 'projects', project.id, 'users');
+    },
+    removeProjectFromTeam: (state, { payload: { project } }) => {
+      expireChildResources(state.resources, 'projects', project.id, 'users');
+    },
+    addProjectToCollection: (state, { payload: { collection } }) => {
+      expireChildResources(state.resources, 'collections', collection.id, 'projects');
+    },
+    removeProjectFromCollection: (state, { payload: { collection } }) => {
+      expireChildResources(state.resources, 'collections', collection.id, 'projects');
+    },
+    toggleBookmark: (state, { payload: { collection } }) => {
+      expireChildResources(state.resources, 'collections', collection.id, 'projects');
+    },
+  }
+})
+
+Object.assign(actions, topLevelSlice.actions)
+
+export const topLevelReducer = topLevelSlice.reducer;
 
 export const handlers = {
   [actions.requestedResources]: debounce((_, store) => {
