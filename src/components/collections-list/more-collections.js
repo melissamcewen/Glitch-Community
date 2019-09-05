@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { sampleSize, range, flatMap, zipWith } from 'lodash';
+import { flatMap, zipWith } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { Loader } from '@fogcreek/shared-components';
 

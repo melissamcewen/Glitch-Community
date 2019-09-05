@@ -70,7 +70,7 @@ export const useToggleBookmark = (project) => {
           type: 'success',
         });
       }
-      dispatch(actions.toggleBookmark({ project, collection: myStuffCollection }))
+      dispatch(actions.toggleBookmark({ project, collection: myStuffCollection }));
     } catch (error) {
       captureException(error);
       createNotification('Something went wrong, try refreshing?', { type: 'error' });
