@@ -68,7 +68,7 @@ const FeaturedProject = ({
 }) => {
   const myStuffEnabled = useDevToggle('My Stuff');
   const { currentUser } = useCurrentUser();
-  const [hasBookmarked, toggleBookmark] = useToggleBookmark();
+  const [hasBookmarked, toggleBookmark] = useToggleBookmark(featuredProject);
 
   const isAnonymousUser = !currentUser.login;
 

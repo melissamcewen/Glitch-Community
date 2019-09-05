@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Pluralize from 'react-pluralize';
-import { partition, sampleSize } from 'lodash';
+import { partition } from 'lodash';
 import classnames from 'classnames';
 
 import { isDarkColor } from 'Utils/color';
@@ -21,15 +21,13 @@ import { CollectionLink } from 'Components/link';
 import Arrow from 'Components/arrow';
 import { useCollectionCurator } from 'State/collection';
 import useDevToggle from 'State/dev-toggles';
+import useSample from 'Hooks/use-sample';
 
 import styles from './container.styl';
 
 const CollectionContainer = ({ collection, showFeaturedProject, isAuthorized, preview, funcs }) => {
   const { value: curator } = useCollectionCurator(collection);
-  const [previewProjects, setPreviewProjects] = useState(sampleSize(collection.projects, 3));
-  useEffect(() => {
-    setPreviewProjects(sampleSize(collection.projects, 3));
-  }, [collection]);
+  const previewProjects = useSample(collection.projects, 3);
   const [displayHint, setDisplayHint] = useState(false);
 
   const collectionHasProjects = collection.projects.length > 0;

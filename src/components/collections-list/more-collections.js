@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { sampleSize, range, flatMap, zipWith } from 'lodash';
-import { Loader } from '@fogcreek/shared-components';
 import { useSelector, useDispatch } from 'react-redux';
+import { Loader } from '@fogcreek/shared-components';
 
 import CoverContainer from 'Components/containers/cover-container';
 import DataLoader from 'Components/data-loader';
@@ -15,6 +15,7 @@ import { getDisplayName } from 'Models/user';
 import { getSingleItem } from 'Shared/api';
 import { useCollectionCurator } from 'State/collection';
 import { getResource, allReady, actions as resourceActions } from 'State/resources';
+import useSample from 'Hooks/use-sample';
 
 import styles from './styles.styl';
 
@@ -50,19 +51,12 @@ const useCollectionsWithProjects = (collections) => {
   })).filter((coll) => coll.projects.length > 0);
 };
 
-// a version of sampleSize that uses the same indices as long as the input array's length is stable
-const useSample = (items, size) => {
-  const indices = React.useMemo(() => sampleSize(range(items.length), size), [items.length, size]);
-  return indices.map((idx) => items[idx]);
-};
-
 const MoreCollections = ({ currentCollection, collections }) => {
   const curator = useCollectionCurator(currentCollection);
-  const collectionsWithProjects = useCollectionsWithProjects(collections);
-  const sampledCollections = useSample(collectionsWithProjects || [], 3);
-
-  if (!collectionsWithProjects) return <Loader style={{ width: '25px' }} />;
-  if (!collectionsWithProjects.length) return null;
+  const allCollectionsWithProjects = useCollectionsWithProjects(collections);
+  const sampleCollectionsWithProjects = useSample(allCollectionsWithProjects || [], 3);
+  if (!allCollectionsWithProjects) return <Loader style={{ width: '25px' }} />;
+  if (!allCollectionsWithProjects.length) return null;
 
   const isUserCollection = currentCollection.teamId === -1;
   const type = isUserCollection ? 'user' : 'team';
@@ -89,7 +83,7 @@ const MoreCollections = ({ currentCollection, collections }) => {
         </Heading>
       </div>
       <CoverContainer type={type} item={currentCollection[type]}>
-        <Row items={sampledCollections}>{(collection) => <SmallCollectionItem key={collection.id} collection={collection} />}</Row>
+        <Row items={sampleCollectionsWithProjects}>{(collection) => <SmallCollectionItem key={collection.id} collection={collection} />}</Row>
       </CoverContainer>
     </>
   );
@@ -111,3 +105,4 @@ MoreCollectionsContainer.propTypes = {
 };
 
 export default MoreCollectionsContainer;
+
