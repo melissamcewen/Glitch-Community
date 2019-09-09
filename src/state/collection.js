@@ -166,7 +166,7 @@ export function useCollectionEditor(initialCollection) {
       }
     }, handleCustomError),
 
-    removeProjectFromCollection: withErrorHandler(async (project, selectedCollection) => {      
+    removeProjectFromCollection: withErrorHandler(async (project, selectedCollection) => {
       // if no collection is passed in, assume the current page is the collection we're removing from
       if (!selectedCollection.id) {
         selectedCollection = collection;

@@ -202,12 +202,13 @@ const storeChildResources = (state, { type, id, childType, values }) => {
   storeResources(state, { type: childResourceType, values });
 };
 
-function expireChildResources(state, type, id, childType) {
-  const row = getOrInitializeRow(state, type, id);
-  if (row.references[childType]) {
-    row.references[childType].expires = 0;
-  }
-}
+// TODO: use this for error handling?
+// function expireChildResources(state, type, id, childType) {
+//   const row = getOrInitializeRow(state, type, id);
+//   if (row.references[childType]) {
+//     row.references[childType].expires = 0;
+//   }
+// }
 
 const unshift = (list, value) => {
   if (!list.includes(value)) list.unshift(value);
@@ -357,7 +358,8 @@ const topLevelSlice = createSlice({
       changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, remove);
     },
     toggleBookmark: (state, { payload: { project } }) => {
-      const { myStuffID } = state.currentUser;
+      const { collections } = state.currentUser;
+      const myStuffID = collections.find((c) => c.isMyStuff).id;
       const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffID, 'projects');
       const changeFn = projectIDs.includes(project.id) ? remove : push;
       changeRelation(state.resources, { type: 'collections', id: myStuffID }, { type: 'projects', id: project.id }, changeFn);
