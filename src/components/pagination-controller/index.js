@@ -44,7 +44,7 @@ const paginationReducer = (oldState, action) => {
           ...oldState,
           page: pageToReturnTo,
           totalPages: action.totalPages,
-          announce: `Showing page ${action.totalPages - 1} of ${action.totalPages}`,
+          announce: `Showing page ${pageToReturnTo} of ${action.totalPages}`,
         };
       }
       return oldState;
