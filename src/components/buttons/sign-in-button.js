@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from 'Components/buttons/button';
+import { Button, Icon } from '@fogcreek/shared-components';
 
 import { FACEBOOK_CLIENT_ID, GITHUB_CLIENT_ID, APP_URL, API_URL } from 'Utils/constants';
+import { emoji as emojiStyle } from '../global.styl';
 
 function facebookAuthLink() {
   const params = new URLSearchParams();
@@ -28,13 +29,6 @@ function googleAuthLink() {
   return `${API_URL}/auth/google?${params}`;
 }
 
-function slackAuthLink() {
-  const params = new URLSearchParams();
-  const callbackURL = `${APP_URL}/login/slack`;
-  params.append('callbackURL', callbackURL);
-  return `${API_URL}/auth/slack?${params}`;
-}
-
 const companies = {
   facebook: {
     name: 'Facebook',
@@ -51,11 +45,6 @@ const companies = {
     emoji: 'google',
     href: googleAuthLink(),
   },
-  slack: {
-    name: 'Slack',
-    emoji: 'slack',
-    href: slackAuthLink(),
-  },
 };
 
 export const companyNames = Object.keys(companies);
@@ -65,8 +54,8 @@ const SignInButton = ({ companyName, onClick, short }) => {
 
   return (
     <div style={{ marginBottom: '10px' }}>
-      <Button href={href} onClick={onClick} size="small" emoji={emoji}>
-        {short ? name : `Sign in with ${name}`}
+      <Button as="a" href={href} onClick={onClick} size="small">
+        {short ? name : `Sign in with ${name}`} <Icon className={emojiStyle} icon={emoji} />
       </Button>
     </div>
   );

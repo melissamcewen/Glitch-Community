@@ -166,7 +166,7 @@ AddTeamUserPop.defaultProps = {
 const AddTeamUser = ({ members, whitelistedDomain, inviteEmail, inviteUser, setWhitelistedDomain }) => {
   const track = useTracker('Add to Team clicked');
   return (
-    <PopoverWithButton buttonProps={{ size: 'small', type: 'tertiary' }} buttonText="Add" onOpen={track}>
+    <PopoverWithButton buttonProps={{ size: 'small', variant: 'secondary' }} buttonText="Add" onOpen={track}>
       {({ toggleAndCall }) => (
         <AddTeamUserPop
           members={members}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { LiveAnnouncer } from 'react-aria-live';
 import { RootStyle, lightTheme } from '@fogcreek/shared-components';
+import { HelmetProvider } from 'react-helmet-async';
 
 import Store from 'State/store';
 import { AnalyticsContext } from 'State/segment-analytics';
@@ -15,7 +16,7 @@ import ErrorBoundary from 'Components/error-boundary';
 
 import Router from './presenters/pages/router';
 
-const App = ({ apiCache }) => (
+const App = ({ apiCache, helmetContext }) => (
   <ErrorBoundary fallback="Something went very wrong, try refreshing?">
     <LiveAnnouncer>
       <Store>
@@ -25,12 +26,14 @@ const App = ({ apiCache }) => (
               <CurrentUserProvider>
                 <APIContextProvider>
                   <APICacheProvider initial={apiCache}>
-                    <>
-                      <RootStyle theme={lightTheme} />
-                      <SuperUserBanner />
-                      <OfflineNotice />
-                      <Router />
-                    </>
+                    <HelmetProvider helmetContext={helmetContext}>
+                      <>
+                        <RootStyle theme={lightTheme} />
+                        <SuperUserBanner />
+                        <OfflineNotice />
+                        <Router />
+                      </>
+                    </HelmetProvider>
                   </APICacheProvider>
                 </APIContextProvider>
               </CurrentUserProvider>

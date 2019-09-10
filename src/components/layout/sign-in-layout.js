@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
+import { Button, Icon } from '@fogcreek/shared-components';
 
 import Link from 'Components/link';
 import Logo from 'Components/header/logo';
-import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
 import SignInButton, { companyNames } from 'Components/buttons/sign-in-button';
 import Image from 'Components/images/image';
 import UseMagicCode from 'Components/sign-in/use-magic-code';
 import GetMagicCode from 'Components/sign-in/get-magic-code';
 
-import useDevToggle from 'State/dev-toggles';
-
 import styles from './sign-in-layout.styl';
+import { emoji } from '../global.styl';
 
 const keyImageUrl = 'https://cdn.glitch.com/8ae9b195-ef39-406b-aee0-764888d15665%2Foauth-key.svg?1544466885907';
 
@@ -22,7 +21,6 @@ const TermsAndConditions = () => (
 );
 
 const SignInLayout = () => {
-  const slackAuthEnabled = useDevToggle('Slack Auth');
   const [page, setPage] = useState('main');
   const showMainPage = () => setPage('main');
   const showMagicPage = () => setPage('magic');
@@ -55,7 +53,6 @@ const SignInLayout = () => {
                 <div>
                   <div className={styles.signInButtons}>
                     {companyNames
-                      .filter((companyName) => companyName !== 'slack' || slackAuthEnabled)
                       .map((companyName) => (
                         <div key={companyName} className={styles.signInButton}>
                           <SignInButton short companyName={companyName} />
@@ -63,8 +60,8 @@ const SignInLayout = () => {
                       ))}
                   </div>
                   <div className={styles.signInButtons}>
-                    <Button emoji="loveLetter" onClick={showMagicPage}>
-                      Magic Code via Email
+                    <Button onClick={showMagicPage}>
+                      Magic Code via Email <Icon className={emoji} icon="loveLetter" />
                     </Button>
                   </div>
                 </div>

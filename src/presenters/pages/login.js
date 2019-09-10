@@ -146,12 +146,6 @@ export const GoogleLoginPage = ({ code, error }) => {
   return <OAuthLoginPage error={error} provider="Google" url={url} />;
 };
 
-export const SlackLoginPage = ({ code, error }) => {
-  const callbackUrl = `${APP_URL}/login/slack`;
-  const url = `/auth/slack/callback?code=${code}&callbackURL=${encodeURIComponent(callbackUrl)}`;
-  return <OAuthLoginPage error={error} provider="Slack" url={url} />;
-};
-
 export const EmailTokenLoginPage = ({ token }) => {
   const url = `/auth/email/${token}`;
   return <LoginPage provider="Email" url={url} />;

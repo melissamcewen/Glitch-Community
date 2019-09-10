@@ -1,17 +1,17 @@
 import React from 'react';
-import { Loader } from '@fogcreek/shared-components';
+import { Button, Icon, Loader } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
 import ProjectsList from 'Components/containers/projects-list';
 import CoverContainer from 'Components/containers/cover-container';
 import { UserLink, WrappingLink } from 'Components/link';
-import Button from 'Components/buttons/button';
 import Arrow from 'Components/arrow';
 import SignInPop from 'Components/sign-in-pop';
 import { getUserAvatarStyle, getUserLink } from 'Models/user';
 import { useCurrentUser } from 'State/current-user';
 
 import styles from './styles.styl';
+import { emoji } from '../global.styl';
 
 const SignInNotice = () => (
   <div className={styles.anonUserSignUp}>
@@ -34,8 +34,8 @@ const ClearSession = ({ clearUser }) => {
 
   return (
     <div className={styles.clearSession}>
-      <Button onClick={clickClearSession} size="small" type="dangerZone" emoji="balloon">
-        Clear Session
+      <Button onClick={clickClearSession} size="small" variant="warning">
+        Clear Session <Icon className={emoji} icon="balloon" />
       </Button>
     </div>
   );

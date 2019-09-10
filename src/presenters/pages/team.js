@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Button, Icon } from '@fogcreek/shared-components';
 
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { partition } from 'lodash';
 import Text from 'Components/text/text';
 import Heading from 'Components/text/heading';
@@ -11,13 +12,11 @@ import Thanks from 'Components/thanks';
 import { TeamProfileContainer } from 'Components/containers/profile';
 import CollectionsList from 'Components/collections-list';
 import Image from 'Components/images/image';
-import Emoji from 'Components/images/emoji';
 import TeamFields from 'Components/fields/team-fields';
 import ReportButton from 'Components/report-abuse-pop';
 import DeleteTeam from 'Components/team/delete-team-pop';
 import AddTeamProject from 'Components/team/add-team-project-pop';
 import TeamUsers from 'Components/team-users';
-import Button from 'Components/buttons/button';
 import TeamAnalytics from 'Components/team-analytics';
 import AuthDescription from 'Components/fields/auth-description';
 import ErrorBoundary from 'Components/error-boundary';
@@ -30,6 +29,7 @@ import { useTeamEditor } from 'State/team';
 import useFocusFirst from 'Hooks/use-focus-first';
 
 import styles from './team.styl';
+import { emoji } from '../../components/global.styl';
 
 function syncPageToUrl(team) {
   history.replaceState(null, null, getTeamLink(team));
@@ -62,8 +62,8 @@ const TeamMarketing = () => (
       />
       Want your own team page, complete with detailed app analytics?
     </Text>
-    <Button href="/teams" emoji="fishingPole">
-      About Teams
+    <Button as="a" href="/teams">
+      About Teams <Icon className={emoji} icon="fishingPole" />
     </Button>
   </section>
 );
@@ -71,9 +71,9 @@ const TeamMarketing = () => (
 const NameConflictWarning = ({ id }) => (
   <>
     <Text>
-      This team has your name. You should update your info to remain unique <Emoji name="sparkles" />
+      This team has your name. You should update your info to remain unique <Icon className={emoji} icon="sparkles" />
     </Text>
-    <Button size="small" type="tertiary" href={`/user/${id}`}>
+    <Button as="a" size="small" variant="secondary" href={`/user/${id}`}>
       Your Profile
     </Button>
   </>

@@ -58,7 +58,7 @@ const Dropdown = () => <span className="down-arrow" aria-label="options" />;
 
 const TeamAnalyticsProjectPop = ({ projects, updateProjectDomain, currentProjectDomain }) => (
   <PopoverWithButton
-    buttonProps={{ size: 'small', type: 'tertiary' }}
+    buttonProps={{ size: 'small', variant: 'secondary' }}
     buttonText={
       currentProjectDomain ? (
         <>

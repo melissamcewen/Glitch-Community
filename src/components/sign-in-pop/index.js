@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { Loader } from '@fogcreek/shared-components';
+import { Button, Icon, Loader } from '@fogcreek/shared-components';
 
-import Button from 'Components/buttons/button';
 import SignInButton from 'Components/buttons/sign-in-button';
-import Emoji from 'Components/images/emoji';
 import TextInput from 'Components/inputs/text-input';
 import Link from 'Components/link';
 import Notification from 'Components/notification';
@@ -20,10 +18,11 @@ import useDevToggle from 'State/dev-toggles';
 import { captureException } from 'Utils/sentry';
 
 import styles from './styles.styl';
+import { emoji } from '../global.styl';
 
 const SignInCodeSection = ({ onClick }) => (
   <PopoverActions type="secondary">
-    <Button size="small" type="tertiary" matchBackground onClick={onClick}>
+    <Button size="small" variant="secondary" matchBackground onClick={onClick}>
       Use a sign in code
     </Button>
   </PopoverActions>
@@ -67,7 +66,7 @@ const ForgotPasswordHandler = ({ align }) => {
               testingId="reset-password-email"
             />
             <div className={styles.submitWrap}>
-              <Button size="small" disabled={!isEnabled} submit>
+              <Button size="small" disabled={!isEnabled} onClick={onSubmit}>
                 Send Reset Password Link
               </Button>
             </div>
@@ -128,7 +127,7 @@ const EmailHandler = ({ align, showView }) => {
   return (
     <PopoverDialog align={align}>
       <MultiPopoverTitle>
-        Email Sign In&nbsp;<Emoji name="email" />
+        Email Sign In&nbsp;<Icon className={emoji} icon="email" />
       </MultiPopoverTitle>
       <PopoverActions>
         {status === 'ready' && (
@@ -246,7 +245,7 @@ const SignInWithCode = ({ align, showTwoFactor }) => {
 const TwoFactorSignIn = ({ align, token }) => (
   <PopoverDialog align={align}>
     <MultiPopoverTitle>
-      Two factor auth <Emoji name="key" />
+      Two factor auth <Icon className={emoji} icon="key" />
     </MultiPopoverTitle>
     <PopoverActions>
       <TwoFactorForm initialToken={token} />
@@ -312,13 +311,13 @@ const PasswordLoginSection = ({ showTwoFactor, showForgotPassword }) => {
           testingId="sign-in-password"
         />
         <div className={styles.submitWrap}>
-          <Button size="small" disabled={!emailAddress || !password || emailValidationError || working} submit>
+          <Button size="small" disabled={!emailAddress || !password || emailValidationError || working} onClick={handleSubmit}>
             Sign in
           </Button>
         </div>
       </form>
       <div className={styles.submitWrap}>
-        <Button size="small" type="tertiary" onClick={showForgotPassword}>
+        <Button size="small" variant="secondary" onClick={showForgotPassword}>
           Forgot Password
         </Button>
       </div>
@@ -327,7 +326,6 @@ const PasswordLoginSection = ({ showTwoFactor, showForgotPassword }) => {
 };
 
 export const SignInPopBase = withRouter(({ location, align }) => {
-  const slackAuthEnabled = useDevToggle('Slack Auth');
   const userPasswordEnabled = useDevToggle('User Passwords');
   const [, setDestination] = useLocalStorage('destinationAfterAuth');
   const [tfaToken, setTfaToken] = React.useState('');
@@ -365,7 +363,7 @@ export const SignInPopBase = withRouter(({ location, align }) => {
       {(showView) => (
         <PopoverDialog focusOnDialog align={align}>
           <PopoverInfo>
-            <Emoji name="carpStreamer" /> New to Glitch? Create an account by signing in.
+            <Icon className={emoji} icon="carpStreamer" /> New to Glitch? Create an account by signing in.
           </PopoverInfo>
           <PopoverInfo>
             <div className={styles.termsAndConditions}>
@@ -380,9 +378,8 @@ export const SignInPopBase = withRouter(({ location, align }) => {
             <SignInButton companyName="facebook" onClick={onClick} />
             <SignInButton companyName="github" onClick={onClick} />
             <SignInButton companyName="google" onClick={onClick} />
-            {slackAuthEnabled && <SignInButton companyName="slack" onClick={onClick} />}
-            <Button size="small" emoji="email" onClick={setDestinationAnd(showView.email)}>
-              Sign in with Email
+            <Button size="small" onClick={setDestinationAnd(showView.email)}>
+              Sign in with Email <Icon className={emoji} icon="email" />
             </Button>
           </PopoverActions>
           <SignInCodeSection onClick={setDestinationAnd(showView.signInCode)} />

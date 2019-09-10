@@ -1,9 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
+import { Icon } from '@fogcreek/shared-components';
+
 import Image from 'Components/images/image';
-import Emoji from 'Components/images/emoji';
 import Link from 'Components/link';
+
 import styles from './footer.styl';
+import { emoji } from '../global.styl';
 
 const FooterLink = ({ className, href, track, children }) => (
   <div className={classnames(styles.footerLinkWrap, className)}>
@@ -25,23 +28,23 @@ const Footer = () => (
   <footer className={styles.container} role="contentinfo">
     <FooterLink href="/about" track="about">
       About Glitch
-      <Emoji name="crystalBall" />
+      <Icon className={emoji} icon="crystalBall" />
     </FooterLink>
     <FooterLink href="/culture" track="blog">
       Blog
-      <Emoji name="newspaper" />
+      <Icon className={emoji} icon="newspaper" />
     </FooterLink>
     <FooterLink href="/help/" track="faq">
       Help Center
-      <Emoji name="umbrella" />
+      <Icon className={emoji} icon="umbrella" />
     </FooterLink>
     <FooterLink href="http://status.glitch.com/" track="system status">
       System Status
-      <Emoji name="horizontalTrafficLight" />
+      <Icon className={emoji} icon="horizontalTrafficLight" />
     </FooterLink>
     <FooterLink href="/legal" track="legal stuff">
       Legal Stuff
-      <Emoji name="scales" />
+      <Icon className={emoji} icon="scales" />
     </FooterLink>
     <FooterLink className={styles.teams} href="/teams" track="platforms">
       <PlatformsIcon />

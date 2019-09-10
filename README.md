@@ -14,7 +14,7 @@ Glitch employees should check out [DEPLOYING.md](https://glitch.com/edit/#!/comm
 
 File structure
 
-- the backend app starts at `server.js`
+- the backend app starts at `server/server.js`
 - `src/client.js` is compiled and served as /client-bundle.js
 - components and their styles are in `src/components/` :-)
 - view templates are powered by the .jsx files in `src/presenters/`

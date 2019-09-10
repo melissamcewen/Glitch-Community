@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Button } from '@fogcreek/shared-components';
 
-import Button from 'Components/buttons/button';
 import Markdown from 'Components/text/markdown';
 import Cover from 'Components/search-result-cover-bar';
 import Thanks from 'Components/thanks';
@@ -16,13 +16,13 @@ const NameAndLogin = ({ user }) =>
   user.name ? (
     <>
       <div className={styles.itemButtonWrap}>
-        <Button decorative>{user.name}</Button>
+        <Button as="span">{user.name}</Button>
       </div>
       <div className={styles.login}>@{user.login}</div>
     </>
   ) : (
     <div className={styles.itemButtonWrap}>
-      <Button decorative>@{user.login}</Button>
+      <Button as="span">@{user.login}</Button>
     </div>
   );
 

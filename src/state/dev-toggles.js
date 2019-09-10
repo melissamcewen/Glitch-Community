@@ -16,10 +16,6 @@ const toggleData = [
     description: 'Enables invite-by-email behavior on the team page.',
   },
   {
-    name: 'Slack Auth',
-    description: 'Sign in with your Slack account!',
-  },
-  {
     name: 'User Passwords',
     description: 'Enable users to set a password for their account',
   },

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { uniq } from 'lodash';
+import { Button, Icon } from '@fogcreek/shared-components';
 
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import WhitelistedDomainIcon from 'Components/whitelisted-domain';
@@ -11,7 +12,6 @@ import { useAPIHandlers, createAPIHook } from 'State/api';
 import { useNotifications } from 'State/notifications';
 import { PopoverContainer, PopoverDialog, PopoverInfo, PopoverActions, InfoDescription } from 'Components/popover';
 import AddTeamUserPop from 'Components/team-users/add-team-user';
-import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
 import { UserAvatar } from 'Components/images/avatar';
 import { UserLink } from 'Components/link';
@@ -19,6 +19,7 @@ import { captureException } from 'Utils/sentry';
 
 import TeamUserPop from './team-user-info';
 import styles from './styles.styl';
+import { emoji } from '../global.styl';
 
 // Invited user icon and pop
 
@@ -66,14 +67,14 @@ function InvitedUser({ user, team, onRevokeInvite }) {
               </PopoverInfo>
 
               <PopoverActions>
-                <Button onClick={resendInvite} type="tertiary" size="small" emoji="herb">
-                  Resend invite
+                <Button onClick={resendInvite} variant="secondary" size="small">
+                  Resend invite <Icon className={emoji} icon="herb" />
                 </Button>
               </PopoverActions>
 
               <PopoverActions type="dangerZone">
-                <Button onClick={onRevokeInvite} type="dangerZone" emoji="wave">
-                  Remove
+                <Button onClick={onRevokeInvite} variant="warning" size="small">
+                  Remove <Icon className={emoji} icon="wave" />
                 </Button>
               </PopoverActions>
             </PopoverDialog>
@@ -114,8 +115,8 @@ const WhitelistedDomain = ({ domain, setDomain }) => (
             </PopoverInfo>
             {!!setDomain && (
               <PopoverActions type="dangerZone">
-                <Button type="dangerZone" size="small" emoji="bomb" onClick={() => setDomain(null)}>
-                  Remove {domain}
+                <Button variant="warning" size="small" onClick={() => setDomain(null)}>
+                  Remove {domain} <Icon className={emoji} icon="bomb" />
                 </Button>
               </PopoverActions>
             )}
@@ -138,7 +139,7 @@ WhitelistedDomain.defaultProps = {
 // Join Team
 
 const JoinTeam = ({ onClick }) => (
-  <Button size="small" type="cta" onClick={onClick}>
+  <Button size="small" variant="cta" onClick={onClick}>
     Join Team
   </Button>
 );

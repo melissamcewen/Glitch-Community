@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { LiveMessage } from 'react-aria-live';
+import { Button } from '@fogcreek/shared-components';
 
 import Text from 'Components/text/text';
-import Button from 'Components/buttons/button';
 import classNames from 'classnames/bind';
 import styles from './styles.styl';
 
@@ -65,7 +65,7 @@ export const AddProjectToCollectionMsg = ({ projectDomain, collectionName, url }
       {collectionName && `to collection ${collectionName}`}
     </Text>
     {url && (
-      <Button href={url} rel="noopener noreferrer" size="small" type="tertiary">
+      <Button as="a" href={url} rel="noopener noreferrer" size="small" variant="secondary">
         Take me there
       </Button>
     )}

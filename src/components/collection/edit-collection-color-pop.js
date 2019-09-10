@@ -1,13 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { throttle } from 'lodash';
+import { Button, Icon } from '@fogcreek/shared-components';
 
 import { isGoodColorContrast, pickRandomColor } from 'Utils/color';
 import TextInput from 'Components/inputs/text-input';
 import ColorInput from 'Components/inputs/color';
-import Button from 'Components/buttons/button';
 import { PopoverWithButton, PopoverDialog, PopoverInfo, PopoverActions } from 'Components/popover';
+
 import styles from './edit-collection-color-pop.styl';
+import { emoji } from '../global.styl';
 
 const formatAndValidateHex = (hex) => {
   if (!hex) return null;
@@ -93,8 +95,9 @@ function EditCollectionColorPop({ initialColor, updateColor, togglePopover }) {
       </PopoverInfo>
 
       <PopoverActions type="secondary">
-        <Button size="small" type="tertiary" emoji="bouquet" onClick={setRandomColor}>
+        <Button size="small" variant="secondary" onClick={setRandomColor}>
           Random
+          <Icon className={emoji} icon="bouquet" />
         </Button>
       </PopoverActions>
     </PopoverDialog>

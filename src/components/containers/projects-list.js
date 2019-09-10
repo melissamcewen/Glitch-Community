@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Icon } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
 import PaginationController from 'Components/pagination-controller';
@@ -9,9 +10,9 @@ import Grid from 'Components/containers/grid';
 import Row from 'Components/containers/row';
 import classNames from 'classnames/bind';
 import SkipSectionButtons from 'Components/containers/skip-section-buttons';
-import Emoji from 'Components/images/emoji';
 
 import styles from './projects-list.styl';
+import { emoji } from '../global.styl';
 
 const containers = {
   row: (props) => <Row className={styles.projectsRow} {...props} />,
@@ -54,7 +55,7 @@ function ProjectsList({
     }
     return (
       <>
-        {title} <Emoji inTitle name={titleEmoji} />
+        {title} <Icon className={emoji} icon={titleEmoji} />
       </>
     );
   };

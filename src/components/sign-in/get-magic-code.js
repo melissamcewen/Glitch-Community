@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Loader } from '@fogcreek/shared-components';
+import { Button, Icon, Loader } from '@fogcreek/shared-components';
 
 import Text from 'Components/text/text';
-import Button from 'Components/buttons/button';
 import TextInput from 'Components/inputs/text-input';
 import Notification from 'Components/notification';
 import useEmail from 'Hooks/use-email';
@@ -10,6 +9,7 @@ import { useAPI } from 'State/api';
 import { captureException } from 'Utils/sentry';
 
 import styles from './styles.styl';
+import { emoji } from '../global.styl';
 
 const GetMagicCode = () => {
   const api = useAPI();
@@ -60,8 +60,8 @@ const GetMagicCode = () => {
             testingId="sign-in-email"
           />
           <div className={styles.submitWrap}>
-            <Button emoji="loveLetter" disabled={!isEnabled || validationError} onClick={onSubmit}>
-              Send a Code
+            <Button disabled={!isEnabled || validationError} onClick={onSubmit}>
+              Send a Code <Icon className={emoji} icon="loveLetter" />
             </Button>
           </div>
         </form>

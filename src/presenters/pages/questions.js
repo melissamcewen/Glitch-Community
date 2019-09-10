@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import MoreIdeas from 'Components/more-ideas';
 import Questions from 'Components/questions';
 import Layout from 'Components/layout';

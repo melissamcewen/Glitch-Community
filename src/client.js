@@ -19,7 +19,6 @@ dayjs.extend(convertPlugin);
 
 // This function is used in index.ejs to set up the app
 window.bootstrap = (container) => {
-  console.log('called bootstrap');
   if (location.hash.startsWith('#!/')) {
     window.location.replace(EDITOR_URL + window.location.hash);
     return;

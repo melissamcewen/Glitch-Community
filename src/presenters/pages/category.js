@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import CollectionContainer from 'Components/collection/container';
 import MoreIdeas from 'Components/more-ideas';
 import DataLoader from 'Components/data-loader';

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
+import { Button, Icon, Mark } from '@fogcreek/shared-components';
 
-import Button from 'Components/buttons/button';
 import { Overlay, OverlaySection, OverlayBackground } from 'Components/overlays';
 import { PopoverContainer } from 'Components/popover';
-import Mark from 'Components/mark';
 import Arrow from 'Components/arrow';
 import WistiaVideo from 'Components/wistia-video';
 import { useTracker } from 'State/segment-analytics';
 
 import styles from './banner.styl';
+import { emoji } from '../../../components/global.styl';
 
 const OverlayVideoBody = () => (
   <Overlay>
@@ -30,8 +30,8 @@ const OverlayVideo = () => {
     };
     return (
       <>
-        <Button onClick={onClick} emoji="playButton">
-          Watch Video
+        <Button onClick={onClick}>
+          Watch Video <Icon className={emoji} icon="playButton" />
         </Button>
         {visible && <OverlayBackground />}
       </>
@@ -78,8 +78,8 @@ const InlineVideo = () => {
         <>
           <div className={styles.bannerVideoPoster} onClick={onClick} aria-hidden="true" />
           <span className={styles.bannerVideoButton}>
-            <Button onClick={onClick} emoji="playButton">
-              Watch Video
+            <Button onClick={onClick}>
+              Watch Video <Icon className={emoji} icon="playButton" />
             </Button>
           </span>
         </>
@@ -126,7 +126,7 @@ const Banner = () => (
       <div className={styles.bannerCopyAndButtons}>
         <p>Simple, powerful, free tools to create and use millions of apps.</p>
         <div className={styles.bannerButtonWrap}>
-          <Button type="cta" href="/create">
+          <Button as="a" variant="cta" href="/create">
             Start Creating <Arrow />
           </Button>
           <div className={styles.watchVideoBtnWrap}>
