@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+
 import axios from 'axios';
 import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { getAllPages } from 'Shared/api';
 import { API_URL } from 'Utils/constants';
+import createResourceManager from './resource-manager';
 
 const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
 const status = {
