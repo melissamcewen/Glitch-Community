@@ -73,24 +73,24 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     const referenceResourceType = getReferenceResourceType(type, referenceType);
 
     const parentRow = state[type][id];
-    // resource isn't present; request it + its children
+    // resource isn't present; request it + its references
     if (!parentRow) {
       return { status: status.loading, value: null, requests: [{ type, ids: [id] }, { type, id, referenceType }] };
     }
 
     const referencesRow = parentRow.references[referenceType];
-    // resource is present but its children are missing; request all of its children
+    // resource is present but its references are missing; request its references
     if (!referencesRow) {
       return { status: status.loading, value: null, requests: [{ type, id, referenceType }] };
     }
 
-    // child IDs request is stale; use IDs but also create a new request
+    // reference request is stale; use reference IDs but also create a new request
     let refreshReferences = rowNeedsRefresh(referencesRow);
 
-    // collect all of the associated children from the child resource table
+    // collect all of the referenced resources from the reference type's table
     const referencedResources = (referencesRow.ids || []).map((referenceID) => getBaseResource(state, referenceResourceType, referenceID));
 
-    // if _any_ children have pending requests, just reload the whole batch
+    // if _any_ referenced resources have pending requests, just reload the whole batch
     if (referencedResources.some((resource) => resource.requests.length)) {
       refreshReferences = true;
     }
@@ -139,8 +139,8 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   };
 
   const storePendingReferencesRequest = (state, { type, id, referenceType }) => {
-    const rowChild = getOrInitializeRowReferences(state, type, id, referenceType);
-    rowChild.status = status.loading;
+    const rowReferences = getOrInitializeRowReferences(state, type, id, referenceType);
+    rowReferences.status = status.loading;
   };
 
   // { type, values: [{ id, ...fields }] }
@@ -154,12 +154,12 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     }
   };
 
-  const storeChildResources = (state, { type, id, referenceType, values }) => {
+  const storeReferenceResources = (state, { type, id, referenceType, values }) => {
     // store IDs on parent
-    const rowChild = getOrInitializeRowReferences(state, type, id, referenceType);
-    rowChild.status = status.ready;
-    rowChild.expires = Date.now() + DEFAULT_TTL;
-    rowChild.ids = values.map((value) => value.id);
+    const rowReferences = getOrInitializeRowReferences(state, type, id, referenceType);
+    rowReferences.status = status.ready;
+    rowReferences.expires = Date.now() + DEFAULT_TTL;
+    rowReferences.ids = values.map((value) => value.id);
 
     // store children
     const referenceResourceType = getReferenceResourceType(type, referenceType);
@@ -241,7 +241,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
       flushedResponseQueue: (state) => {
         for (const response of state._responseQueue) {
           if (response.referenceType) {
-            storeChildResources(state, response);
+            storeReferenceResources(state, response);
           } else {
             storeResources(state, response);
           }
@@ -267,7 +267,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   };
 
   // TODO: use this for error handling?
-  function expireChildResources(state, type, id, referenceType) {
+  function expireReferences(state, type, id, referenceType) {
     const row = getOrInitializeRow(state, type, id);
     if (row.references[referenceType]) {
       row.references[referenceType].expires = 0;
@@ -292,7 +292,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     return result;
   };
 
-  return { useResource, getResource, changeRelation, expireChildResources, reducer, actions, handlers };
+  return { useResource, getResource, changeRelation, expireReferences, reducer, actions, handlers };
 }
 
 /*
