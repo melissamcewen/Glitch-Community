@@ -10,62 +10,42 @@ const status = {
   ready: 'ready',
 };
 
-const resourceConfig = {
-  collections: {
-    references: {
-      projects: 'projects',
-    },
-  },
-  projects: {
-    orderBy: 'domain',
-    references: {
-      collections: 'collections',
-      teams: 'teams',
-      users: 'users',
-    },
-  },
-  teams: {
-    orderBy: 'url',
-    references: {
-      collections: 'collections',
-      users: 'users',
-      projects: 'projects',
-      pinnedProjects: 'projects',
-    },
-  },
-  users: {
-    orderBy: 'login',
-    references: {
-      collections: 'collections',
-      teams: 'teams',
-      projects: 'projects',
-      pinnedProjects: 'projects',
-      deletedProjects: 'projects',
-    },
-  },
-};
-
-/*
-state shape:
-{
-  [type]: {
-    [id]: {
-      status: 'loading' | 'ready'
-      expires: timestamp,
-      value: Object,
+const { getResource, reducer, actions, handlers, changeRelation } = createResourceManager({
+  resourceConfig: {
+    collections: {
       references: {
-        [childType]: {
-          status: 'loading' | 'ready',
-          expires,
-          ids: [childID]
-        }
-      }
-    }
+        projects: 'projects',
+      },
+    },
+    projects: {
+      orderBy: 'domain',
+      references: {
+        collections: 'collections',
+        teams: 'teams',
+        users: 'users',
+      },
+    },
+    teams: {
+      orderBy: 'url',
+      references: {
+        collections: 'collections',
+        users: 'users',
+        projects: 'projects',
+        pinnedProjects: 'projects',
+      },
+    },
+    users: {
+      orderBy: 'login',
+      references: {
+        collections: 'collections',
+        teams: 'teams',
+        projects: 'projects',
+        pinnedProjects: 'projects',
+        deletedProjects: 'projects',
+      },
+    },
   },
-  _requestQueue: [request],
-  _responseQueue: [response],
-}
-*/
+});
 
 const unshift = (list, value) => {
   if (!list.includes(value)) list.unshift(value);
@@ -79,13 +59,10 @@ const remove = (list, value) => {
   if (list.includes(value)) list.splice(list.indexOf(value), 1);
 };
 
-export const { getResource, reducer, actions, handlers, changeRelation } = createResourceManager({ resourceConfig });
-
-const topLevelSlice = createSlice({
+const { reducer: topLevelReducer, actions: topLevelActions } = createSlice({
   reducers: {
     joinTeamProject: (state, { payload: { project } }) => {
       const { currentUser } = state;
-      // INSERT INTO projects_users (project_id, user_id) <project.id> <user.id> 
       changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, push);
     },
     leaveProject: (state, { payload: { project } }) => {
@@ -113,17 +90,18 @@ const topLevelSlice = createSlice({
     toggleBookmark: (state, { payload: { project } }) => {
       const { collections } = state.currentUser;
       const myStuffID = collections.find((c) => c.isMyStuff).id;
-      // SELECT * FROM projects 
-      const { ids: projectIDs } = getOrInitializeRowChild(state.resources, 'collections', myStuffID, 'projects');
-      const changeFn = projectIDs.includes(project.id) ? remove : push;
+      const { value: myProjects } = getResource(state.resources, 'collections', myStuffID, 'projects');
+      if (!myProjects) return;
+
+      const changeFn = myProjects.find((p) => p.id === project.id) ? remove : push;
       changeRelation(state.resources, { type: 'collections', id: myStuffID }, { type: 'projects', id: project.id }, changeFn);
     },
   },
 });
 
-Object.assign(actions, topLevelSlice.actions);
+Object.assign(actions, topLevelActions);
 
-export const topLevelReducer = topLevelSlice.reducer;
+export { getResource, reducer, topLevelReducer, actions, handlers };
 
 export const useResource = (type, id, childType) => {
   // TODO: figure out best balance between cost of `isEqual` vs cost of wasted renders here

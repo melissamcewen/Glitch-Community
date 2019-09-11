@@ -8,8 +8,32 @@ import { getAllPages } from 'Shared/api';
 import { API_URL } from 'Utils/constants';
 
 const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
+const status = {
+  loading: 'loading',
+  ready: 'ready',
+};
 
-
+/*
+state shape:
+{
+  [type]: {
+    [id]: {
+      status: 'loading' | 'ready'
+      expires: timestamp,
+      value: Object,
+      references: {
+        [childType]: {
+          status: 'loading' | 'ready',
+          expires,
+          ids: [childID]
+        }
+      }
+    }
+  },
+  _requestQueue: [request],
+  _responseQueue: [response],
+}
+*/
 
 // API _without_ caching, since caching is handled by redux
 export const getAPIForToken = memoize((persistentToken) => {
@@ -26,7 +50,7 @@ export const getAPIForToken = memoize((persistentToken) => {
   });
 });
 
-export default function createResourceManager() {
+export default function createResourceManager({ resourceConfig }) {
   // utilities
   const getChildResourceType = (type, childType) => {
     const childResourceType = resourceConfig[type].references[childType];
@@ -157,33 +181,6 @@ returns {
     storeResources(state, { type: childResourceType, values });
   };
 
-  // TODO: use this for error handling?
-  // function expireChildResources(state, type, id, childType) {
-  //   const row = getOrInitializeRow(state, type, id);
-  //   if (row.references[childType]) {
-  //     row.references[childType].expires = 0;
-  //   }
-  // }
-
-  //   const unshift = (list, value) => {
-  //     if (!list.includes(value)) list.unshift(value);
-  //   };
-
-  //   const push = (list, value) => {
-  //     if (!list.includes(value)) list.push(value);
-  //   };
-
-  //   const remove = (list, value) => {
-  //     if (list.includes(value)) list.splice(list.indexOf(value), 1);
-  //   };
-
-  //   const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
-  //     const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
-  //     const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
-  //     changeFn(leftIDs, leftID);
-  //     changeFn(rightIDs, rightID);
-  //   };
-
   const handleRequest = async (api, { type, childType, id, ids }) => {
     if (childType) {
       const childResourceType = getChildResourceType(type, childType);
@@ -284,7 +281,15 @@ returns {
       store.dispatch(actions.flushedResponseQueue());
     }, 1000),
   };
-  
+
+  // TODO: use this for error handling?
+  function expireChildResources(state, type, id, childType) {
+    const row = getOrInitializeRow(state, type, id);
+    if (row.references[childType]) {
+      row.references[childType].expires = 0;
+    }
+  }
+
   const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
     const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
     const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
@@ -292,5 +297,5 @@ returns {
     changeFn(rightIDs, rightID);
   };
 
-  return { getResource, changeRelation, reducer, actions, handlers };
+  return { getResource, changeRelation, expireChildResources, reducer, actions, handlers };
 }
