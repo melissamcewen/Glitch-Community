@@ -36,7 +36,7 @@ state shape:
 */
 
 // API _without_ caching, since caching is handled by redux
-export const getAPIForToken = memoize((persistentToken) => {
+const getAPIForToken = memoize((persistentToken) => {
   if (persistentToken) {
     return axios.create({
       baseURL: API_URL,
@@ -297,5 +297,26 @@ returns {
     changeFn(rightIDs, rightID);
   };
 
-  return { getResource, changeRelation, expireChildResources, reducer, actions, handlers };
+  const useResource = (type, id, childType) => {
+    // TODO: figure out best balance between cost of `isEqual` vs cost of wasted renders here
+    const result = useSelector((state) => getResource(state.resources, type, id, childType), isEqual);
+    const dispatch = useDispatch();
+
+    if (result.requests.length) {
+      dispatch(actions.requestedResources(result.requests));
+    }
+    return result;
+  };
+
+  return { useResource, getResource, changeRelation, expireChildResources, reducer, actions, handlers };
 }
+
+/*
+  combine multiple results into a single result that's ready when all inputs are ready
+  (like Promise.all or allByKeys).
+  Can take an object or an array.
+*/
+export const allReady = (reqs) => ({
+  status: Object.values(reqs).every((req) => req.status === status.ready) ? status.ready : status.loading,
+  value: Array.isArray(reqs) ? reqs.map((req) => req.value) : mapValues(reqs, (req) => req.value),
+});

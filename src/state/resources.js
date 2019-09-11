@@ -1,16 +1,12 @@
 /* eslint-disable no-underscore-dangle */
-import { mapValues, isEqual } from 'lodash';
+import 
 import { createSlice } from 'redux-starter-kit';
-import { useSelector, useDispatch } from 'react-redux';
 
-import createResourceManager from './resource-manager';
+import createResourceManager, { allReady } from './resource-manager';
 
-const status = {
-  loading: 'loading',
-  ready: 'ready',
-};
+export { allReady };
 
-const { getResource, reducer, actions, handlers, changeRelation } = createResourceManager({
+const { useResource, getResource, reducer, actions: resourceManagerActions, handlers, changeRelation } = createResourceManager({
   resourceConfig: {
     collections: {
       references: {
@@ -45,6 +41,20 @@ const { getResource, reducer, actions, handlers, changeRelation } = createResour
       },
     },
   },
+  getAuthenticatedAPI: memoize((state) => {
+    const persistentToken = state.currentUser.persistentToken;
+    if (persistentToken) {
+      return axios.create({
+        baseURL: API_URL,
+        headers: {
+          Authorization: persistentToken,
+        },
+      });
+    }
+    return axios.create({
+      baseURL: API_URL,
+    });
+  }),
 });
 
 const unshift = (list, value) => {
@@ -99,27 +109,9 @@ const { reducer: topLevelReducer, actions: topLevelActions } = createSlice({
   },
 });
 
-Object.assign(actions, topLevelActions);
-
-export { getResource, reducer, topLevelReducer, actions, handlers };
-
-export const useResource = (type, id, childType) => {
-  // TODO: figure out best balance between cost of `isEqual` vs cost of wasted renders here
-  const result = useSelector((state) => getResource(state.resources, type, id, childType), isEqual);
-  const dispatch = useDispatch();
-
-  if (result.requests.length) {
-    dispatch(actions.requestedResources(result.requests));
-  }
-  return result;
+export const actions = {
+  ...resourceManagerActions,
+  ...topLevelActions,
 };
 
-/*
-  combine multiple results into a single result that's ready when all inputs are ready
-  (like Promise.all or allByKeys).
-  Can take an object or an array.
-*/
-export const allReady = (reqs) => ({
-  status: Object.values(reqs).every((req) => req.status === status.ready) ? status.ready : status.loading,
-  value: Array.isArray(reqs) ? reqs.map((req) => req.value) : mapValues(reqs, (req) => req.value),
-});
+export { useResource, getResource, reducer, topLevelReducer, handlers };
