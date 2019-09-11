@@ -37,6 +37,8 @@ state shape:
 */
 
 export default function createResourceManager({ resourceConfig, getAuthenticatedAPI }) {
+  // lookup the resource type for a reference
+  // e.g. `getReferenceResourceType('user', 'pinnedProjects') -> 'projects'`.
   const getReferenceResourceType = (type, referenceType) => {
     const referenceResourceType = resourceConfig[type].references[referenceType];
     if (!referenceResourceType) throw new Error(`Unknown reference type "${referenceType}"`);
@@ -47,14 +49,13 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   const rowNeedsRefresh = (row) => row && row.status === status.ready && row.expires < Date.now();
 
   /*
-    getResource gets the cached resource or resources + any requests that we need to make.
+    get the cached resource or resources + any requests that we need to make.
     returns {
-      status: 'loading' | 'ready'
+      status: 'loading' | 'ready',
       value,
       requests: [{ type, ids: [id] } | { type, id, referenceType }],
     }
   */
-
   const getBaseResource = (state, type, id) => {
     const row = state[type][id];
     // resource is missing; request the resource
@@ -73,7 +74,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     const referenceResourceType = getReferenceResourceType(type, referenceType);
 
     const parentRow = state[type][id];
-    // resource isn't present; request it + its references
+    // parent resource isn't present; request it + its references
     if (!parentRow) {
       return { status: status.loading, value: null, requests: [{ type, ids: [id] }, { type, id, referenceType }] };
     }
@@ -95,7 +96,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
       refreshReferences = true;
     }
 
-    // return any available children
+    // return any available referenced resources
     const resultValues = referencedResources.map((resource) => resource.value).filter(Boolean);
 
     return { status: status.ready, value: resultValues, requests: refreshReferences ? [{ type, id, referenceType }] : [] };
@@ -112,7 +113,12 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     if (referenceType) return getReferencedResources(state, type, id, referenceType);
     return getBaseResource(state, type, id);
   };
+  
 
+  /*
+  Lookup a resource or a set of references, or create an empty data structure, 
+  so it can be updated in the cache.
+  */
   const getOrInitializeRow = (state, type, id) => {
     // create row with reference map if it doesn't exist already
     if (!state[type][id]) {
@@ -131,6 +137,9 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     return row.references[referenceType];
   };
 
+  /*
+  Update the cache to reflect that resources are being loaded. 
+  */
   const storePendingRequest = (state, { type, ids }) => {
     for (const id of ids) {
       const row = getOrInitializeRow(state, type, id);
@@ -143,7 +152,10 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     rowReferences.status = status.loading;
   };
 
-  // { type, values: [{ id, ...fields }] }
+  
+  /*
+  Save values 
+  */
   const storeResources = (state, { type, values }) => {
     const expires = Date.now() + DEFAULT_TTL;
     for (const value of values) {
@@ -155,13 +167,13 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   };
 
   const storeReferenceResources = (state, { type, id, referenceType, values }) => {
-    // store IDs on parent
+    // store reference IDs
     const rowReferences = getOrInitializeRowReferences(state, type, id, referenceType);
     rowReferences.status = status.ready;
     rowReferences.expires = Date.now() + DEFAULT_TTL;
     rowReferences.ids = values.map((value) => value.id);
 
-    // store children
+    // store resources
     const referenceResourceType = getReferenceResourceType(type, referenceType);
     storeResources(state, { type: referenceResourceType, values });
   };
