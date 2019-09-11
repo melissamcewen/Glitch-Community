@@ -21,7 +21,7 @@ const ResumeCoding = () => (
   </TrackedExternalLink>
 );
 
-const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay }) => {
+const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay, showNav }) => {
   const { currentUser } = useCurrentUser();
   const { SSR_SIGNED_IN } = useGlobals();
   // signedIn and signedOut are both false on the server so the sign in button doesn't render
@@ -36,7 +36,7 @@ const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay }
         <Logo />
       </Link>
 
-      <nav className={styles.headerActions}>
+      {showNav && <nav className={styles.headerActions}>
         <div className={styles.searchWrap}>
           <SearchForm defaultValue={searchQuery} />
         </div>
@@ -65,7 +65,7 @@ const Header = ({ searchQuery, showAccountSettingsOverlay, showNewStuffOverlay }
             </li>
           )}
         </ul>
-      </nav>
+      </nav>}
     </header>
   );
 };
@@ -74,10 +74,12 @@ Header.propTypes = {
   searchQuery: PropTypes.string,
   showAccountSettingsOverlay: PropTypes.func.isRequired,
   showNewStuffOverlay: PropTypes.func.isRequired,
+  showNav: PropTypes.bool,
 };
 
 Header.defaultProps = {
   searchQuery: '',
+  showNav: true,
 };
 
 export default Header;
