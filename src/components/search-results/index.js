@@ -26,7 +26,7 @@ const FilterContainer = ({ filters, activeFilter, setFilter }) => {
     ),
   }));
 
-  return <SegmentedButton value={activeFilter} options={buttons} onChange={setFilter} />;
+  return <SegmentedButton variant="secondary" value={activeFilter} options={buttons} onChange={setFilter} />;
 };
 
 const groups = [
