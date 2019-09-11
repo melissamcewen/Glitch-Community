@@ -1,4 +1,15 @@
 /* eslint-disable no-underscore-dangle */
+import axios from 'axios';
+import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
+import { createSlice } from 'redux-starter-kit';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { getAllPages } from 'Shared/api';
+import { API_URL } from 'Utils/constants';
+
+const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
+
+
 
 // API _without_ caching, since caching is handled by redux
 export const getAPIForToken = memoize((persistentToken) => {
@@ -258,5 +269,28 @@ returns {
     },
   });
 
-  return { getResource, reducer, actions };
+  const handlers = {
+    [actions.requestedResources]: debounce((_, store) => {
+      const requests = store.getState().resources._requestQueue;
+      const token = store.getState().currentUser.persistentToken;
+      store.dispatch(actions.flushedRequestQueue());
+      const api = getAPIForToken(token);
+      batchAndDedupeRequests(requests).forEach(async (request) => {
+        const response = await handleRequest(api, request);
+        store.dispatch(actions.receivedResources(response));
+      });
+    }, 1000),
+    [actions.receivedResources]: debounce((_, store) => {
+      store.dispatch(actions.flushedResponseQueue());
+    }, 1000),
+  };
+  
+  const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
+    const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
+    const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
+    changeFn(leftIDs, leftID);
+    changeFn(rightIDs, rightID);
+  };
+
+  return { getResource, changeRelation, reducer, actions, handlers };
 }
