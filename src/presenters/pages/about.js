@@ -15,6 +15,8 @@ import Footer from 'Components/footer';
 import ErrorBoundary from 'Components/error-boundary';
 import styles from './about.styl';
 
+const blueMark = '#aad6fb';
+
 const HeaderLinks = () => (
   <nav className={styles.headerActions}>
     <a href="/about">About</a>
@@ -25,7 +27,7 @@ const HeaderLinks = () => (
   </nav>
 );
 
-const Unmarked = ({ children }) => <span className={styles.unmarked}>{children }</span>;
+const Unmarked = ({ children }) => <span className={styles.unmarked}>{children}</span>;
 
 function Banner() {
   const illustration = `${CDN_URL}/d2b595e6-45a6-4ddc-8110-038cdb509b16%2Fabout.svg?v=1562163931412`;
@@ -51,6 +53,17 @@ function Banner() {
   );
 }
 
+function FirstSection() {
+  return (
+    <section>
+      <Heading className={styles.h2} tagName="h2">
+        <Mark color={blueMark}><small>1.</small> A simple tool for creating web apps</Mark>
+      </Heading>
+      <p className={styles.useCases}>We’re evolving “developer tools” into a creative and expressive platform that everyone can use to create the web.</p>
+    </section>
+  );
+}
+
 const AboutPage = withRouter(() => (
   <div className={styles.content}>
     <Helmet title="About Glitch" />
@@ -63,8 +76,9 @@ const AboutPage = withRouter(() => (
       </Link>
       <HeaderLinks />
     </header>
-    <main id="main">
+    <main id="main" className={styles.main}>
       <Banner />
+      <FirstSection />
     </main>
 
     <Footer />
