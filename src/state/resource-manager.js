@@ -308,8 +308,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   e.g. `updateReferences(state, { type: 'users', id: userID }, { type: 'projects', id: projectID }, push)`
   will add the project's ID to the user's project references & add the user's ID to the project's user references.
   If one of the reference types is not a resource type (e.g. 'users' and 'pinnedProjects'),
-  
-  
+  the 'nonstandard' resource should be the right-hand argument.
   */
   const updateReferences = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
     const referenceResourceType = getReferenceResourceType(leftType, rightType);
