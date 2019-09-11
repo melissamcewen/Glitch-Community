@@ -291,9 +291,8 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   /*
   Mark a resource or set of references as expired.
   These will remain in the cache, but will be fetched fresh from the API on the next request.
-  This may be useful for 
+  This may be useful for handling errors after optimistic updates.
   */
-  // TODO: use this for error handling?
   function expireResource(state, type, id, referenceType) {
     const row = getOrInitializeRow(state, type, id);
     
@@ -304,13 +303,25 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     }    
   }
 
-  const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
+  /*
+  Symmetrically updates the references between two resources.
+  e.g. `updateReferences(state, { type: 'users', id: userID }, { type: 'projects', id: projectID }, push)`
+  will add the project's ID to the user's project references & add the user's ID to the project's user references.
+  If one of the reference types is not a resource type (e.g. 'users' and 'pinnedProjects'),
+  
+  
+  */
+  const updateReferences = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
+    const referenceResourceType = getReferenceResourceType(leftType, rightType);
     const { ids: rightIDs } = getOrInitializeRowReferences(state, leftType, leftID, rightType);
-    const { ids: leftIDs } = getOrInitializeRowReferences(state, rightType, rightID, leftType);
+    const { ids: leftIDs } = getOrInitializeRowReferences(state, referenceResourceType, rightID, leftType);
     changeFn(leftIDs, leftID);
     changeFn(rightIDs, rightID);
   };
 
+  /*
+  A hook that retrieves resources from the cache, and dispatches requests for resources if they're stale or unavailable.
+  */
   const useResource = (type, id, referenceType) => {
     // TODO: figure out best balance between cost of `isEqual` vs cost of wasted renders here
     const result = useSelector((state) => getResource(state[SLICE], type, id, referenceType), isEqual);
@@ -322,7 +333,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     return result;
   };
 
-  return { useResource, getResource, changeRelation, expireResource, reducer, actions, handlers };
+  return { useResource, getResource, updateReferences, expireResource, reducer, actions, handlers };
 }
 
 /*

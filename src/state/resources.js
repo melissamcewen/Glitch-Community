@@ -22,7 +22,7 @@ const getAPIForToken = memoize((persistentToken) => {
   });
 });
 
-const { useResource, getResource, reducer, actions: resourceManagerActions, handlers, changeRelation } = createResourceManager({
+const { useResource, getResource, reducer, actions: resourceManagerActions, handlers, updateReferences } = createResourceManager({
   resourceConfig: {
     collections: {
       references: {
@@ -76,29 +76,29 @@ const { reducer: topLevelReducer, actions: topLevelActions } = createSlice({
   reducers: {
     joinTeamProject: (state, { payload: { project } }) => {
       const { currentUser } = state;
-      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, push);
+      updateReferences(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, push);
     },
     leaveProject: (state, { payload: { project } }) => {
       const { currentUser } = state;
-      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, remove);
+      updateReferences(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: currentUser.id }, remove);
     },
     removeUserFromTeamAndProjects: (state, { payload: { user, team, projects } }) => {
-      changeRelation(state.resources, { type: 'teams', id: team.id }, { type: 'users', id: user.id }, remove);
+      updateReferences(state.resources, { type: 'teams', id: team.id }, { type: 'users', id: user.id }, remove);
       projects.forEach((project) => {
-        changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: user.id }, remove);
+        updateReferences(state.resources, { type: 'projects', id: project.id }, { type: 'users', id: user.id }, remove);
       });
     },
     addProjectToTeam: (state, { payload: { project, team } }) => {
-      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, unshift);
+      updateReferences(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, unshift);
     },
     removeProjectFromTeam: (state, { payload: { project, team } }) => {
-      changeRelation(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, remove);
+      updateReferences(state.resources, { type: 'projects', id: project.id }, { type: 'teams', id: team.id }, remove);
     },
     addProjectToCollection: (state, { payload: { project, collection } }) => {
-      changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, unshift);
+      updateReferences(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, unshift);
     },
     removeProjectFromCollection: (state, { payload: { project, collection } }) => {
-      changeRelation(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, remove);
+      updateReferences(state.resources, { type: 'collections', id: collection.id }, { type: 'projects', id: project.id }, remove);
     },
     toggleBookmark: (state, { payload: { project } }) => {
       const { collections } = state.currentUser;
@@ -107,7 +107,7 @@ const { reducer: topLevelReducer, actions: topLevelActions } = createSlice({
       if (!myProjects) return;
 
       const changeFn = myProjects.find((p) => p.id === project.id) ? remove : push;
-      changeRelation(state.resources, { type: 'collections', id: myStuffID }, { type: 'projects', id: project.id }, changeFn);
+      updateReferences(state.resources, { type: 'collections', id: myStuffID }, { type: 'projects', id: project.id }, changeFn);
     },
   },
 });
