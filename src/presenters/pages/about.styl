@@ -113,29 +113,27 @@ u5 = 50px
   height: 350px
   margin-left: -2rem
   margin-right: -1rem
-  @media (min-width: 420px)
+  @media (max-width: mediumSmallViewport)
     margin: auto
   @media (min-width: mediumSmallViewport)
     height: 360px
   @media (min-width: mediumViewport)
-    flex: 2
-  @media (min-width: mediumLargeViewport)
-    flex: 1.5
+    flex: 1.8
   @media (min-width: hugeViewport)
     flex: 2.2
 .bannerText
   position: absolute
-  left: 75px
-  top: 15px
+  left: 50px
+  top: 5px
   max-width: 275px
   p
-    margin-left: 2rem
+    margin-left: 1rem
     @media (min-width: mediumViewport)
       margin-left: 0
       font-size: inherit
   @media (min-width: smallViewport)
     left: 60px
-    top: 30px
+    top: 20px
   @media (min-width: mediumViewport)
     left: 65px
   @media (min-width: largeViewport)
