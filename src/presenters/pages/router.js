@@ -8,7 +8,7 @@ import rootTeams from 'Curated/teams';
 import { useCurrentUser } from 'State/current-user';
 import { useGlobals } from 'State/globals';
 
-import { FacebookLoginPage, GitHubLoginPage, GoogleLoginPage, SlackLoginPage, EmailTokenLoginPage } from './login';
+import { FacebookLoginPage, GitHubLoginPage, GoogleLoginPage, EmailTokenLoginPage } from './login';
 import ResetPasswordPage from './reset-password';
 import OauthSignIn from './signin';
 import JoinTeamPage from './join-team';
@@ -111,11 +111,6 @@ const Router = () => {
           render={({ location }) => (
             <GoogleLoginPage key={location.key} code={parse(location.search, 'code')} error={parse(location.search, 'error')} />
           )}
-        />
-        <Route
-          path="/login/slack"
-          exact
-          render={({ location }) => <SlackLoginPage key={location.key} code={parse(location.search, 'code')} error={parse(location.search, 'error')} />}
         />
         <Route
           path="/login/email"

@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Button, Loader, SegmentedButton } from '@fogcreek/shared-components';
+import { Badge, Button, Loader, SegmentedButton } from '@fogcreek/shared-components';
 
 import { createAPIHook } from 'State/api';
 
-import Badge from 'Components/badges/badge';
 import Heading from 'Components/text/heading';
 import UserItem from 'Components/user/user-item';
 import TeamItem from 'Components/team/team-item';
@@ -27,7 +26,7 @@ const FilterContainer = ({ filters, activeFilter, setFilter }) => {
     ),
   }));
 
-  return <SegmentedButton value={activeFilter} options={buttons} onChange={setFilter} />;
+  return <SegmentedButton variant="secondary" value={activeFilter} options={buttons} onChange={setFilter} />;
 };
 
 const groups = [

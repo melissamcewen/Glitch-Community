@@ -1,5 +1,5 @@
 import React from 'react';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { withRouter } from 'react-router-dom';
 
 import PreviewContainer from 'Components/containers/preview-container';

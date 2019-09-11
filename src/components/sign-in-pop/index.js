@@ -326,7 +326,6 @@ const PasswordLoginSection = ({ showTwoFactor, showForgotPassword }) => {
 };
 
 export const SignInPopBase = withRouter(({ location, align }) => {
-  const slackAuthEnabled = useDevToggle('Slack Auth');
   const userPasswordEnabled = useDevToggle('User Passwords');
   const [, setDestination] = useLocalStorage('destinationAfterAuth');
   const [tfaToken, setTfaToken] = React.useState('');
@@ -379,7 +378,6 @@ export const SignInPopBase = withRouter(({ location, align }) => {
             <SignInButton companyName="facebook" onClick={onClick} />
             <SignInButton companyName="github" onClick={onClick} />
             <SignInButton companyName="google" onClick={onClick} />
-            {slackAuthEnabled && <SignInButton companyName="slack" onClick={onClick} />}
             <Button size="small" onClick={setDestinationAnd(showView.email)}>
               Sign in with Email <Icon className={emoji} icon="email" />
             </Button>

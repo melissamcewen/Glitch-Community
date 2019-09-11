@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { Avatar } from '@fogcreek/shared-components';
 
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import Image from 'Components/images/image';
@@ -16,9 +17,9 @@ import { FALLBACK_AVATAR_URL, getProjectAvatarUrl } from 'Models/project';
 import styles from './avatar.styl';
 
 // UserAvatar
-export const Avatar = ({ name, src, color, srcFallback, type, tiny, hideTooltip, withinButton }) => {
+export const AvatarBase = ({ name, src, color, srcFallback, variant, type, tiny, hideTooltip, withinButton }) => {
   const className = classNames(styles.avatar, styles[type], { [styles.tiny]: tiny });
-  const contents = <Image src={src} defaultSrc={srcFallback} alt={name} backgroundColor={color} className={className} />;
+  const contents = <Avatar src={src} defaultSrc={srcFallback} alt={name} backgroundcolor={color} variant={variant} className={className} />;
 
   if (!hideTooltip) {
     return <TooltipContainer tooltip={name} target={contents} type="action" align={['left']} fallback={withinButton} />;
@@ -26,10 +27,11 @@ export const Avatar = ({ name, src, color, srcFallback, type, tiny, hideTooltip,
   return contents;
 };
 
-Avatar.propTypes = {
+AvatarBase.propTypes = {
   name: PropTypes.string.isRequired,
   src: PropTypes.string.isRequired,
   srcFallback: PropTypes.string,
+  variant: PropTypes.string,
   type: PropTypes.string.isRequired,
   color: PropTypes.string,
   hideTooltip: PropTypes.bool,
@@ -37,15 +39,16 @@ Avatar.propTypes = {
   tiny: PropTypes.bool,
 };
 
-Avatar.defaultProps = {
+AvatarBase.defaultProps = {
   color: null,
   srcFallback: '',
+  variant: 'circle',
   hideTooltip: false,
   tiny: false,
 };
 
 export const TeamAvatar = ({ team, size, hideTooltip, tiny }) => (
-  <Avatar name={team.name} src={getTeamAvatarUrl({ ...team, size })} srcFallback={DEFAULT_TEAM_AVATAR} type="team" hideTooltip={hideTooltip} tiny={tiny} />
+  <AvatarBase name={team.name} src={getTeamAvatarUrl({ ...team, size })} srcFallback={DEFAULT_TEAM_AVATAR} variant="roundrect" type="team" hideTooltip={hideTooltip} tiny={tiny} />
 );
 TeamAvatar.propTypes = {
   team: PropTypes.shape({
@@ -62,7 +65,7 @@ TeamAvatar.defaultProps = {
 };
 
 export const UserAvatar = ({ user, suffix = '', hideTooltip, withinButton, tiny }) => (
-  <Avatar
+  <AvatarBase
     name={getDisplayName(user) + suffix}
     src={getUserAvatarThumbnailUrl(user)}
     color={user.color}
@@ -93,7 +96,7 @@ UserAvatar.defaultProps = {
 };
 
 export const ProjectAvatar = ({ project, hasAlt, tiny }) => (
-  <Avatar name={hasAlt ? project.domain : ''} src={getProjectAvatarUrl(project)} srcFallback={FALLBACK_AVATAR_URL} type="project" hideTooltip tiny={tiny} />
+  <AvatarBase name={hasAlt ? project.domain : ''} src={getProjectAvatarUrl(project)} srcFallback={FALLBACK_AVATAR_URL} variant="roundrect" type="project" hideTooltip tiny={tiny} />
 );
 
 ProjectAvatar.propTypes = {

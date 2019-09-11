@@ -3,9 +3,8 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Pluralize from 'react-pluralize';
 import { partition } from 'lodash';
-import { Button, SegmentedButton } from '@fogcreek/shared-components';
+import { Badge, Button, SegmentedButton } from '@fogcreek/shared-components';
 
-import Badge from 'Components/badges/badge';
 import Link from 'Components/link';
 import {
   PopoverWithButton,

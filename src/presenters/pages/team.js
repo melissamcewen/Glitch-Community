@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon } from '@fogcreek/shared-components';
 
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { partition } from 'lodash';
 import Text from 'Components/text/text';
 import Heading from 'Components/text/heading';

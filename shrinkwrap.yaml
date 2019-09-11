@@ -76,9 +76,9 @@ dependencies:
   react-aria-live: 2.0.5
   react-axe: 2.1.9
   react-dom: 16.9.0
-  react-helmet: 5.2.1
+  react-helmet-async: 1.0.2
   react-is: 16.9.0
-  react-konami: 0.5.1
+  react-konami: 0.6.2
   react-onclickoutside: 6.9.0
   react-pluralize: 1.6.3
   react-redux: 7.1.1
@@ -859,6 +859,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-AS2D/5APsqzq3LJVmHnwLwH0CbQpbcD+bjxuuxbrwt0E3PtTv3TL5TBTUnL6SkKzIW/+ZBf3oegHNG7W0pXcUA==
+  /@babel/runtime/7.3.4:
+    dependencies:
+      regenerator-runtime: 0.12.1
+    dev: false
+    resolution:
+      integrity: sha512-IvfvnMdSaLBateu0jfsYIpZTxAc2cKEXEMiezGGN75QcBcecDUKd3PgLAncT0oOgxKy8dd8hrJKj9MfzgfZd6g==
   /@babel/runtime/7.6.0:
     dependencies:
       regenerator-runtime: 0.13.3
@@ -8202,17 +8208,19 @@ packages:
     dev: false
     resolution:
       integrity: sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
-  /react-helmet/5.2.1:
+  /react-helmet-async/1.0.2:
     dependencies:
-      object-assign: 4.1.1
+      '@babel/runtime': 7.3.4
+      invariant: 2.2.4
       prop-types: 15.7.2
       react-fast-compare: 2.0.4
-      react-side-effect: 1.2.0
+      shallowequal: 1.1.0
     dev: false
     peerDependencies:
-      react: '>=15.0.0'
+      react: ^16.6.0
+      react-dom: ^16.6.0
     resolution:
-      integrity: sha512-CnwD822LU8NDBnjCpZ4ySh8L6HYyngViTZLfBBb3NjtrpN8m49clH8hidHouq20I51Y6TpCTISCBbqiY5GamwA==
+      integrity: sha512-qzzchrM/ibHuPS/60ief8jaibPunuRdeta4iBDQV+ri2SFKwOV+X2NlEpvevZOauhmHrH/I6dI4E90EPVfJBBg==
   /react-input-autosize/2.2.1:
     dependencies:
       prop-types: 15.7.2
@@ -8225,13 +8233,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-tJBzzzIgnnRfEm046qRcURvwQnZVXmuCbscxUO5RWrGTXpon2d4c8mI0D8WE6ydVIm29JiLB6+RslkIvym9Rjw==
-  /react-konami/0.5.1:
-    dependencies:
-      prop-types: 15.7.2
-      react: 16.9.0
+  /react-konami/0.6.2:
     dev: false
+    peerDependencies:
+      react: '>=15.4.0'
     resolution:
-      integrity: sha512-g72TSUVuTEGxF60wdHqQYNsSGI6NVDeRZ9om22ITsMo4g0A+2L/f/LX0h9LFhW8XN+gFSsVSxyYhvnqlUM7PDA==
+      integrity: sha512-rKhv5fVWVK7Qj5H3TdBXg6F9ixgY8ftf+SLj4a/v6xlU59reva60vzc5JWpkJocykkgu/TvKNS/Uy0GVk7DkYA==
   /react-lifecycles-compat/3.0.4:
     dev: false
     resolution:
@@ -8313,14 +8320,6 @@ packages:
       react-dom: ^16.8.0
     resolution:
       integrity: sha512-fbVISKa/lSUlLsltuatfUiKcWCNvdLXxFFyrzVQCBUsjxJZH/m7UMPdw/ywmRixAmwXAP++MdbNNZypOsiDEfA==
-  /react-side-effect/1.2.0:
-    dependencies:
-      shallowequal: 1.1.0
-    dev: false
-    peerDependencies:
-      react: ^0.13.0 || ^0.14.0 || ^15.0.0 || ^16.0.0
-    resolution:
-      integrity: sha512-v1ht1aHg5k/thv56DRcjw+WtojuuDHFUgGfc+bFHOWsF4ZK6C2V57DO0Or0GPsg6+LSTE0M6Ry/gfzhzSwbc5w==
   /react-sortable-hoc/1.10.1:
     dependencies:
       '@babel/runtime': 7.6.0
@@ -8507,6 +8506,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-1G6jJVDWrt0rK99kBjvEtziZNCICAuvIPkSiUFIQxVP06RCVpq3dmDo2oi6ABpYaDYaTRr67BEhL8r1wgEZZKg==
+  /regenerator-runtime/0.12.1:
+    dev: false
+    resolution:
+      integrity: sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
   /regenerator-runtime/0.13.3:
     dev: false
     resolution:
@@ -10500,9 +10503,9 @@ specifiers:
   react-aria-live: ^2.0.5
   react-axe: ^2.1.9
   react-dom: ^16.8.6
-  react-helmet: ^5.2.1
+  react-helmet-async: ^1.0.2
   react-is: ^16.8.6
-  react-konami: ^0.5.0
+  react-konami: ^0.6.2
   react-onclickoutside: ^6.8.0
   react-pluralize: ^1.6.3
   react-redux: ^7.1.1

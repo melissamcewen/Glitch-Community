@@ -9,8 +9,6 @@ import Image from 'Components/images/image';
 import UseMagicCode from 'Components/sign-in/use-magic-code';
 import GetMagicCode from 'Components/sign-in/get-magic-code';
 
-import useDevToggle from 'State/dev-toggles';
-
 import styles from './sign-in-layout.styl';
 import { emoji } from '../global.styl';
 
@@ -23,7 +21,6 @@ const TermsAndConditions = () => (
 );
 
 const SignInLayout = () => {
-  const slackAuthEnabled = useDevToggle('Slack Auth');
   const [page, setPage] = useState('main');
   const showMainPage = () => setPage('main');
   const showMagicPage = () => setPage('magic');
@@ -56,7 +53,6 @@ const SignInLayout = () => {
                 <div>
                   <div className={styles.signInButtons}>
                     {companyNames
-                      .filter((companyName) => companyName !== 'slack' || slackAuthEnabled)
                       .map((companyName) => (
                         <div key={companyName} className={styles.signInButton}>
                           <SignInButton short companyName={companyName} />

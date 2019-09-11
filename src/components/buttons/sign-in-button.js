@@ -29,13 +29,6 @@ function googleAuthLink() {
   return `${API_URL}/auth/google?${params}`;
 }
 
-function slackAuthLink() {
-  const params = new URLSearchParams();
-  const callbackURL = `${APP_URL}/login/slack`;
-  params.append('callbackURL', callbackURL);
-  return `${API_URL}/auth/slack?${params}`;
-}
-
 const companies = {
   facebook: {
     name: 'Facebook',
@@ -51,11 +44,6 @@ const companies = {
     name: 'Google',
     emoji: 'google',
     href: googleAuthLink(),
-  },
-  slack: {
-    name: 'Slack',
-    emoji: 'slack',
-    href: slackAuthLink(),
   },
 };
 

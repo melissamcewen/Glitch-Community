@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { Button, Icon, Loader } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
@@ -25,7 +25,7 @@ import BookmarkButton from 'Components/buttons/bookmark-button';
 import { AnalyticsContext, useTrackedFunc } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
 import { useToggleBookmark } from 'State/collection';
-import { useProjectEditor } from 'State/project';
+import { useProjectEditor, useProjectMembers } from 'State/project';
 import { getUserLink } from 'Models/user';
 import { userIsProjectMember, userIsProjectAdmin } from 'Models/project';
 import { addBreadcrumb } from 'Utils/sentry';
@@ -139,7 +139,8 @@ const ProjectPage = ({ project: initialProject }) => {
   const { currentUser } = useCurrentUser();
   const [hasBookmarked, toggleBookmark, setHasBookmarked] = useToggleBookmark(project);
   const isAnonymousUser = !currentUser.login;
-  const isAuthorized = userIsProjectMember({ project, user: currentUser });
+  const { value: members } = useProjectMembers(project.id);
+  const isAuthorized = userIsProjectMember({ members, user: currentUser });
   const isAdmin = userIsProjectAdmin({ project, user: currentUser });
   const { domain, users, teams, suspendedReason } = project;
   const updateDomainAndSync = (newDomain) => updateDomain(newDomain).then(() => syncPageToDomain(newDomain));
