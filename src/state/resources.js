@@ -1,4 +1,4 @@
-
+/* eslint-disable no-underscore-dangle */
 import axios from 'axios';
 import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
 import { createSlice } from 'redux-starter-kit';

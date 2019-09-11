@@ -17,8 +17,6 @@ export const getAPIForToken = memoize((persistentToken) => {
 
 export default function createResourceManager() {
   // utilities
-
-  //
   const getChildResourceType = (type, childType) => {
     const childResourceType = resourceConfig[type].references[childType];
     if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
@@ -156,24 +154,24 @@ returns {
   //   }
   // }
 
-  const unshift = (list, value) => {
-    if (!list.includes(value)) list.unshift(value);
-  };
+  //   const unshift = (list, value) => {
+  //     if (!list.includes(value)) list.unshift(value);
+  //   };
 
-  const push = (list, value) => {
-    if (!list.includes(value)) list.push(value);
-  };
+  //   const push = (list, value) => {
+  //     if (!list.includes(value)) list.push(value);
+  //   };
 
-  const remove = (list, value) => {
-    if (list.includes(value)) list.splice(list.indexOf(value), 1);
-  };
+  //   const remove = (list, value) => {
+  //     if (list.includes(value)) list.splice(list.indexOf(value), 1);
+  //   };
 
-  const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
-    const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
-    const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
-    changeFn(leftIDs, leftID);
-    changeFn(rightIDs, rightID);
-  };
+  //   const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
+  //     const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
+  //     const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
+  //     changeFn(leftIDs, leftID);
+  //     changeFn(rightIDs, rightID);
+  //   };
 
   const handleRequest = async (api, { type, childType, id, ids }) => {
     if (childType) {
