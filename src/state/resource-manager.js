@@ -1,13 +1,14 @@
 /* eslint-disable no-underscore-dangle */
-import axios from 'axios';
-import { mapValues, memoize, debounce, chunk, isEqual } from 'lodash';
+import { mapValues, debounce, chunk, isEqual } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getAllPages } from 'Shared/api';
-import { API_URL } from 'Utils/constants';
 
 const DEFAULT_TTL = 1000 * 60 * 5; // 5 minutes
+
+const SLICE = 'resources';
+
 const status = {
   loading: 'loading',
   ready: 'ready',
@@ -22,7 +23,7 @@ state shape:
       expires: timestamp,
       value: Object,
       references: {
-        [childType]: {
+        [referenceType]: {
           status: 'loading' | 'ready',
           expires,
           ids: [childID]
@@ -35,40 +36,25 @@ state shape:
 }
 */
 
-// API _without_ caching, since caching is handled by redux
-const getAPIForToken = memoize((persistentToken) => {
-  if (persistentToken) {
-    return axios.create({
-      baseURL: API_URL,
-      headers: {
-        Authorization: persistentToken,
-      },
-    });
-  }
-  return axios.create({
-    baseURL: API_URL,
-  });
-});
-
-export default function createResourceManager({ resourceConfig }) {
+export default function createResourceManager({ resourceConfig, getAuthenticatedAPI }) {
   // utilities
-  const getChildResourceType = (type, childType) => {
-    const childResourceType = resourceConfig[type].references[childType];
-    if (!childResourceType) throw new Error(`Unknown reference type "${childType}"`);
-    return childResourceType;
+  const getReferenceResourceType = (type, referenceType) => {
+    const referenceResourceType = resourceConfig[type].references[referenceType];
+    if (!referenceResourceType) throw new Error(`Unknown reference type "${referenceType}"`);
+    return referenceResourceType;
   };
 
   // check if row data is present, but stale, and doesn't yet have a request pending
   const rowNeedsRefresh = (row) => row && row.status === status.ready && row.expires < Date.now();
 
   /*
-getResource gets the cached resource or resources + any requests that we need to make.
-returns {
-  status: 'loading' | 'ready'
-  value,
-  requests: [{ type, ids: [id] } | { type, id, childType }],
-}
-*/
+    getResource gets the cached resource or resources + any requests that we need to make.
+    returns {
+      status: 'loading' | 'ready'
+      value,
+      requests: [{ type, ids: [id] } | { type, id, referenceType }],
+    }
+  */
 
   const getBaseResource = (state, type, id) => {
     const row = state[type][id];
@@ -84,26 +70,26 @@ returns {
     return { status: row.status, value: row.value, requests: [] };
   };
 
-  const getChildResources = (state, type, id, childType) => {
-    const childResourceType = getChildResourceType(type, childType);
+  const getChildResources = (state, type, id, referenceType) => {
+    const referenceResourceType = getReferenceResourceType(type, referenceType);
 
     const parentRow = state[type][id];
     // resource isn't present; request it + its children
     if (!parentRow) {
-      return { status: status.loading, value: null, requests: [{ type, ids: [id] }, { type, id, childType }] };
+      return { status: status.loading, value: null, requests: [{ type, ids: [id] }, { type, id, referenceType }] };
     }
 
-    const childRow = parentRow.references[childType];
+    const childRow = parentRow.references[referenceType];
     // resource is present but its children are missing; request all of its children
     if (!childRow) {
-      return { status: status.loading, value: null, requests: [{ type, id, childType }] };
+      return { status: status.loading, value: null, requests: [{ type, id, referenceType }] };
     }
 
     // child IDs request is stale; use IDs but also create a new request
     let refreshChildren = rowNeedsRefresh(childRow);
 
     // collect all of the associated children from the child resource table
-    const childResources = (childRow.ids || []).map((childID) => getBaseResource(state, childResourceType, childID));
+    const childResources = (childRow.ids || []).map((childID) => getBaseResource(state, referenceResourceType, childID));
 
     // if _any_ children have pending requests, just reload the whole batch
     if (childResources.some((resource) => resource.requests.length)) {
@@ -113,10 +99,10 @@ returns {
     // return any available children
     const resultValues = childResources.map((resource) => resource.value).filter(Boolean);
 
-    return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, childType }] : [] };
+    return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, referenceType }] : [] };
   };
 
-  const getResource = (state, type, id, childType) => {
+  const getResource = (state, type, id, referenceType) => {
     if (!resourceConfig[type]) throw new Error(`Unknown resource type "${type}"`);
 
     // Handle resources with optional references (e.g. collection -> user)
@@ -124,7 +110,7 @@ returns {
       return { status: status.ready, value: null, requests: [] };
     }
 
-    if (childType) return getChildResources(state, type, id, childType);
+    if (referenceType) return getChildResources(state, type, id, referenceType);
     return getBaseResource(state, type, id);
   };
 
@@ -138,12 +124,12 @@ returns {
     return state[type][id];
   };
 
-  const getOrInitializeRowChild = (state, type, id, childType) => {
+  const getOrInitializeRowChild = (state, type, id, referenceType) => {
     const row = getOrInitializeRow(state, type, id);
-    if (!row.references[childType]) {
-      row.references[childType] = { ids: [] };
+    if (!row.references[referenceType]) {
+      row.references[referenceType] = { ids: [] };
     }
-    return row.references[childType];
+    return row.references[referenceType];
   };
 
   const storePendingRequest = (state, { type, ids }) => {
@@ -153,8 +139,8 @@ returns {
     }
   };
 
-  const storePendingChildRequest = (state, { type, id, childType }) => {
-    const rowChild = getOrInitializeRowChild(state, type, id, childType);
+  const storePendingChildRequest = (state, { type, id, referenceType }) => {
+    const rowChild = getOrInitializeRowChild(state, type, id, referenceType);
     rowChild.status = status.loading;
   };
 
@@ -169,26 +155,26 @@ returns {
     }
   };
 
-  const storeChildResources = (state, { type, id, childType, values }) => {
+  const storeChildResources = (state, { type, id, referenceType, values }) => {
     // store IDs on parent
-    const rowChild = getOrInitializeRowChild(state, type, id, childType);
+    const rowChild = getOrInitializeRowChild(state, type, id, referenceType);
     rowChild.status = status.ready;
     rowChild.expires = Date.now() + DEFAULT_TTL;
     rowChild.ids = values.map((value) => value.id);
 
     // store children
-    const childResourceType = getChildResourceType(type, childType);
-    storeResources(state, { type: childResourceType, values });
+    const referenceResourceType = getReferenceResourceType(type, referenceType);
+    storeResources(state, { type: referenceResourceType, values });
   };
 
-  const handleRequest = async (api, { type, childType, id, ids }) => {
-    if (childType) {
-      const childResourceType = getChildResourceType(type, childType);
-      const order = resourceConfig[childResourceType].orderBy;
-      const url = `/v1/${type}/by/id/${childType}?id=${id}&limit=100${order ? `&orderKey=${order}&orderDirection=ASC` : ''}`;
+  const handleRequest = async (api, { type, referenceType, id, ids }) => {
+    if (referenceType) {
+      const referenceResourceType = getReferenceResourceType(type, referenceType);
+      const order = resourceConfig[referenceResourceType].orderBy;
+      const url = `/v1/${type}/by/id/${referenceType}?id=${id}&limit=100${order ? `&orderKey=${order}&orderDirection=ASC` : ''}`;
 
       const values = await getAllPages(api, url);
-      return { type, id, childType, values };
+      return { type, id, referenceType, values };
     }
 
     const idString = ids.map((itemId) => `id=${itemId}`).join('&');
@@ -201,7 +187,7 @@ returns {
 
     // dedupe
     for (const req of requests) {
-      const hash = `${req.type} ${req.id || ''} ${req.childType || ''}`;
+      const hash = `${req.type} ${req.id || ''} ${req.referenceType || ''}`;
       // consolidate multiple requests for a single resource type
       if (combined[hash] && combined[hash].ids) {
         combined[hash] = {
@@ -229,7 +215,7 @@ returns {
   };
 
   const { reducer, actions } = createSlice({
-    slice: 'resources',
+    slice: SLICE,
     initialState: {
       ...mapValues(resourceConfig, () => ({})),
       _requestQueue: [],
@@ -239,7 +225,7 @@ returns {
       // loading
       requestedResources: (state, { payload: requests }) => {
         for (const request of requests) {
-          if (request.childType) {
+          if (request.referenceType) {
             storePendingChildRequest(state, request);
           } else {
             storePendingRequest(state, request);
@@ -255,7 +241,7 @@ returns {
       },
       flushedResponseQueue: (state) => {
         for (const response of state._responseQueue) {
-          if (response.childType) {
+          if (response.referenceType) {
             storeChildResources(state, response);
           } else {
             storeResources(state, response);
@@ -269,9 +255,8 @@ returns {
   const handlers = {
     [actions.requestedResources]: debounce((_, store) => {
       const requests = store.getState().resources._requestQueue;
-      const token = store.getState().currentUser.persistentToken;
       store.dispatch(actions.flushedRequestQueue());
-      const api = getAPIForToken(token);
+      const api = getAuthenticatedAPI(store.getState());
       batchAndDedupeRequests(requests).forEach(async (request) => {
         const response = await handleRequest(api, request);
         store.dispatch(actions.receivedResources(response));
@@ -283,10 +268,10 @@ returns {
   };
 
   // TODO: use this for error handling?
-  function expireChildResources(state, type, id, childType) {
+  function expireChildResources(state, type, id, referenceType) {
     const row = getOrInitializeRow(state, type, id);
-    if (row.references[childType]) {
-      row.references[childType].expires = 0;
+    if (row.references[referenceType]) {
+      row.references[referenceType].expires = 0;
     }
   }
 
@@ -297,9 +282,9 @@ returns {
     changeFn(rightIDs, rightID);
   };
 
-  const useResource = (type, id, childType) => {
+  const useResource = (type, id, referenceType) => {
     // TODO: figure out best balance between cost of `isEqual` vs cost of wasted renders here
-    const result = useSelector((state) => getResource(state.resources, type, id, childType), isEqual);
+    const result = useSelector((state) => getResource(state[SLICE], type, id, referenceType), isEqual);
     const dispatch = useDispatch();
 
     if (result.requests.length) {

@@ -1,10 +1,26 @@
 /* eslint-disable no-underscore-dangle */
-import 
+import axios from 'axios';
+import { memoize } from 'lodash';
 import { createSlice } from 'redux-starter-kit';
-
+import { API_URL } from 'Utils/constants';
 import createResourceManager, { allReady } from './resource-manager';
 
 export { allReady };
+
+// API _without_ caching, since caching is handled by redux
+const getAPIForToken = memoize((persistentToken) => {
+  if (persistentToken) {
+    return axios.create({
+      baseURL: API_URL,
+      headers: {
+        Authorization: persistentToken,
+      },
+    });
+  }
+  return axios.create({
+    baseURL: API_URL,
+  });
+});
 
 const { useResource, getResource, reducer, actions: resourceManagerActions, handlers, changeRelation } = createResourceManager({
   resourceConfig: {
@@ -41,20 +57,7 @@ const { useResource, getResource, reducer, actions: resourceManagerActions, hand
       },
     },
   },
-  getAuthenticatedAPI: memoize((state) => {
-    const persistentToken = state.currentUser.persistentToken;
-    if (persistentToken) {
-      return axios.create({
-        baseURL: API_URL,
-        headers: {
-          Authorization: persistentToken,
-        },
-      });
-    }
-    return axios.create({
-      baseURL: API_URL,
-    });
-  }),
+  getAuthenticatedAPI: (state) => getAPIForToken(state.currentUser.persistentToken),
 });
 
 const unshift = (list, value) => {
