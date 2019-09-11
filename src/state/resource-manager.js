@@ -26,7 +26,7 @@ state shape:
         [referenceType]: {
           status: 'loading' | 'ready',
           expires,
-          ids: [childID]
+          ids: [referenceID]
         }
       }
     }
@@ -37,7 +37,6 @@ state shape:
 */
 
 export default function createResourceManager({ resourceConfig, getAuthenticatedAPI }) {
-  // utilities
   const getReferenceResourceType = (type, referenceType) => {
     const referenceResourceType = resourceConfig[type].references[referenceType];
     if (!referenceResourceType) throw new Error(`Unknown reference type "${referenceType}"`);
@@ -70,7 +69,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     return { status: row.status, value: row.value, requests: [] };
   };
 
-  const getChildResources = (state, type, id, referenceType) => {
+  const getReferencedResources = (state, type, id, referenceType) => {
     const referenceResourceType = getReferenceResourceType(type, referenceType);
 
     const parentRow = state[type][id];
@@ -79,27 +78,27 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
       return { status: status.loading, value: null, requests: [{ type, ids: [id] }, { type, id, referenceType }] };
     }
 
-    const childRow = parentRow.references[referenceType];
+    const referencesRow = parentRow.references[referenceType];
     // resource is present but its children are missing; request all of its children
-    if (!childRow) {
+    if (!referencesRow) {
       return { status: status.loading, value: null, requests: [{ type, id, referenceType }] };
     }
 
     // child IDs request is stale; use IDs but also create a new request
-    let refreshChildren = rowNeedsRefresh(childRow);
+    let refreshReferences = rowNeedsRefresh(referencesRow);
 
     // collect all of the associated children from the child resource table
-    const childResources = (childRow.ids || []).map((childID) => getBaseResource(state, referenceResourceType, childID));
+    const referencedResources = (referencesRow.ids || []).map((referenceID) => getBaseResource(state, referenceResourceType, referenceID));
 
     // if _any_ children have pending requests, just reload the whole batch
-    if (childResources.some((resource) => resource.requests.length)) {
-      refreshChildren = true;
+    if (referencedResources.some((resource) => resource.requests.length)) {
+      refreshReferences = true;
     }
 
     // return any available children
-    const resultValues = childResources.map((resource) => resource.value).filter(Boolean);
+    const resultValues = referencedResources.map((resource) => resource.value).filter(Boolean);
 
-    return { status: status.ready, value: resultValues, requests: refreshChildren ? [{ type, id, referenceType }] : [] };
+    return { status: status.ready, value: resultValues, requests: refreshReferences ? [{ type, id, referenceType }] : [] };
   };
 
   const getResource = (state, type, id, referenceType) => {
@@ -110,7 +109,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
       return { status: status.ready, value: null, requests: [] };
     }
 
-    if (referenceType) return getChildResources(state, type, id, referenceType);
+    if (referenceType) return getReferencedResources(state, type, id, referenceType);
     return getBaseResource(state, type, id);
   };
 
@@ -124,7 +123,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     return state[type][id];
   };
 
-  const getOrInitializeRowChild = (state, type, id, referenceType) => {
+  const getOrInitializeRowReferences = (state, type, id, referenceType) => {
     const row = getOrInitializeRow(state, type, id);
     if (!row.references[referenceType]) {
       row.references[referenceType] = { ids: [] };
@@ -140,7 +139,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   };
 
   const storePendingChildRequest = (state, { type, id, referenceType }) => {
-    const rowChild = getOrInitializeRowChild(state, type, id, referenceType);
+    const rowChild = getOrInitializeRowReferences(state, type, id, referenceType);
     rowChild.status = status.loading;
   };
 
@@ -157,7 +156,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
 
   const storeChildResources = (state, { type, id, referenceType, values }) => {
     // store IDs on parent
-    const rowChild = getOrInitializeRowChild(state, type, id, referenceType);
+    const rowChild = getOrInitializeRowReferences(state, type, id, referenceType);
     rowChild.status = status.ready;
     rowChild.expires = Date.now() + DEFAULT_TTL;
     rowChild.ids = values.map((value) => value.id);
@@ -276,8 +275,8 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   }
 
   const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
-    const { ids: rightIDs } = getOrInitializeRowChild(state, leftType, leftID, rightType);
-    const { ids: leftIDs } = getOrInitializeRowChild(state, rightType, rightID, leftType);
+    const { ids: rightIDs } = getOrInitializeRowReferences(state, leftType, leftID, rightType);
+    const { ids: leftIDs } = getOrInitializeRowReferences(state, rightType, rightID, leftType);
     changeFn(leftIDs, leftID);
     changeFn(rightIDs, rightID);
   };
