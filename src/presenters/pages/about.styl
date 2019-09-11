@@ -156,8 +156,12 @@ body[data-grey]
 .sideBySide
   display: flex
   justify-content: space-between
+  @media (max-width: mediumSmallViewport)
+    flex-direction: column
   .half 
     width: 50%
+    @media (max-width: mediumSmallViewport)
+      width: 100%
   .left
     margin-right: 20px
   video
