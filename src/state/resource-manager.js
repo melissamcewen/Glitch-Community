@@ -18,8 +18,6 @@ const status = {
 The resource manager is a cache for users, teams, projects and collections,
 as well as the relationships between them.
 
-
-
 state shape:
 {
   [type]: {
@@ -172,15 +170,15 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   };
 
   const storeReferenceResources = (state, { type, id, referenceType, values }) => {
-    // store reference IDs
+    // store referenced resources
+    const referenceResourceType = getReferenceResourceType(type, referenceType);
+    storeBaseResources(state, { type: referenceResourceType, values });
+
+    // store reference IDs on parent resource
     const rowReferences = getOrInitializeRowReferences(state, type, id, referenceType);
     rowReferences.status = status.ready;
     rowReferences.expires = Date.now() + DEFAULT_TTL;
     rowReferences.ids = values.map((value) => value.id);
-
-    // store resources
-    const referenceResourceType = getReferenceResourceType(type, referenceType);
-    storeBaseResources(state, { type: referenceResourceType, values });
   };
 
   const storeResources = (state, response) => {
