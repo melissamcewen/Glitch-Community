@@ -6,6 +6,7 @@ import { useCurrentUser } from 'State/current-user';
 import { useAPIHandlers, useAPI } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
 import { userOrTeamIsAuthor } from 'State/collection';
+import { useProjectMembers } from 'State/project';
 import { actions } from 'State/resources';
 import { userIsOnTeam } from 'Models/team';
 import { userIsProjectMember, userIsProjectAdmin, userIsOnlyProjectAdmin } from 'Models/project';
