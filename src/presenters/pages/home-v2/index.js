@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import Pluralize from 'react-pluralize';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Button, Icon, Mark } from '@fogcreek/shared-components';
+import { Button, Mark } from '@fogcreek/shared-components';
 
 import Row from 'Components/containers/row';
 import ProfileList from 'Components/profile-list';
 import Embed from 'Components/project/embed';
 import MaskImage from 'Components/images/mask-image';
 import Markdown from 'Components/text/markdown';
-import Text from 'Components/text/text';
 import Questions from 'Components/questions';
 import RecentProjects from 'Components/recent-projects';
 import ReportButton from 'Components/report-abuse-pop';
@@ -20,15 +19,14 @@ import Arrow from 'Components/arrow';
 import VisibilityContainer from 'Components/visibility-container';
 import LazyLoader from 'Components/lazy-loader';
 import { useCurrentUser } from 'State/current-user';
-import { getEditorUrl, getProjectAvatarUrl } from 'Models/project';
+import { getProjectAvatarUrl } from 'Models/project';
 import { useAPI } from 'State/api';
 import { useGlobals } from 'State/globals';
-
+import MadeOnGlitch from 'Components/footer/made-on-glitch';
 import Banner from './banner';
 import CuratedCollectionContainer from './collection-container';
 import { Discover, Dreams, Teams } from './feature-callouts';
 import styles from './styles.styl';
-import { emoji } from '../../../components/global.styl';
 
 const calloutGraphics = {
   apps: {
@@ -262,11 +260,7 @@ const BuildingOnGlitch = ({ content }) => (
 
 const MadeInGlitch = () => (
   <HomeSection className={styles.madeInGlitch}>
-    <Text defaultMargin>Of course, this site was made on Glitch too.</Text>
-    <Button as="a" href={getEditorUrl('community')}>
-      View Source
-      <Icon className={emoji} icon="carpStreamer" />
-    </Button>
+    <MadeOnGlitch />
   </HomeSection>
 );
 

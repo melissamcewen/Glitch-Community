@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Icon } from '@fogcreek/shared-components';
 
@@ -24,8 +25,8 @@ const PlatformsIcon = () => (
   />
 );
 
-const Footer = () => (
-  <footer className={styles.container} role="contentinfo">
+const Footer = ({ containerClass }) => (
+  <footer className={classnames(styles.container, containerClass)} role="contentinfo">
     <FooterLink href="/about" track="about">
       About Glitch
       <Icon className={emoji} icon="crystalBall" />
@@ -52,5 +53,13 @@ const Footer = () => (
     </FooterLink>
   </footer>
 );
+
+Footer.propTypes = {
+  containerClass: PropTypes.string,
+};
+
+Footer.defaultProps = {
+  containerClass: '',
+};
 
 export default Footer;
