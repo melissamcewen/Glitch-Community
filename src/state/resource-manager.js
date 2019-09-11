@@ -138,7 +138,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     }
   };
 
-  const storePendingChildRequest = (state, { type, id, referenceType }) => {
+  const storePendingReferencesRequest = (state, { type, id, referenceType }) => {
     const rowChild = getOrInitializeRowReferences(state, type, id, referenceType);
     rowChild.status = status.loading;
   };
@@ -225,7 +225,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
       requestedResources: (state, { payload: requests }) => {
         for (const request of requests) {
           if (request.referenceType) {
-            storePendingChildRequest(state, request);
+            storePendingReferencesRequest(state, request);
           } else {
             storePendingRequest(state, request);
           }
