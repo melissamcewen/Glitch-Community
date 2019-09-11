@@ -140,23 +140,24 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   /*
   Update the cache to reflect that resources are being loaded. 
   */
-  const storePendingRequest = (state, { type, ids }) => {
-    for (const id of ids) {
-      const row = getOrInitializeRow(state, type, id);
-      row.status = status.loading;
+  const storePendingRequest = (state, { type, ids, id, refrenceType }) => {
+    // handle references request
+    if (referenceType) {
+      const rowReferences = getOrInitializeRowReferences(state, type, id, referenceType);
+      rowReferences.status = status.loading;
+    // handle base request
+    } else {
+      for (const id of ids) {
+        const row = getOrInitializeRow(state, type, id);
+        row.status = status.loading;
+      }
     }
   };
-
-  const storePendingReferencesRequest = (state, { type, id, referenceType }) => {
-    const rowReferences = getOrInitializeRowReferences(state, type, id, referenceType);
-    rowReferences.status = status.loading;
-  };
-
   
   /*
-  Save values 
+  Update the cache with values returned from the API.
   */
-  const storeResources = (state, { type, values }) => {
+  const storeBaseResources = (state, { type, idvalues }) => {
     const expires = Date.now() + DEFAULT_TTL;
     for (const value of values) {
       const row = getOrInitializeRow(state, type, value.id);
@@ -175,9 +176,20 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
 
     // store resources
     const referenceResourceType = getReferenceResourceType(type, referenceType);
-    storeResources(state, { type: referenceResourceType, values });
+    storeBaseResources(state, { type: referenceResourceType, values });
   };
+  
+  const storeResources = (state, response) => {
+    if (response.referenceType) {
+      storeReferenceResources(state, response)
+    } else {
+      storeBaseResources(state, response)
+    }
+  }
 
+  /* 
+  Process a request for the API and return a formatted response.
+  */
   const handleRequest = async (api, { type, referenceType, id, ids }) => {
     if (referenceType) {
       const referenceResourceType = getReferenceResourceType(type, referenceType);
@@ -193,6 +205,12 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     return { type, values: Object.values(data) };
   };
 
+  /*
+  combine all pending requests into their most efficient form:
+  - remove duplicates
+  - consolidate multiple requests for a single resource into one request
+  - split single requests into batches if there are too many items to process at once
+  */
   const batchAndDedupeRequests = (requests) => {
     const combined = {};
 
@@ -236,11 +254,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
       // loading
       requestedResources: (state, { payload: requests }) => {
         for (const request of requests) {
-          if (request.referenceType) {
-            storePendingReferencesRequest(state, request);
-          } else {
-            storePendingRequest(state, request);
-          }
+          storePendingRequest(state, request);
         }
         state._requestQueue.push(...requests);
       },
@@ -252,11 +266,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
       },
       flushedResponseQueue: (state) => {
         for (const response of state._responseQueue) {
-          if (response.referenceType) {
-            storeReferenceResources(state, response);
-          } else {
-            storeResources(state, response);
-          }
+          storeResources(state, response);
         }
         state._responseQueue = [];
       },
@@ -278,12 +288,20 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     }, 1000),
   };
 
+  /*
+  Mark a resource or set of references as expired.
+  These will remain in the cache, but will be fetched fresh from the API on the next request.
+  This may be useful for 
+  */
   // TODO: use this for error handling?
-  function expireReferences(state, type, id, referenceType) {
+  function expireResource(state, type, id, referenceType) {
     const row = getOrInitializeRow(state, type, id);
-    if (row.references[referenceType]) {
+    
+    if (referenceType) {
       row.references[referenceType].expires = 0;
-    }
+    } else {
+      row.expires = 0;
+    }    
   }
 
   const changeRelation = (state, { type: leftType, id: leftID }, { type: rightType, id: rightID }, changeFn) => {
@@ -304,7 +322,7 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     return result;
   };
 
-  return { useResource, getResource, changeRelation, expireReferences, reducer, actions, handlers };
+  return { useResource, getResource, changeRelation, expireResource, reducer, actions, handlers };
 }
 
 /*
