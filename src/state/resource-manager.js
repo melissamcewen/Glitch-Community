@@ -15,6 +15,11 @@ const status = {
 };
 
 /*
+The resource manager is a cache for users, teams, projects and collections,
+as well as the relationships between them.
+
+
+
 state shape:
 {
   [type]: {
@@ -113,10 +118,9 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     if (referenceType) return getReferencedResources(state, type, id, referenceType);
     return getBaseResource(state, type, id);
   };
-  
 
   /*
-  Lookup a resource or a set of references, or create an empty data structure, 
+  Lookup a resource or a set of references, or create an empty data structure,
   so it can be updated in the cache.
   */
   const getOrInitializeRow = (state, type, id) => {
@@ -138,14 +142,14 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   };
 
   /*
-  Update the cache to reflect that resources are being loaded. 
+  Update the cache to reflect that resources are being loaded.
   */
-  const storePendingRequest = (state, { type, ids, id, refrenceType }) => {
+  const storePendingRequest = (state, { type, ids, id: parentID, referenceType }) => {
     // handle references request
     if (referenceType) {
-      const rowReferences = getOrInitializeRowReferences(state, type, id, referenceType);
+      const rowReferences = getOrInitializeRowReferences(state, type, parentID, referenceType);
       rowReferences.status = status.loading;
-    // handle base request
+      // handle base request
     } else {
       for (const id of ids) {
         const row = getOrInitializeRow(state, type, id);
@@ -153,11 +157,11 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
       }
     }
   };
-  
+
   /*
   Update the cache with values returned from the API.
   */
-  const storeBaseResources = (state, { type, idvalues }) => {
+  const storeBaseResources = (state, { type, values }) => {
     const expires = Date.now() + DEFAULT_TTL;
     for (const value of values) {
       const row = getOrInitializeRow(state, type, value.id);
@@ -178,16 +182,16 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
     const referenceResourceType = getReferenceResourceType(type, referenceType);
     storeBaseResources(state, { type: referenceResourceType, values });
   };
-  
+
   const storeResources = (state, response) => {
     if (response.referenceType) {
-      storeReferenceResources(state, response)
+      storeReferenceResources(state, response);
     } else {
-      storeBaseResources(state, response)
+      storeBaseResources(state, response);
     }
-  }
+  };
 
-  /* 
+  /*
   Process a request for the API and return a formatted response.
   */
   const handleRequest = async (api, { type, referenceType, id, ids }) => {
@@ -295,12 +299,12 @@ export default function createResourceManager({ resourceConfig, getAuthenticated
   */
   function expireResource(state, type, id, referenceType) {
     const row = getOrInitializeRow(state, type, id);
-    
+
     if (referenceType) {
       row.references[referenceType].expires = 0;
     } else {
       row.expires = 0;
-    }    
+    }
   }
 
   /*
