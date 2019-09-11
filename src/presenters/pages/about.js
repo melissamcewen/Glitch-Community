@@ -57,16 +57,50 @@ function FirstSection() {
   return (
     <section>
       <Heading className={styles.h2} tagName="h2">
-        <Mark color={blueMark}><small>1.</small> A simple tool for creating web apps</Mark>
+        <Mark color={blueMark}>
+          <small>1.</small> A simple tool for creating web apps
+        </Mark>
       </Heading>
-      <p className={styles.useCases}>We’re evolving “developer tools” into a creative and expressive platform that everyone can use to create the web.</p>
+      <p className={styles.useCases}>
+        We’re evolving “developer tools” into a creative and expressive platform that everyone can use to create the web.
+      </p>
+      <div className={styles.sideBySide}>
+        <div className={classNames(styles.half, styles.left)}>
+          <video autoPlay muted loop playsinline>
+            <source type="video/webm" src="https://cdn.glitch.com/d5cdac21-5e23-4601-8243-d5645f80aa71%2Fcollab.webm?1538421865695" />
+            <source type="video/mp4" src="https://cdn.glitch.com/d5cdac21-5e23-4601-8243-d5645f80aa71%2Fcollab.mp4?1538421865892" />
+          </video>
+          <Heading tagName="h3" className={styles.videoHeading}>
+            <Mark color={blueMark}>Create and collaborate on code</Mark>
+          </Heading>
+          <p>
+            Coding on Glitch is like working together in Google Docs–multiple people can work on the same project at the same time. There’s no setup,
+            and you can see changes live on the web as you type.
+          </p>
+        </div>
+        <div className={styles.half}>
+          <video autoPlay muted loop playsinline>
+            <source type="video/webm" src="https://cdn.glitch.com/d5cdac21-5e23-4601-8243-d5645f80aa71%2Fprivate.webm?1538419456676" />
+            <source type="video/mp4" src="https://cdn.glitch.com/d5cdac21-5e23-4601-8243-d5645f80aa71%2Fprivate.mp4?1538419456584" />
+          </video>
+          <Heading tagName="h3" className={styles.videoHeading}>
+            <Mark color={blueMark}>For people and teams of all skill levels</Mark>
+          </Heading>
+          <p>
+            For people and teams of all skill levels Glitch makes it easy and fun to express yourself with code, whether you’re a professional
+            developer or just starting out. You can create on your own or as part of a team.
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
 
 const AboutPage = withRouter(() => (
   <div className={styles.content}>
-    <Helmet title="About Glitch" />
+    <Helmet title="About Glitch">
+      <body data-grey="true" />
+    </Helmet>
     <Button as="a" href="#main" className={styles.visibleOnFocus}>
       Skip to Main Content
     </Button>
