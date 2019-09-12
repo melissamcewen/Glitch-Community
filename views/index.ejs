@@ -38,11 +38,13 @@
     <script>
       var RUNNING_ON = '<%= RUNNING_ON %>';
       var ENVIRONMENT = '<%= ENVIRONMENT %>';
-      var EXTERNAL_ROUTES = <%- EXTERNAL_ROUTES %>;
+      var EXTERNAL_ROUTES = <%- JSON.stringify(EXTERNAL_ROUTES) %>;
       var PROJECT_DOMAIN = '<%= PROJECT_DOMAIN %>';
-      var ZINE_POSTS = <%- ZINE_POSTS %>;
-      var HOME_CONTENT = <%- HOME_CONTENT %>;
+      var ZINE_POSTS = <%- JSON.stringify(ZINE_POSTS) %>;
+      var HOME_CONTENT = <%- JSON.stringify(HOME_CONTENT) %>;
+      var API_CACHE = <%- JSON.stringify(API_CACHE) %>;
       var SSR_SIGNED_IN = <%- SSR_SIGNED_IN %>;
+      var AB_TESTS = <%- JSON.stringify(AB_TESTS) %>;
       var BUILD_COMPLETE = <%- BUILD_COMPLETE %>;
       var BUILD_TIMESTAMP = '<%= BUILD_TIMESTAMP %>';
     </script>

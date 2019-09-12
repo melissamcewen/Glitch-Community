@@ -6,7 +6,7 @@ const TrackedButtonGroup = ({ actions }) =>
   Object.entries(actions)
     .filter(([, onClick]) => onClick)
     .map(([label, onClick]) => (
-      <TrackedButton key={label} size="small" type="tertiary" label={label} onClick={onClick}>
+      <TrackedButton key={label} size="small" variant="secondary" label={label} onClick={onClick}>
         {label}
       </TrackedButton>
     ));

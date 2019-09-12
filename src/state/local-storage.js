@@ -1,7 +1,7 @@
 import React from 'react';
 import { captureException } from 'Utils/sentry';
 
-const getStorage = () => {
+export const getStorage = () => {
   try {
     const storage = window.localStorage;
     storage.setItem('test', 'test');
@@ -23,7 +23,7 @@ const getStorage = () => {
   return null;
 };
 
-const readFromStorage = (storage, name) => {
+export const readFromStorage = (storage, name) => {
   if (storage) {
     try {
       const raw = storage.getItem(name);
@@ -37,7 +37,7 @@ const readFromStorage = (storage, name) => {
   return undefined;
 };
 
-const writeToStorage = (storage, name, value) => {
+export const writeToStorage = (storage, name, value) => {
   if (storage) {
     try {
       if (value !== undefined) {

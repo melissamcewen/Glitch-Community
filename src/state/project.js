@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, createContext } from 'react';
+import React, { useState, useCallback, useContext, createContext, useEffect } from 'react';
 
 import useUploader from 'State/uploader';
 import { useAPI, useAPIHandlers } from 'State/api';
@@ -52,6 +52,7 @@ function loadProjectMembers(api, projectIds, setProjectResponses, withCacheBust)
 
 const ProjectMemberContext = createContext();
 const ProjectReloadContext = createContext();
+
 export const ProjectContextProvider = ({ children }) => {
   const [projectResponses, setProjectResponses] = useState({});
   const api = useAPI();
@@ -89,9 +90,10 @@ export function useProjectReload() {
 export function useProjectEditor(initialProject) {
   const [project, setProject] = useState(initialProject);
   const { uploadAsset } = useUploader();
-  const { handleError, handleErrorForInput } = useErrorHandlers();
+  const { handleError, handleErrorForInput, handleImageUploadError } = useErrorHandlers();
   const { getAvatarImagePolicy } = assets.useAssetPolicy();
   const { updateItem, deleteItem, updateProjectDomain } = useAPIHandlers();
+  useEffect(() => setProject(initialProject), [initialProject]);
 
   async function updateFields(changes) {
     await updateItem({ project }, changes);
@@ -116,12 +118,16 @@ export function useProjectEditor(initialProject) {
       assets.requestFile(
         withErrorHandler(async (blob) => {
           const { data: policy } = await getAvatarImagePolicy({ project });
-          await uploadAsset(blob, policy, '', { cacheControl: 60 });
+          const url = await uploadAsset(blob, policy, '', { cacheControl: 60 });
+          if (!url) {
+            return;
+          }
+
           setProject((prev) => ({
             ...prev,
             avatarUpdatedAt: Date.now(),
           }));
-        }, handleError),
+        }, handleImageUploadError),
       ),
   };
   return [project, funcs];

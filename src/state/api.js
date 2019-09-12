@@ -41,6 +41,14 @@ export const getAPIForToken = memoize((persistentToken) => {
       };
       return response;
     },
+    // bustCache is a bandaid for now to handle stale data after an update,
+    // in the future we should have a more sophisticated caching layer
+    // that can understand when data expires after a post/patch/delete request
+    bustCache: (url) => {
+      if (cache && cache[url]) {
+        cache[url].timestamp = 0;
+      }
+    },
   };
 });
 

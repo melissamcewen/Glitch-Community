@@ -1,13 +1,15 @@
 // transforms the individual data points (buckets) we get from the api into grouped 'bins' of data
 // each bin is then rendered as a point on the graph
 
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@fogcreek/shared-components';
 
 import { isEmpty } from 'lodash';
 import groupByTime from 'group-by-time';
 import { histogram as d3Histogram } from 'd3-array';
 import { createAPIHook } from 'State/api';
+import styles from './styles.styl';
 
 const useC3 = createAPIHook(async () => import(/* webpackChunkName: "c3-bundle" */ 'c3'));
 
@@ -60,7 +62,8 @@ const chartColumns = (analytics, currentTimeFrame) => {
     appViews.push(bucket.appViews);
     remixes.push(bucket.remixes);
   });
-  return [timestamps, appViews, remixes];
+  const results = [timestamps, appViews, remixes];
+  return results;
 };
 
 const dateFormat = (currentTimeFrame) => {
@@ -76,6 +79,33 @@ const renderChart = (activeFilter, c3, analytics, currentTimeFrame) => {
     columns = chartColumns(analytics, currentTimeFrame);
   }
 
+  const tableRows = [];
+  const dateFormatToUse = dateFormat(currentTimeFrame);
+  // first entry in each array is the label, so start at 1
+  for (let i = 1; i < columns[0].length; i += 1) {
+    const date = new Date(columns[0][i]);
+    tableRows.push(
+      <tr key={columns[0][i]} className={styles.analyticsRow}>
+        <td>{date.toDateString(dateFormatToUse)}</td>
+        <td className={`${styles.centerText} ${styles.bigRightPadding}`}>{columns[1][i]}</td>
+        <td className={styles.centerText}>{columns[2][i]}</td>
+      </tr>,
+    );
+  }
+
+  const table = (
+    <table className={styles.analyticsTable}>
+      <thead>
+        <tr className={styles.analyticsRow}>
+          <th className={styles.leftText}>Date</th>
+          <th className={styles.bigRightPadding}>App Views</th>
+          <th>Remixes</th>
+        </tr>
+      </thead>
+      <tbody>{tableRows}</tbody>
+    </table>
+  );
+
   // eslint-disable-next-line no-unused-vars
   const chart = c3.generate({
     size: {
@@ -83,14 +113,14 @@ const renderChart = (activeFilter, c3, analytics, currentTimeFrame) => {
     },
     data: {
       x: 'x',
-      xFormat: dateFormat(currentTimeFrame),
+      xFormat: dateFormatToUse,
       columns,
     },
     axis: {
       x: {
         type: 'timeseries',
         tick: {
-          format: dateFormat(currentTimeFrame),
+          format: dateFormatToUse,
         },
       },
       y: {
@@ -120,15 +150,24 @@ const renderChart = (activeFilter, c3, analytics, currentTimeFrame) => {
   } else if (activeFilter === 'remixes') {
     chart.hide(['Total App Views']);
   }
+  return table;
 };
 
 function TeamAnalyticsActivity({ activeFilter, analytics, currentTimeFrame }) {
   const { value: c3 } = useC3();
+  const [tableData, setTable] = useState(null);
+  const [showingTable, setShowingTable] = useState(false);
   useEffect(() => {
     if (!c3) return;
-    renderChart(activeFilter, c3, analytics, currentTimeFrame);
+    setTable(renderChart(activeFilter, c3, analytics, currentTimeFrame));
   }, [activeFilter, analytics, currentTimeFrame, c3]);
-  return null;
+  const buttonLabel = showingTable ? 'Hide Analytics in Table Format' : 'Show Analytics in Table Format';
+  return (
+    <>
+      <Button variant="secondary" onClick={() => setShowingTable(!showingTable)}>{buttonLabel}</Button>
+      {showingTable && tableData}
+    </>
+  );
 }
 
 TeamAnalyticsActivity.propTypes = {

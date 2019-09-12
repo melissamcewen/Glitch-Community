@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 
-describe('Account settings', () => {
+xdescribe('Account settings', () => {
   context('when signed in', () => {
     beforeEach(() => {
       cy.signIn();
@@ -12,7 +12,7 @@ describe('Account settings', () => {
       cy.contains('Account Settings').click();
     });
 
-    it.only('shows account settings popup', () => {
+    it('shows account settings popup', () => {
       cy.get('.account-settings-overlay').within(() => {
         cy.get('[data-cy="account-settings-options"]').within(() => {
           cy.contains('Password').should('exist');

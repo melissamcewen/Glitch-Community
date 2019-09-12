@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import randomColor from 'randomcolor';
 import { sample } from 'lodash';
 
 import Heading from 'Components/text/heading';
@@ -9,6 +8,7 @@ import Grid from 'Components/containers/grid';
 import ErrorBoundary from 'Components/error-boundary';
 import Arrow from 'Components/arrow';
 
+import { pickRandomColors } from 'Utils/color';
 import { captureException } from 'Utils/sentry';
 import { useAPI } from 'State/api';
 
@@ -26,10 +26,7 @@ async function load(api, max) {
       .filter((q) => !!q)
       .slice(0, max)
       .map((question) => {
-        const [colorInner, colorOuter] = randomColor({
-          luminosity: 'light',
-          count: 2,
-        });
+        const [colorInner, colorOuter] = pickRandomColors(2);
         return { colorInner, colorOuter, id: question.questionId, ...question };
       });
     return { kaomoji, questions };
@@ -56,7 +53,7 @@ function Questions({ max }) {
   });
   useRepeatingEffect(() => {
     load(api, max).then(setState);
-  }, 10000, []);
+  }, 10000, [api.persistentToken, max]);
 
   return (
     <section className={styles.container}>

@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 
-describe('Sign in', () => {
+xdescribe('Sign in', () => {
   context('with email', () => {
     beforeEach(() => {
       cy.enableDevToggles(['User Passwords']);

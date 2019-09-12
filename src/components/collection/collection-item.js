@@ -1,16 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import Pluralize from 'react-pluralize';
 import classNames from 'classnames';
+import { Button, Icon, Loader } from '@fogcreek/shared-components';
 
 import Markdown from 'Components/text/markdown';
-import Button from 'Components/buttons/button';
 import Text from 'Components/text/text';
 import Image from 'Components/images/image';
-import Emoji from 'Components/images/emoji';
 import { ProfileItem } from 'Components/profile-list';
-import Loader from 'Components/loader/';
 import { CollectionLink } from 'Components/link';
 import Row from 'Components/containers/row';
 import ProjectItemSmall from 'Components/project/project-item-small';
@@ -32,6 +29,7 @@ import { createCollection } from 'Models/collection';
 import CollectionOptions from './collection-options-pop';
 
 import styles from './collection-item.styl';
+import { emoji } from '../global.styl';
 
 const collectionColorStyles = (collection) => ({
   backgroundColor: collection.coverColor,
@@ -40,7 +38,7 @@ const collectionColorStyles = (collection) => ({
 
 const ProjectsLoading = () => (
   <div className={classNames(styles.projectsContainer, styles.empty)}>
-    <Loader />
+    <Loader style={{ width: '25px' }} />
   </div>
 );
 
@@ -64,7 +62,7 @@ const CollectionProjects = ({ collection, isAuthorized }) => {
     return (
       <div className={classNames(styles.projectsContainer, styles.empty)}>
         <Text className={styles.emptyCollectionText}>
-          This collection is empty – add some projects <Emoji name="index" />
+          This collection is empty – add some projects <Icon className={emoji} icon="index" />
         </Text>
       </div>
     );
@@ -76,7 +74,7 @@ const CollectionProjects = ({ collection, isAuthorized }) => {
       </div>
     );
   }
-
+  const footerLabel = `View ${projects.length >= 3 ? 'all' : ''} ${projects.length} ${projects.length > 1 ? 'projects' : 'project'}`;
   return (
     <>
       <div className={styles.projectsContainer}>
@@ -84,9 +82,8 @@ const CollectionProjects = ({ collection, isAuthorized }) => {
           {(project) => <ProjectItemSmall project={project} />}
         </Row>
       </div>
-      <CollectionLink collection={collection} className={styles.footerLink}>
-        {`View ${projects.length >= 3 ? 'all' : ''} `}
-        <Pluralize count={projects.length} singular="project" /> <Arrow />
+      <CollectionLink collection={collection} className={styles.footerLink} label={footerLabel}>
+        {footerLabel} <Arrow />
       </CollectionLink>
     </>
   );
@@ -143,7 +140,7 @@ export const MyStuffItem = ({ collection, isAuthorized, showLoader }) => {
         </div>
         <div className={styles.nameDescriptionContainer}>
           <div className={styles.itemButtonWrap}>
-            <Button decorative>{collection.name}</Button>
+            <Button as="span">{collection.name}</Button>
           </div>
           <div className={classNames(styles.description, { [styles.dark]: isDarkColor(collection.coverColor) })}>
             <Markdown length={100}>{collection.description || ' '}</Markdown>
@@ -175,7 +172,7 @@ const CollectionItem = ({ collection, deleteCollection, isAuthorized, showCurato
           </div>
           <div className={styles.nameDescriptionContainer}>
             <div className={styles.itemButtonWrap}>
-              <Button decorative>{collection.name}</Button>
+              <Button as="span">{collection.name}</Button>
             </div>
             <div className={classNames(styles.description, { [styles.dark]: isDarkColor(collection.coverColor) })}>
               <Markdown length={100}>{collection.description || ' '}</Markdown>

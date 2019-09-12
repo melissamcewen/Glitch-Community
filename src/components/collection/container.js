@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Pluralize from 'react-pluralize';
-import { partition, sampleSize } from 'lodash';
+import { partition } from 'lodash';
 import classnames from 'classnames';
+import { Button, Icon } from '@fogcreek/shared-components';
 
 import { isDarkColor } from 'Utils/color';
 import Text from 'Components/text/text';
@@ -19,15 +20,16 @@ import { CollectionLink } from 'Components/link';
 import Arrow from 'Components/arrow';
 import { useCollectionCurator } from 'State/collection';
 import useDevToggle from 'State/dev-toggles';
+import useSample from 'Hooks/use-sample';
 
 import styles from './container.styl';
+import { emoji } from '../global.styl';
 
 const CollectionContainer = ({ collection, showFeaturedProject, isAuthorized, preview, funcs }) => {
   const { value: curator } = useCollectionCurator(collection);
-  const [previewProjects, setPreviewProjects] = useState(sampleSize(collection.projects, 3));
-  useEffect(() => {
-    setPreviewProjects(sampleSize(collection.projects, 3));
-  }, [collection]);
+  const previewProjects = useSample(collection.projects, 3);
+  const [displayHint, setDisplayHint] = useState(false);
+
   const collectionHasProjects = collection.projects.length > 0;
   let featuredProject = null;
   let { projects } = collection;
@@ -81,13 +83,36 @@ const CollectionContainer = ({ collection, showFeaturedProject, isAuthorized, pr
 
           {!preview && (
             <div className={styles.projectCount}>
-              <Text>
+              <Text weight="600">
                 <Pluralize count={collection.projects.length} singular="Project" />
               </Text>
             </div>
           )}
 
           {isAuthorized && funcs.updateColor && <EditCollectionColor update={funcs.updateColor} initialColor={collection.coverColor} />}
+
+          {enableSorting && (
+            <div className={classnames(styles.hint, isDarkColor(collection.coverColor) && styles.dark)}>
+              <Icon className={emoji} icon="new" />
+              <Text> You can reorder your projects</Text>
+              {!displayHint && (
+                <Button variant="secondary" size="small" onClick={() => setDisplayHint(true)}>
+                  Learn More
+                </Button>
+              )}
+              {displayHint && (
+                <div className={styles.hintBody}>
+                  <Text>
+                    <Icon className={emoji} icon="mouse" /> Click and drag to reorder
+                  </Text>
+                  <Text>
+                    <Icon className={emoji} icon="keyboard" /> Focus on a project and press space to select. Move it with the arrow keys, and press space again to
+                    save.
+                  </Text>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </header>
 
@@ -100,7 +125,7 @@ const CollectionContainer = ({ collection, showFeaturedProject, isAuthorized, pr
         {!collectionHasProjects && isAuthorized && (
           <div className={styles.emptyCollectionHint}>
             <Image src="https://cdn.glitch.com/1afc1ac4-170b-48af-b596-78fe15838ad3%2Fpsst-pink.svg?1541086338934" alt="psst" width="" height="" />
-            <Text>You can add any project, created by any user</Text>
+            <Text className={isDarkColor(collection.coverColor) && styles.dark}>You can add any project, created by any user</Text>
           </div>
         )}
         {!collectionHasProjects && !isAuthorized && <div className={styles.emptyCollectionHint}>No projects to see in this collection just yet.</div>}
@@ -130,11 +155,6 @@ const CollectionContainer = ({ collection, showFeaturedProject, isAuthorized, pr
             }}
             projectOptions={{ ...funcs, collection }}
           />
-        )}
-        {enableSorting && (
-          <Text defaultMargin>
-            Drag to reorder, or move focus to a project and press space. Move it with the arrow keys and press space again to save.
-          </Text>
         )}
         {preview && (
           <CollectionLink collection={collection} className={styles.viewAll}>

@@ -1,7 +1,5 @@
 @require '../constants'
-
 .bookmarkButton {
-  padding: 17px 17px 0
   border: none
   background: inherit
   position: relative
@@ -9,16 +7,28 @@
   transition: all 0.3s
   transform: translateY(20px)
   opacity: 0
+  line-height: 0
   .highlight{
     fill: none
     display: none
+  }  
+  .flag, .check{
+    transition: all 0.15s
   }
-  
   &:focus{
     outline: none
   }
-} 
-@media (max-width: mediumSmallViewport) {
+  &:hover{
+    .flag{
+      stroke: tertiary
+    }
+    .check{
+      fill: tertiary
+    }
+  }
+}  
+
+@media (hover: none) {
   .bookmarkButton {
     transform: translateY(0px)
     opacity: 1
@@ -37,8 +47,8 @@
 
 .halo {
   position: absolute
-  left: 6px
-  top: 0px
+  top: -14px
+  left: -10px
   display: none
 }
 
@@ -51,8 +61,8 @@
   position: absolute
   width: 13px
   height: 13px
-  left: 27px
-  top: 27px
+  top: 9px
+  left: 11px
   display: inline-block
 }
 
@@ -173,3 +183,12 @@
     opacity: 1
   }
 }
+
+@media(prefers-reduced-motion: reduce)
+  .halo1, .halo2, .halo3, .halo4, .halo5{
+    animation: none !important
+    -webkit-animation: none !important
+  }
+  .bookmarkButton{
+    transition: all 0s !important
+  }

@@ -45,8 +45,8 @@ Link.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export const CollectionLink = ({ collection, children, ...props }) => (
-  <Link to={getCollectionLink(collection)} {...props} aria-label={collection.name}>
+export const CollectionLink = ({ collection, children, label, ...props }) => (
+  <Link to={getCollectionLink(collection)} {...props} aria-label={label || collection.name}>
     {children}
   </Link>
 );
@@ -69,6 +69,11 @@ CollectionLink.propTypes = {
       url: PropTypes.string.isRequired,
     }),
   ]).isRequired,
+  label: PropTypes.string,
+};
+
+CollectionLink.defaultProps = {
+  label: null,
 };
 
 export const ProjectLink = ({ project, children, ...props }) => {

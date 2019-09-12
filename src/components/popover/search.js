@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { Icon, Loader } from '@fogcreek/shared-components';
 
-import Loader from 'Components/loader';
-import Emoji from 'Components/images/emoji';
 import TextInput from 'Components/inputs/text-input';
 import ResultsList from 'Components/containers/results-list';
 import { PopoverActions, PopoverInfo, PopoverSection, InfoDescription } from './base';
+
+import { emoji } from '../global.styl';
 
 function useActiveIndex(items, onSelect) {
   const inputRef = useRef();
@@ -62,14 +63,14 @@ function useActiveIndex(items, onSelect) {
 
 const PopoverLoader = () => (
   <PopoverActions>
-    <Loader />
+    <Loader style={{ width: '25px' }} />
   </PopoverActions>
 );
 
 const NothingFound = () => (
   <PopoverActions>
     <InfoDescription>
-      Nothing found <Emoji name="sparkles" />
+      Nothing found <Icon className={emoji} icon="sparkles" />
     </InfoDescription>
   </PopoverActions>
 );
@@ -82,11 +83,14 @@ function PopoverSearch({
   onSubmit,
   renderItem,
   renderNoResults,
+  renderMessage,
   renderLoader,
   renderError,
   labelText,
   placeholder,
 }) {
+  const message = renderMessage();
+
   const { inputRef, activeIndex } = useActiveIndex(results, onSubmit);
   return (
     <>
@@ -107,6 +111,7 @@ function PopoverSearch({
           <ResultsList scroll items={results}>
             {(item, i) => renderItem({ item, onSubmit, active: i === activeIndex })}
           </ResultsList>
+          {message}
         </PopoverSection>
       )}
       {status === 'loading' && value.length > 0 && results.length === 0 && renderLoader()}
@@ -124,6 +129,7 @@ PopoverSearch.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   renderItem: PropTypes.func.isRequired,
   renderNoResults: PropTypes.func,
+  renderMessage: PropTypes.func,
   renderLoader: PropTypes.func,
   renderError: PropTypes.func,
   labelText: PropTypes.string.isRequired,
@@ -133,6 +139,7 @@ PopoverSearch.propTypes = {
 PopoverSearch.defaultProps = {
   renderLoader: () => <PopoverLoader />,
   renderNoResults: () => <NothingFound />,
+  renderMessage: () => null,
   renderError: () => null,
   placeholder: null,
 };

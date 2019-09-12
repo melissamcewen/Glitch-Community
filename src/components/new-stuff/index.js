@@ -1,22 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { Button, CheckboxButton, Icon } from '@fogcreek/shared-components';
 
 import { Overlay, OverlaySection, OverlayTitle, OverlayBackground } from 'Components/overlays';
-import CheckboxButton from 'Components/buttons/checkbox-button';
-import Button from 'Components/buttons/button';
 import { PopoverContainer } from 'Components/popover';
 
 import { useTracker } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
 import useUserPref from 'State/user-prefs';
 
-import newStuffLog from '../../curated/new-stuff-log';
+import pupdates from '../../curated/pupdates.json';
 import NewStuffArticle from './new-stuff-article';
 import NewStuffPrompt from './new-stuff-prompt';
 import NewStuffPup from './new-stuff-pup';
-import styles from './styles.styl';
 
-const latestId = Math.max(...newStuffLog.map(({ id }) => id));
+import styles from './styles.styl';
+import { emoji } from '../global.styl';
+
+const pupdatesArray = pupdates.pupdates;
+const latestId = Math.max(...pupdatesArray.map(({ id }) => id));
 
 function usePreventTabOut() {
   const first = useRef();
@@ -45,7 +47,7 @@ function usePreventTabOut() {
   return { first, last };
 }
 
-const NewStuffOverlay = ({ setShowNewStuff, showNewStuff, newStuff, closePopover }) => {
+export const NewStuffOverlay = ({ setShowNewStuff, showNewStuff, newStuff, closePopover }) => {
   const { first, last } = usePreventTabOut();
 
   return (
@@ -56,7 +58,7 @@ const NewStuffOverlay = ({ setShowNewStuff, showNewStuff, newStuff, closePopover
         </div>
         <OverlayTitle id="newStuff">New Stuff</OverlayTitle>
         <div className={styles.newStuffToggle}>
-          <CheckboxButton value={showNewStuff} onChange={setShowNewStuff} ref={first}>
+          <CheckboxButton size="small" value={showNewStuff} onChange={setShowNewStuff} ref={first}>
             Keep showing me these
           </CheckboxButton>
         </div>
@@ -65,8 +67,8 @@ const NewStuffOverlay = ({ setShowNewStuff, showNewStuff, newStuff, closePopover
         {newStuff.map(({ id, ...props }) => (
           <NewStuffArticle key={id} {...props} />
         ))}
-        <Button emoji="carpStreamer" onClick={closePopover} ref={last}>
-          Back to Glitch
+        <Button onClick={closePopover} ref={last}>
+          Back to Glitch <Icon className={emoji} icon="carpStreamer" />
         </Button>
       </OverlaySection>
     </Overlay>
@@ -90,16 +92,16 @@ const NewStuff = ({ children }) => {
   const isSignedIn = !!currentUser && !!currentUser.login;
   const [showNewStuff, setShowNewStuff] = useUserPref('showNewStuff', true);
   const [newStuffReadId, setNewStuffReadId] = useUserPref('newStuffReadId', 0);
-  const [log, setLog] = useState(newStuffLog);
-  const track = useTracker('Pupdate');
+  const [log, setLog] = useState(pupdatesArray);
+  const track = useTracker('pupdates');
 
   const renderOuter = ({ visible, openPopover }) => {
     const pupVisible = isSignedIn && showNewStuff && newStuffReadId < latestId;
     const show = () => {
       track();
       openPopover();
-      const unreadStuff = newStuffLog.filter(({ id }) => id > newStuffReadId);
-      setLog(unreadStuff.length ? unreadStuff : newStuffLog);
+      const unreadStuff = pupdatesArray.filter(({ id }) => id > newStuffReadId);
+      setLog(unreadStuff.length ? unreadStuff : pupdatesArray);
       setNewStuffReadId(latestId);
     };
 

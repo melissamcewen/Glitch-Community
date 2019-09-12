@@ -14,7 +14,7 @@ Glitch employees should check out [DEPLOYING.md](https://glitch.com/edit/#!/comm
 
 File structure
 
-- the backend app starts at `server.js`
+- the backend app starts at `server/server.js`
 - `src/client.js` is compiled and served as /client-bundle.js
 - components and their styles are in `src/components/` :-)
 - view templates are powered by the .jsx files in `src/presenters/`
@@ -23,6 +23,20 @@ File structure
 - drag in `assets`, like images or music, to add them to your project
 
 application models -> presenter -> DOM
+
+## Script Overview
+
+The following commands are available for use during development:
+
+| Command           | Description                                                              |
+| ----------------- | ------------------------------------------------------------------------ |
+| `npm start`       | Launch the development server                                            |
+| `npm run lint`    | Lint the codebase using ESLint                                           |
+| `npm run cy:run`  | Run Cypress-based integration tests in the console                       |
+| `npm run cy:open` | Launch the Cypress GUI for running integration tests                     |
+| `npm run cy:ci`   | Auto-start a temporary dev server and run integration tests against it   |
+| `npm run build`   | Perform a production build of the site and store the results in `build/` |
+
 
 ## Built with
 

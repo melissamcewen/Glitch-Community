@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { partition, uniqBy } from 'lodash';
+import { Icon } from '@fogcreek/shared-components';
 
 import { getAllPages } from 'Shared/api';
 import { PopoverWithButton, PopoverDialog, PopoverSearch, PopoverInfo, InfoDescription } from 'Components/popover';
-import Emoji from 'Components/images/emoji';
 import ProjectResultItem from 'Components/project/project-result-item';
 import { AddProjectToCollectionMsg } from 'Components/notification';
 import { useTrackedFunc } from 'State/segment-analytics';
@@ -13,6 +13,8 @@ import { useCurrentUser } from 'State/current-user';
 import { useAlgoliaSearch } from 'State/search';
 import { useNotifications } from 'State/notifications';
 import useDebouncedValue from 'Hooks/use-debounced-value';
+
+import { emoji } from '../global.styl';
 
 function parseQuery(query) {
   query = query.trim();
@@ -40,7 +42,7 @@ const useTeamProjects = createAPIHook(async (api, teamId) => {
 function AddCollectionProjectPop({ collection, togglePopover, addProjectToCollection }) {
   const [query, setQuery] = useState('');
   const parsedQuery = parseQuery(query);
-  const debouncedQuery = useDebouncedValue(query, 200);
+  const debouncedQuery = useDebouncedValue(parsedQuery, 200);
   const { topResults, project: retrievedProjects, status } = useAlgoliaSearch(
     debouncedQuery,
     {
@@ -99,7 +101,7 @@ function AddCollectionProjectPop({ collection, togglePopover, addProjectToCollec
       {status === 'ready' && excludingExactMatch && (
         <PopoverInfo>
           <InfoDescription>
-            {parsedQuery} is already in this collection <Emoji name="sparkles" />
+            {parsedQuery} is already in this collection <Icon className={emoji} icon="sparkles" />
           </InfoDescription>
         </PopoverInfo>
       )}

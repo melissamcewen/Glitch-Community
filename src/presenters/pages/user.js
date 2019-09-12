@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { orderBy, partition } from 'lodash';
+import { Icon } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
-import Emoji from 'Components/images/emoji';
 import FeaturedProject from 'Components/project/featured-project';
 import Thanks from 'Components/thanks';
 import UserNameInput from 'Components/fields/user-name-input';
@@ -22,6 +22,7 @@ import { useUserEditor } from 'State/user';
 import useFocusFirst from 'Hooks/use-focus-first';
 
 import styles from './user.styl';
+import { emoji } from '../../components/global.styl';
 
 function syncPageToLogin(login) {
   history.replaceState(null, null, getUserLink({ login }));
@@ -180,7 +181,7 @@ const UserPage = ({ user: initialUser }) => {
         <article data-cy="deleted-projects">
           <Heading tagName="h2">
             Deleted Projects
-            <Emoji inTitle name="bomb" />
+            <Icon className={emoji} icon="bomb" />
           </Heading>
           <DeletedProjects
             setDeletedProjects={setDeletedProjects}

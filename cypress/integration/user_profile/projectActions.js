@@ -95,7 +95,7 @@ let deletedProjects = [deletedProject];
 
 const shouldHaveProjectOptions = (options) => options.forEach((option) => cy.contains('.project-options-pop', option).should('exist'));
 
-describe('User profile', () => {
+xdescribe('User profile', () => {
   context('when signed in on your own profile', () => {
     /**
      * Perform feature, pin, add to collection, take a Percy snapshot

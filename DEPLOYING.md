@@ -60,6 +60,12 @@ In particular test anything that you merged with.  Make sure there's no console 
 
 Satisfied?  Deploy it.
 
+Unsatisfied?  You'll want to revert the PR in GitHub
+![picture of revert option in github](https://cdn.glitch.com/e7059ab5-55e6-49e7-9f97-0c93dc3ca016%2FScreen%20Shot%202019-08-28%20at%201.43.53%20PM.png?v=1567019148161)
+
+Merge the revert in GitHub, and pull that update into `~community-staging`. Double check that you're back to a good state, and go fix the issues in your remix!
+
+
 ### Deploy
 
 Run the _special command_ to swap `~community` with `~community-staging`.

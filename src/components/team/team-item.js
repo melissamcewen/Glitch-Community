@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { sumBy } from 'lodash';
+import { Button } from '@fogcreek/shared-components';
 
-import Button from 'Components/buttons/button';
 import Markdown from 'Components/text/markdown';
 import Cover from 'Components/search-result-cover-bar';
 import Image from 'Components/images/image';
@@ -41,7 +41,7 @@ const TeamItem = ({ team }) => {
         </div>
         <div className={styles.body}>
           <div className={styles.itemButtonWrap}>
-            <Button href={getTeamLink(team)}>{team.name}</Button>
+            <Button as="a" href={getTeamLink(team)}>{team.name}</Button>
             {!!team.isVerified && <VerifiedBadge />}
           </div>
           <div className={styles.usersList}>

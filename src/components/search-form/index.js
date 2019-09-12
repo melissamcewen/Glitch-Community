@@ -8,6 +8,7 @@ import { getProjectLink } from 'Models/project';
 import { getUserLink } from 'Models/user';
 import { getTeamLink } from 'Models/team';
 import { useAlgoliaSearch } from 'State/search';
+import useDebouncedValue from 'Hooks/use-debounced-value';
 
 import TextInput from '../inputs/text-input';
 import AutocompleteSearch from './autocomplete';
@@ -104,7 +105,8 @@ const AlgoliaSearchController = withRouter(({ history, visible, openPopover, def
     results: [],
   };
   const [{ query, results, selectedResult }, dispatch] = useReducer(reducer, initialState);
-  const algoliaResults = useAlgoliaSearch(query);
+  const debouncedQuery = useDebouncedValue(query, 500);
+  const algoliaResults = useAlgoliaSearch(debouncedQuery);
 
   useEffect(
     () => {

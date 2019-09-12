@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { Badge, Button, Loader, SegmentedButton } from '@fogcreek/shared-components';
 
 import { createAPIHook } from 'State/api';
 
-import SegmentedButtons from 'Components/buttons/segmented-buttons';
-import Button from 'Components/buttons/button';
-import Badge from 'Components/badges/badge';
 import Heading from 'Components/text/heading';
 import UserItem from 'Components/user/user-item';
 import TeamItem from 'Components/team/team-item';
@@ -15,13 +13,12 @@ import CollectionItemSmall from 'Components/collection/collection-item-small';
 import StarterKitItem from 'Components/search/starter-kit-result';
 import Grid from 'Components/containers/grid';
 import NotFound from 'Components/errors/not-found';
-import Loader from 'Components/loader';
 import styles from './search-results.styl';
 
 const FilterContainer = ({ filters, activeFilter, setFilter }) => {
   const buttons = filters.map((filter) => ({
-    name: filter.id,
-    contents: (
+    id: filter.id,
+    label: (
       <>
         {filter.label}
         {filter.hits && <Badge>{filter.hits > filter.maxHits ? `${filter.maxHits}+` : filter.hits}</Badge>}
@@ -29,7 +26,7 @@ const FilterContainer = ({ filters, activeFilter, setFilter }) => {
     ),
   }));
 
-  return <SegmentedButtons value={activeFilter} buttons={buttons} onChange={setFilter} />;
+  return <SegmentedButton variant="secondary" value={activeFilter} options={buttons} onChange={setFilter} />;
 };
 
 const groups = [
@@ -120,7 +117,7 @@ function SearchResults({ query, searchResults, activeFilter, setActiveFilter }) 
         <FilterContainer filters={filters} setFilter={setActiveFilter} activeFilter={activeFilter} />
       )}
       {activeFilter === 'all' && <h1>All results for {query}</h1>}
-      {!ready && <Loader />}
+      {!ready && <Loader style={{ width: '25px' }} />}
       {showTopResults && (
         <article className={classnames(styles.groupContainer, styles.topResults)}>
           <Heading tagName="h2">Top Results</Heading>

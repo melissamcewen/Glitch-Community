@@ -2,23 +2,30 @@ import React, { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { debounce } from 'lodash';
-import { Avatar, UserAvatar, TeamAvatar } from 'Components/images/avatar';
-
+import { AvatarBase, UserAvatar, TeamAvatar } from 'Components/images/avatar';
+import TooltipContainer from 'Components/tooltips/tooltip-container';
 import { UserLink, TeamLink } from 'Components/link';
+import { getDisplayName } from 'Models/user';
 
 import styles from './profile-list.styl';
 
-const UserItem = ({ user }) => (
-  <UserLink user={user} draggable={false}>
-    <UserAvatar user={user} />
-  </UserLink>
-);
+const UserItem = ({ user }) => {
+  const tooltipTarget = (
+    <UserLink user={user} draggable={false}>
+      <UserAvatar user={user} hideTooltip />
+    </UserLink>
+  );
+  return <TooltipContainer type="info" tooltip={getDisplayName(user)} target={tooltipTarget} />;
+};
 
-const TeamItem = ({ team }) => (
-  <TeamLink team={team} draggable={false}>
-    <TeamAvatar team={team} />
-  </TeamLink>
-);
+const TeamItem = ({ team }) => {
+  const tooltipTarget = (
+    <TeamLink team={team} draggable={false}>
+      <TeamAvatar team={team} hideTooltip />
+    </TeamLink>
+  );
+  return <TooltipContainer type="info" tooltip={team.name} target={tooltipTarget} />;
+};
 
 // NOTE: ResizeObserver is not widely supported
 // see https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver
@@ -78,7 +85,7 @@ const RowContainer = ({ size, users, teams }) => {
   return (
     <ul ref={ref} className={classnames(styles.container, styles.row, styles[size])}>
       {teams.slice(0, maxTeams).map((team) => (
-        <li key={`team-${team.id}`} className={(styles.teamItem)}>
+        <li key={`team-${team.id}`} className={styles.teamItem}>
           <TeamItem team={team} />
         </li>
       ))}
@@ -96,7 +103,7 @@ const BlockContainer = ({ size, users, teams }) => (
     {teams.length > 0 && (
       <ul className={classnames(styles.container, styles[size])}>
         {teams.map((team) => (
-          <li key={`team-${team.id}`} className={(styles.teamItem)}>
+          <li key={`team-${team.id}`} className={styles.teamItem}>
             <TeamItem team={team} />
           </li>
         ))}
@@ -115,14 +122,18 @@ const BlockContainer = ({ size, users, teams }) => (
 );
 
 const GLITCH_TEAM_AVATAR = 'https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fglitch-team-avatar.svg?1489266029267';
+const GLITCH_TEAM_URL = 'glitch';
 
-const GlitchTeamList = ({ size }) => (
-  <ul className={classnames(styles.container, styles[size])}>
-    <li className={(styles.teamItem)}>
-      <Avatar name="Glitch Team" src={GLITCH_TEAM_AVATAR} color="#74ecfc" type="team" />
-    </li>
-  </ul>
-);
+const GlitchTeamList = ({ size }) => {
+  const tooltipTarget = <TeamLink team={{ url: GLITCH_TEAM_URL }} draggable={false}><AvatarBase name="Glitch Team" src={GLITCH_TEAM_AVATAR} color="#74ecfc" type="team" hideTooltip /></TeamLink>;
+  return (
+    <ul className={classnames(styles.container, styles[size])}>
+      <li className={styles.teamItem}>
+        <TooltipContainer type="info" tooltip="Glitch Team" target={tooltipTarget} />
+      </li>
+    </ul>
+  );
+};
 
 const PlaceholderList = ({ size }) => (
   <ul className={classnames(styles.container, styles[size])}>

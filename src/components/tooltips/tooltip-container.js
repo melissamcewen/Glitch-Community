@@ -27,6 +27,7 @@ function TooltipContainer({ type, tooltip, target, align, persistent, children, 
   );
 
   const id = useUniqueId();
+  const shouldShowTooltip = tooltip && (tooltipIsActive || persistent);
 
   const tooltipClassName = cx({
     tooltip: true,
@@ -36,6 +37,7 @@ function TooltipContainer({ type, tooltip, target, align, persistent, children, 
     newStuff,
     persistent,
     fallback,
+    hideTooltipNode: !shouldShowTooltip,
   });
   const tooltipFallbackClassName = fallback ? styles.fallback : '';
 
@@ -68,8 +70,6 @@ function TooltipContainer({ type, tooltip, target, align, persistent, children, 
     });
   }
 
-  const shouldShowTooltip = tooltip && (tooltipIsActive || persistent);
-
   function cancelClick(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -85,7 +85,7 @@ function TooltipContainer({ type, tooltip, target, align, persistent, children, 
   /* eslint-disable jsx-a11y/no-static-element-interactions */
   if (!fallback) {
     tooltipNode = (
-      <div role={role} id={id} className={tooltipClassName} style={{ opacity: shouldShowTooltip ? 1 : 0 }} onClick={cancelClick}>
+      <div role={role} id={id} className={tooltipClassName} onClick={cancelClick}>
         {type === 'info' || shouldShowTooltip ? tooltip : null}
       </div>
     );

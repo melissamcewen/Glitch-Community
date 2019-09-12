@@ -9,8 +9,8 @@ import { useCurrentUser } from 'State/current-user';
 import { useGlobals } from 'State/globals';
 
 import LoginPage from './login';
-import { FacebookLoginPage, GitHubLoginPage, GoogleLoginPage, SlackLoginPage, EmailTokenLoginPage } from './login/callbacks';
 import ResetPasswordPage from './login/reset-password';
+import { FacebookLoginPage, GitHubLoginPage, GoogleLoginPage, EmailTokenLoginPage } from './login';
 import OauthSignIn from './signin';
 import JoinTeamPage from './join-team';
 import QuestionsPage from './questions';
@@ -20,6 +20,7 @@ import CategoryPage from './category';
 import CollectionPage from './collection';
 import CreatePage from './create';
 import { NotFoundPage } from './error';
+import PupdatesPreview from './pupdates-preview';
 import SearchPage from './search';
 import SecretPage from './secret';
 import NewHomePage, { HomePreview as NewHomePagePreview } from './home-v2';
@@ -85,6 +86,7 @@ const Router = () => {
         <Route path="/" exact render={({ location }) => <NewHomePage key={location.key} />} />
         <Route path="/index.html" exact render={({ location }) => <NewHomePage key={location.key} />} />
         <Route path="/index/preview" exact render={({ location }) => <NewHomePagePreview key={location.key} />} />
+        <Route path="/pupdates/preview" exact render={({ location }) => <PupdatesPreview key={location.key} />} />
 
         <Route path="/login" exact render={({ location }) => <LoginPage key={location.key} />} />
         <Route
@@ -106,13 +108,6 @@ const Router = () => {
           exact
           render={({ location }) => (
             <GoogleLoginPage key={location.key} code={parse(location.search, 'code')} error={parse(location.search, 'error')} />
-          )}
-        />
-        <Route
-          path="/login/slack"
-          exact
-          render={({ location }) => (
-            <SlackLoginPage key={location.key} code={parse(location.search, 'code')} error={parse(location.search, 'error')} />
           )}
         />
         <Route

@@ -28,9 +28,19 @@ function webpackExpressMiddleware() {
 }
 
 module.exports = function(app) {
-  if (process.env.NODE_ENV === 'production') {
-    webpackBackgroundProcess();
-  } else {
-    app.use(webpackExpressMiddleware());
+  switch (process.env.DEPLOY_ENV) {
+    case 'production':
+      // Production here is glitch.com/~community!
+      // We use a webpack background process to
+      // allow for live-edits to be made!
+      webpackBackgroundProcess();
+      break;
+    case 'ci':
+      // Do not webpack, we have already built
+      break;
+    default:
+      // Use webpack middlware for dev/staging/etc.
+      app.use(webpackExpressMiddleware());
+      break;
   }
 };

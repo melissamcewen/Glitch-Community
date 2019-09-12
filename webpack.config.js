@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -7,6 +8,7 @@ const AutoprefixerStylus = require('autoprefixer-stylus');
 const StatsPlugin = require('stats-webpack-plugin');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { EnvironmentPlugin } = require('webpack');
 const aliases = require('./shared/aliases');
 
 const BUILD = path.resolve(__dirname, 'build');
@@ -44,7 +46,7 @@ module.exports = smp.wrap({
     path: BUILD,
     publicPath: '/',
   },
-  devtool: mode === 'production' ? 'source-map' : 'cheap-module-source-map',
+  devtool: mode === 'production' ? 'source-map' : 'eval-source-map',
   optimization: {
     splitChunks: {
       chunks: 'initial',
@@ -184,6 +186,9 @@ module.exports = smp.wrap({
       publicPath: true,
     }),
     new CleanWebpackPlugin({ dry: false, verbose: true, cleanOnceBeforeBuildPatterns: ['**/*', '!storybook/**', ...prevBuildAssets] }),
+    new EnvironmentPlugin({
+      FWD_SUBDOMAIN_PREFIX: process.env.PROJECT_NAME || os.userInfo().username,
+    }),    
   ],
   watchOptions: {
     ignored: /node_modules/,

@@ -3,8 +3,8 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Pluralize from 'react-pluralize';
 import { partition } from 'lodash';
-import Badge from 'Components/badges/badge';
-import SegmentedButtons from 'Components/buttons/segmented-buttons';
+import { Badge, Button, SegmentedButton } from '@fogcreek/shared-components';
+
 import Link from 'Components/link';
 import {
   PopoverWithButton,
@@ -16,7 +16,6 @@ import {
   PopoverActions,
   PopoverSearch,
 } from 'Components/popover';
-import Button from 'Components/buttons/button';
 import { ProjectAvatar } from 'Components/images/avatar';
 import CollectionResultItem from 'Components/collection/collection-result-item';
 import { CreateCollectionWithProject } from 'Components/collection/create-collection-pop';
@@ -33,12 +32,12 @@ import styles from './popover.styl';
 
 const collectionTypeOptions = [
   {
-    name: 'user',
-    contents: 'Your collections',
+    id: 'user',
+    label: 'Your collections',
   },
   {
-    name: 'team',
-    contents: 'Team collections',
+    id: 'team',
+    label: 'Team collections',
   },
 ];
 
@@ -152,7 +151,7 @@ export const AddProjectToCollectionBase = ({ project, fromProject, addProjectToC
 
       {currentUser.teams.length > 0 && (
         <PopoverActions>
-          <SegmentedButtons value={collectionType} buttons={collectionTypeOptions} onChange={setCollectionType} />
+          <SegmentedButton value={collectionType} options={collectionTypeOptions} onChange={setCollectionType} />
         </PopoverActions>
       )}
 
@@ -164,6 +163,12 @@ export const AddProjectToCollectionBase = ({ project, fromProject, addProjectToC
         onSubmit={addProjectTo}
         placeholder="Filter collections"
         labelText="Filter collections"
+        renderMessage={() => {
+          if (collectionsWithProject.length) {
+            return <PopoverInfo><AlreadyInCollection project={project} collections={collectionsWithProject} /></PopoverInfo>;
+          }
+          return null;
+        }}
         renderItem={({ item: collection, active }) => (
           <AddProjectToCollectionResultItem active={active} onClick={() => addProjectTo(collection)} collection={collection} />
         )}
@@ -175,7 +180,7 @@ export const AddProjectToCollectionBase = ({ project, fromProject, addProjectToC
       />
 
       <PopoverActions>
-        <Button size="small" type="tertiary" onClick={createCollectionPopover}>
+        <Button size="small" variant="secondary" onClick={createCollectionPopover}>
           Add to a new collection
         </Button>
       </PopoverActions>

@@ -30,7 +30,6 @@ const CreateFirstCollection = () => (
 */
 function MyStuffController({ children, collections, isAuthorized, maybeTeam }) {
   const myStuffEnabled = useDevToggle('My Stuff');
-
   // put mystuff at beginning of list (and fake one if it's not there yet)
   const collectionsWithMyStuff = getCollectionsWithMyStuff({ collections });
 
@@ -112,34 +111,36 @@ function CollectionsList({
                   </>
                 )}
 
-                <SkipSectionButtons sectionName="Collections">
-                  {renderItems((filteredProjects) => (
-                    <PaginationController
-                      enabled={enablePagination}
-                      items={filteredProjects}
-                      itemsPerPage={collectionsPerPage}
-                      fetchDataOptimistically={getCollectionProjects}
-                    >
-                      {(paginatedCollections, isExpanded) => (
-                        <Grid items={paginatedCollections}>
-                          {(collection) =>
-                            myStuffEnabled && collection.isMyStuff ? (
-                              <MyStuffItem collection={collection} isAuthorized={isAuthorized} showLoader={isExpanded} />
-                            ) : (
-                              <CollectionItem
-                                collection={collection}
-                                isAuthorized={isAuthorized}
-                                deleteCollection={() => deleteCollection(collection)}
-                                showCurator={showCurator}
-                                showLoader={isExpanded}
-                              />
-                            )
-                          }
-                        </Grid>
-                      )}
-                    </PaginationController>
-                  ))}
-                </SkipSectionButtons>
+                {!!collectionsWithMyStuff.length && (
+                  <SkipSectionButtons sectionName="Collections">
+                    {renderItems((filteredCollections) => (
+                      <PaginationController
+                        enabled={enablePagination}
+                        items={filteredCollections}
+                        itemsPerPage={collectionsPerPage}
+                        fetchDataOptimistically={getCollectionProjects}
+                      >
+                        {(paginatedCollections, isExpanded) => (
+                          <Grid items={paginatedCollections}>
+                            {(collection) =>
+                              myStuffEnabled && collection.isMyStuff ? (
+                                <MyStuffItem collection={collection} isAuthorized={isAuthorized} showLoader={isExpanded} />
+                              ) : (
+                                <CollectionItem
+                                  collection={collection}
+                                  isAuthorized={isAuthorized}
+                                  deleteCollection={() => deleteCollection(collection)}
+                                  showCurator={showCurator}
+                                  showLoader={isExpanded}
+                                />
+                              )
+                            }
+                          </Grid>
+                        )}
+                      </PaginationController>
+                    ))}
+                  </SkipSectionButtons>
+                )}
               </article>
             </>
           )}

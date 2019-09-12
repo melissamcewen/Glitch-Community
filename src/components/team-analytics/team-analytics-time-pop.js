@@ -1,35 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PopoverWithButton, PopoverDialog, PopoverSection } from 'Components/popover';
-import ResultsList, { ResultItem, ResultInfo } from 'Components/containers/results-list';
+import { Button } from '@fogcreek/shared-components';
 
-const timeFrames = ['Last 4 Weeks', 'Last 2 Weeks', 'Last 24 Hours'].map((id) => ({ id }));
+import popoverStyles from 'Components/popover/styles.styl';
+import styles from './styles.styl';
 
-const TeamAnalyticsTimePop = ({ currentTimeFrame, updateTimeFrame }) => (
-  <PopoverDialog align="left">
-    <PopoverSection>
-      <ResultsList items={timeFrames}>
-        {({ id: timeFrame }) => (
-          <ResultItem onClick={() => updateTimeFrame(timeFrame)} active={currentTimeFrame === timeFrame}>
-            <ResultInfo>{timeFrame}</ResultInfo>
-          </ResultItem>
-        )}
-      </ResultsList>
-    </PopoverSection>
-  </PopoverDialog>
-);
+const timeFrames = ['Last 4 Weeks', 'Last 2 Weeks', 'Last 24 Hours'];
 
 const TeamAnalyticsTimePopButton = ({ updateTimeFrame, currentTimeFrame }) => (
-  <PopoverWithButton
-    buttonProps={{ size: 'small', type: 'tertiary' }}
-    buttonText={
-      <>
-        {currentTimeFrame} <div className="down-arrow" aria-label="options" />
-      </>
-    }
-  >
-    {({ toggleAndCall }) => <TeamAnalyticsTimePop updateTimeFrame={toggleAndCall(updateTimeFrame)} currentTimeFrame={currentTimeFrame} />}
-  </PopoverWithButton>
+  <div className={styles.timeFramePopWrap}>
+    <Button as="span" size="small" variant="secondary">
+      <select className={styles.timeFrameSelect} value={currentTimeFrame} onChange={(e) => updateTimeFrame(e.target.value)}>
+        {timeFrames.map((t) => (
+          <option key={t} value={t}>{t}</option>
+        ))}
+      </select>
+      <span className={`${popoverStyles.downArrow} ${styles.downArrow}`} />
+    </Button>
+  </div>
 );
 
 TeamAnalyticsTimePopButton.propTypes = {

@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Icon } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
 import PaginationController from 'Components/pagination-controller';
 import FilterController from 'Components/filter-controller';
 import ProjectItem from 'Components/project/project-item';
-import Note from 'Components/collection/note';
 import Grid from 'Components/containers/grid';
 import Row from 'Components/containers/row';
 import classNames from 'classnames/bind';
 import SkipSectionButtons from 'Components/containers/skip-section-buttons';
-import Emoji from 'Components/images/emoji';
 
 import styles from './projects-list.styl';
+import { emoji } from '../global.styl';
 
 const containers = {
   row: (props) => <Row className={styles.projectsRow} {...props} />,
@@ -25,20 +25,7 @@ const ProjectsUL = ({ collection, projects, sortable, onReorder, noteOptions, la
   return (
     <Container itemClassName={styles.projectsItem} items={projects} sortable={sortable} onReorder={onReorder}>
       {(project) => (
-        <>
-          {collection && (
-            <div className={styles.projectsContainerNote}>
-              <Note
-                project={project}
-                collection={collection}
-                isAuthorized={noteOptions.isAuthorized}
-                hideNote={noteOptions.hideNote}
-                updateNote={noteOptions.updateNote}
-              />
-            </div>
-          )}
-          <ProjectItem key={project.id} project={project} projectOptions={projectOptions} />
-        </>
+        <ProjectItem key={project.id} project={project} projectOptions={projectOptions} collection={collection} noteOptions={noteOptions} />
       )}
     </Container>
   );
@@ -68,7 +55,7 @@ function ProjectsList({
     }
     return (
       <>
-        {title} <Emoji inTitle name={titleEmoji} />
+        {title} <Icon className={emoji} icon={titleEmoji} />
       </>
     );
   };
