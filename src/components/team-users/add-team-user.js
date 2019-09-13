@@ -12,7 +12,6 @@ import { ResultItem, ResultInfo, ResultName, ResultDescription } from 'Component
 import { getDisplayName } from 'Models/user';
 import { captureException } from 'Utils/sentry';
 import { useTracker } from 'State/segment-analytics';
-import useDevToggle from 'State/dev-toggles';
 import { useAlgoliaSearch } from 'State/search';
 
 import useDebouncedValue from '../../hooks/use-debounced-value';
@@ -39,7 +38,7 @@ const InviteByEmail = ({ result: email, active, onClick }) => {
   const { current: color } = useRef(randomColor({ luminosity: 'light' }));
   return (
     <ResultItem onClick={onClick} active={active}>
-      <UserAvatar user={{ color }} hideTooltip />
+      <UserAvatar user={{ id: 0, color }} hideTooltip />
       <ResultInfo>
         <ResultName>Invite {email}</ResultName>
       </ResultInfo>
@@ -60,17 +59,12 @@ function useCheckedDomains(query) {
   const [checkedDomains, setCheckedDomains] = useState({ 'gmail.com': false, 'yahoo.com': false });
   useEffect(() => {
     const domain = getDomain(query);
-    if (!domain || domain in checkedDomains) return undefined;
+    if (!domain || domain in checkedDomains) return;
 
-    let isCurrentRequest = true;
+    setCheckedDomains((domains) => ({ ...domains, [domain]: null }));
     axios.get(`https://freemail.glitch.me/${domain}`).then(({ data }) => {
-      if (!isCurrentRequest) return;
       setCheckedDomains((domains) => ({ ...domains, [domain]: !data.free }));
     }, captureException);
-
-    return () => {
-      isCurrentRequest = false;
-    };
   }, [query, checkedDomains]);
   return checkedDomains;
 }
@@ -79,7 +73,6 @@ function AddTeamUserPop({ members, inviteEmail, inviteUser, setWhitelistedDomain
   const [value, onChange] = useState('');
   const debouncedValue = useDebouncedValue(value, 200);
   const checkedDomains = useCheckedDomains(debouncedValue);
-  const allowEmailInvites = useDevToggle('Email Invites');
 
   const { user: retrievedUsers, status } = useAlgoliaSearch(
     debouncedValue,
@@ -95,7 +88,7 @@ function AddTeamUserPop({ members, inviteEmail, inviteUser, setWhitelistedDomain
     const out = [];
 
     const email = parseOneAddress(debouncedValue);
-    if (email && allowEmailInvites) {
+    if (email) {
       out.push({
         id: 'invite-by-email',
         result: email.address,
@@ -127,7 +120,7 @@ function AddTeamUserPop({ members, inviteEmail, inviteUser, setWhitelistedDomain
     );
 
     return out;
-  }, [debouncedValue, retrievedUsers, members, whitelistedDomain]);
+  }, [debouncedValue, retrievedUsers, members, whitelistedDomain, checkedDomains]);
 
   return (
     <PopoverDialog align="left">
@@ -166,7 +159,7 @@ AddTeamUserPop.defaultProps = {
 const AddTeamUser = ({ members, whitelistedDomain, inviteEmail, inviteUser, setWhitelistedDomain }) => {
   const track = useTracker('Add to Team clicked');
   return (
-    <PopoverWithButton buttonProps={{ size: 'small', type: 'tertiary' }} buttonText="Add" onOpen={track}>
+    <PopoverWithButton buttonProps={{ size: 'small', variant: 'secondary' }} buttonText="Add" onOpen={track}>
       {({ toggleAndCall }) => (
         <AddTeamUserPop
           members={members}

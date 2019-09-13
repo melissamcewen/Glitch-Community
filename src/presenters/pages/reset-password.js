@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { Button } from '@fogcreek/shared-components';
 
 import { useAPI } from 'State/api';
 import { useCurrentUser } from 'State/current-user';
 import useLocalStorage from 'State/local-storage';
 
-import Button from 'Components/buttons/button';
 import Notification from 'Components/notification';
 import Text from 'Components/text/text';
 
@@ -75,7 +75,7 @@ const ResetPasswordForm = ({ resetPasswordToken }) => {
         <form onSubmit={onSubmit}>
           <NewPasswordInput disabled={state.working} onChange={setPassword} />
           <div className={styles.submitWrap}>
-            <Button size="small" disabled={!password || state.working} submit>Set Password</Button>
+            <Button size="small" disabled={!password || state.working} onClick={onSubmit}>Set Password</Button>
           </div>
         </form>
       )}

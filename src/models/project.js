@@ -43,9 +43,8 @@ export function sortProjectsByLastAccess(projects) {
 export const MEMBER_ACCESS_LEVEL = 20;
 export const ADMIN_ACCESS_LEVEL = 30;
 
-export function userIsProjectMember({ project, user }) {
-  if (!user || !project || !project.permissions) return false;
-  return project.permissions.some(({ userId }) => user.id === userId);
+export function userIsProjectMember({ members, user }) {
+  return !!(members && members.users && members.users.some(({ id }) => id === user.id));
 }
 
 export function userIsProjectAdmin({ project, user }) {

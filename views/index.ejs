@@ -30,6 +30,9 @@
     <link rel="stylesheet" type="text/css" href="<%= styles[i] %>">
     <% } %>
     
+    <!-- styles from styled-components -->
+    <%- styleTags %>
+    
     <% if (!rendered) { %>
     <noscript><style>#fallback, #fallback-noscript { display: inline-block !important } #fallback-img { display: block !important }</style></noscript>
     <% } %>

@@ -2,13 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import { Loader } from '@fogcreek/shared-components';
+import { Button, Icon, Loader } from '@fogcreek/shared-components';
 
 import Markdown from 'Components/text/markdown';
-import Button from 'Components/buttons/button';
 import Text from 'Components/text/text';
 import Image from 'Components/images/image';
-import Emoji from 'Components/images/emoji';
 import { ProfileItem } from 'Components/profile-list';
 import { CollectionLink } from 'Components/link';
 import Row from 'Components/containers/row';
@@ -31,6 +29,7 @@ import { createCollection } from 'Models/collection';
 import CollectionOptions from './collection-options-pop';
 
 import styles from './collection-item.styl';
+import { emoji } from '../global.styl';
 
 const collectionColorStyles = (collection) => ({
   backgroundColor: collection.coverColor,
@@ -63,7 +62,7 @@ const CollectionProjects = ({ collection, isAuthorized }) => {
     return (
       <div className={classNames(styles.projectsContainer, styles.empty)}>
         <Text className={styles.emptyCollectionText}>
-          This collection is empty – add some projects <Emoji name="index" />
+          This collection is empty – add some projects <Icon className={emoji} icon="index" />
         </Text>
       </div>
     );
@@ -141,7 +140,7 @@ export const MyStuffItem = ({ collection, isAuthorized, showLoader }) => {
         </div>
         <div className={styles.nameDescriptionContainer}>
           <div className={styles.itemButtonWrap}>
-            <Button decorative>{collection.name}</Button>
+            <Button as="span">{collection.name}</Button>
           </div>
           <div className={classNames(styles.description, { [styles.dark]: isDarkColor(collection.coverColor) })}>
             <Markdown length={100}>{collection.description || ' '}</Markdown>
@@ -173,7 +172,7 @@ const CollectionItem = ({ collection, deleteCollection, isAuthorized, showCurato
           </div>
           <div className={styles.nameDescriptionContainer}>
             <div className={styles.itemButtonWrap}>
-              <Button decorative>{collection.name}</Button>
+              <Button as="span">{collection.name}</Button>
             </div>
             <div className={classNames(styles.description, { [styles.dark]: isDarkColor(collection.coverColor) })}>
               <Markdown length={100}>{collection.description || ' '}</Markdown>

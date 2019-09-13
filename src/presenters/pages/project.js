@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
-import { Loader } from '@fogcreek/shared-components';
+import { Helmet } from 'react-helmet-async';
+import { Button, Icon, Loader } from '@fogcreek/shared-components';
 
-import Button from 'Components/buttons/button';
 import Heading from 'Components/text/heading';
 import Markdown from 'Components/text/markdown';
 import NotFound from 'Components/errors/not-found';
@@ -26,7 +25,7 @@ import BookmarkButton from 'Components/buttons/bookmark-button';
 import { AnalyticsContext, useTrackedFunc } from 'State/segment-analytics';
 import { useCurrentUser } from 'State/current-user';
 import { useToggleBookmark } from 'State/collection';
-import { useProjectEditor } from 'State/project';
+import { useProjectEditor, useProjectMembers } from 'State/project';
 import { getUserLink } from 'Models/user';
 import { userIsProjectMember, userIsProjectAdmin } from 'Models/project';
 import { addBreadcrumb } from 'Utils/sentry';
@@ -37,6 +36,7 @@ import { useAPIHandlers } from 'State/api';
 import { useCachedProject } from 'State/api-cache';
 
 import styles from './project.styl';
+import { emoji } from '../../components/global.styl';
 
 function syncPageToDomain(domain) {
   history.replaceState(null, null, `/~${domain}`);
@@ -96,7 +96,7 @@ function DeleteProjectPopover({ projectDomain, deleteProject }) {
 
   return (
     <section>
-      <PopoverWithButton buttonProps={{ size: 'small', type: 'dangerZone', emoji: 'bomb' }} buttonText="Delete Project">
+      <PopoverWithButton buttonProps={{ size: 'small', variant: 'warning', emoji: 'bomb' }} buttonText="Delete Project">
         {({ togglePopover }) => (
           <PopoverDialog align="left" wide>
             <PopoverActions>
@@ -107,9 +107,8 @@ function DeleteProjectPopover({ projectDomain, deleteProject }) {
                 <Loader />
               ) : (
                 <Button
-                  type="tertiary"
+                  variant="secondary"
                   size="small"
-                  emoji="bomb"
                   onClick={() => {
                     setLoading(true);
                     deleteProject().then(() => {
@@ -118,7 +117,7 @@ function DeleteProjectPopover({ projectDomain, deleteProject }) {
                     });
                   }}
                 >
-                  Delete {projectDomain}
+                  Delete {projectDomain} <Icon className={emoji} icon="bomb" />
                 </Button>
               )}
             </PopoverActions>
@@ -140,7 +139,8 @@ const ProjectPage = ({ project: initialProject }) => {
   const { currentUser } = useCurrentUser();
   const [hasBookmarked, toggleBookmark, setHasBookmarked] = useToggleBookmark(project);
   const isAnonymousUser = !currentUser.login;
-  const isAuthorized = userIsProjectMember({ project, user: currentUser });
+  const { value: members } = useProjectMembers(project.id);
+  const isAuthorized = userIsProjectMember({ members, user: currentUser });
   const isAdmin = userIsProjectAdmin({ project, user: currentUser });
   const { domain, users, teams, suspendedReason } = project;
   const updateDomainAndSync = (newDomain) => updateDomain(newDomain).then(() => syncPageToDomain(newDomain));

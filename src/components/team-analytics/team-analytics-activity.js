@@ -3,12 +3,12 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@fogcreek/shared-components';
 
 import { isEmpty } from 'lodash';
 import groupByTime from 'group-by-time';
 import { histogram as d3Histogram } from 'd3-array';
 import { createAPIHook } from 'State/api';
-import Button from 'Components/buttons/button';
 import styles from './styles.styl';
 
 const useC3 = createAPIHook(async () => import(/* webpackChunkName: "c3-bundle" */ 'c3'));
@@ -164,7 +164,7 @@ function TeamAnalyticsActivity({ activeFilter, analytics, currentTimeFrame }) {
   const buttonLabel = showingTable ? 'Hide Analytics in Table Format' : 'Show Analytics in Table Format';
   return (
     <>
-      <Button type="tertiary" onClick={() => setShowingTable(!showingTable)}>{buttonLabel}</Button>
+      <Button variant="secondary" onClick={() => setShowingTable(!showingTable)}>{buttonLabel}</Button>
       {showingTable && tableData}
     </>
   );

@@ -5,7 +5,7 @@ const dayjs = require('dayjs');
 
 const { API_URL } = require('./constants').current;
 const createCache = require('./cache');
-const { allByKeys } = require('Shared/api');
+const { allByKeys, getAllPages } = require('Shared/api');
 
 const api = axios.create({
   baseURL: API_URL,
@@ -47,8 +47,8 @@ async function getProjectFromApi(domain) {
   const project = await getBatchedEntity('projects', 'domain', domain);
   if (!project) return project;
   const members = await allByKeys({
-    // teams: getAllPages(api, `v1/projects/by/domain/teams?domain=${domain}`),
-    // users: getAllPages(api, `v1/projects/by/domain/users?domain=${domain}`),
+    teams: getAllPages(api, `v1/projects/by/domain/teams?domain=${domain}`),
+    users: getAllPages(api, `v1/projects/by/domain/users?domain=${domain}`),
   });
   return { ...project, ...members };
 }

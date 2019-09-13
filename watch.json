@@ -6,12 +6,17 @@
     ]
   },
   "restart": {
-    "exclude": [],
+    "exclude": [
+      "server/",
+      "shared/",
+      "src/",
+      "build/"
+    ],
     "include": [
-      "^sh/",
-      "\\.json",
-      "^webpack\\.config\\.js$",
-      "\\.eslintrc\\.js$"
+      "\\.babelrc",
+      "\\.eslintrc",
+      "webpack\\.config",
+      "aliases.js"
     ]
   },
   "throttle": 100

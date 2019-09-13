@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { TextInput } from '@fogcreek/shared-components';
+import { Button, TextInput } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
-import Button from 'Components/buttons/button';
 import Notification from 'Components/notification';
 import NewPasswordInput from 'Components/new-password-input';
 import { useAPI } from 'State/api';
@@ -35,7 +34,7 @@ const ResetPassword = () => {
   return (
     <>
       <Heading tagName="h2">Reset Password</Heading>
-      <Button type="tertiary" size="small" disabled={status.working} onClick={resetPassword}>Send Reset Password Email</Button>
+      <Button variant="secondary" size="small" disabled={status.working} onClick={resetPassword}>Send Reset Password Email</Button>
       {status.done && <Notification type="success" persistent>Sent a reset code to {primaryEmail.email}</Notification>}
       {status.error && <Notification type="error" persistent>Something went wrong, check your inbox?</Notification>}
     </>
@@ -87,7 +86,7 @@ const PasswordSettings = () => {
 
         <NewPasswordInput key={passwordVersion} disabled={status.working} onChange={andClearState(setNewPassword)} />
 
-        <Button type="tertiary" size="small" disabled={!canSubmit} submit>
+        <Button variant="secondary" size="small" disabled={!canSubmit} onClick={updatePassword}>
           Set Password
         </Button>
 

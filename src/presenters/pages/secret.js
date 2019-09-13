@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
+import { Button } from '@fogcreek/shared-components';
 
-import Button from 'Components/buttons/button';
 import Heading from 'Components/text/heading';
 import VisuallyHidden from 'Components/containers/visually-hidden';
 import { useDevToggles } from 'State/dev-toggles';
@@ -61,7 +61,7 @@ const Secret = () => {
       <ul>
         {toggleData.map(({ name, description }) => (
           <li key={name} className={isEnabled(name) ? styles.lit : ''}>
-            <Button title={description} ariaPressed={isEnabled(name) ? 'true' : 'false'} onClick={() => toggleTheToggle(name)}>
+            <Button size="small" title={description} ariaPressed={isEnabled(name) ? 'true' : 'false'} onClick={() => toggleTheToggle(name)}>
               {name}
             </Button>
           </li>
