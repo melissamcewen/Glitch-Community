@@ -129,7 +129,7 @@ function SearchResults({ query, searchResults, activeFilter, setActiveFilter }) 
           </Grid>
           <Grid items={searchResults.topResults} className={classnames(styles.resultsContainer, topResultsIncludesUser && styles.includesUser)}>
             {(result) => (
-              <div className={classnames(styles.resultWrap, `${result.type}`)}>
+              <div className={classnames(styles.resultWrap, result.type === 'project' && styles.project)}>
                 <ResultComponent result={result} projectsWithUserData={projectsWithUserData} />
               </div>
             )}
