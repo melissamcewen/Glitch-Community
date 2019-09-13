@@ -92,7 +92,7 @@ function SearchResults({ query, searchResults, activeFilter, setActiveFilter }) 
   const ready = searchResults.status === 'ready';
   const noResults = ready && searchResults.totalHits === 0;
   const showTopResults = ready && searchResults.starterKit.length + searchResults.topResults.length > 0 && activeFilter === 'all';
-  const topResultsIncludesUser = showTopResults && values(mapValues(searchResults.topResults, result => result.type), 'user');
+  const topResultsIncludesProject = showTopResults && values(mapValues(searchResults.topResults, (result) => result.type), 'project');
 
   const filters = [
     { id: 'all', label: 'All' },
@@ -127,7 +127,7 @@ function SearchResults({ query, searchResults, activeFilter, setActiveFilter }) 
           <Grid items={searchResults.starterKit} className={styles.starterKitResultsContainer}>
             {(result) => <StarterKitItem result={result} />}
           </Grid>
-          <Grid items={searchResults.topResults} className={classnames(styles.resultsContainer, topResultsIncludesUser && styles.includesUser)}>
+          <Grid items={searchResults.topResults} className={classnames(styles.resultsContainer, topResultsIncludesProject && styles.includesProject)}>
             {(result) => (
               <div className={classnames(styles.resultWrap, result.type === 'project' && styles.project)}>
                 <ResultComponent result={result} projectsWithUserData={projectsWithUserData} />
