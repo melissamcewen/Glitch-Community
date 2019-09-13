@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { debounce } from 'lodash';
-import { Avatar, UserAvatar, TeamAvatar } from 'Components/images/avatar';
+import { AvatarBase, UserAvatar, TeamAvatar } from 'Components/images/avatar';
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import { UserLink, TeamLink } from 'Components/link';
 import { getDisplayName } from 'Models/user';
@@ -125,7 +125,7 @@ const GLITCH_TEAM_AVATAR = 'https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-20439
 const GLITCH_TEAM_URL = 'glitch';
 
 const GlitchTeamList = ({ size }) => {
-  const tooltipTarget = <TeamLink team={{ url: GLITCH_TEAM_URL }} draggable={false}><Avatar name="Glitch Team" src={GLITCH_TEAM_AVATAR} color="#74ecfc" type="team" hideTooltip /></TeamLink>;
+  const tooltipTarget = <TeamLink team={{ url: GLITCH_TEAM_URL }} draggable={false}><AvatarBase name="Glitch Team" src={GLITCH_TEAM_AVATAR} color="#74ecfc" type="team" hideTooltip /></TeamLink>;
   return (
     <ul className={classnames(styles.container, styles[size])}>
       <li className={styles.teamItem}>

@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { Button } from '@fogcreek/shared-components';
 
 import TransparentButton from 'Components/buttons/transparent-button';
-import Button from 'Components/buttons/button';
 import Arrow from 'Components/arrow';
 import styles from './results-list.styl';
 
@@ -52,7 +52,7 @@ export const ResultItem = ({ className, onClick, href, children, active, selecte
       </TransparentButton>
       {href && (
         <div className={styles.linkButtonWrap}>
-          <Button size="small" href={href} newTab>
+          <Button as="a" size="small" href={href} target="blank">
             View <Arrow />
           </Button>
         </div>

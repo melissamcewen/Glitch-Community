@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { uniq } from 'lodash';
+import { Button, Icon } from '@fogcreek/shared-components';
 
 import TooltipContainer from 'Components/tooltips/tooltip-container';
 import WhitelistedDomainIcon from 'Components/whitelisted-domain';
 import { userIsTeamAdmin, userIsOnTeam, userCanJoinTeam } from 'Models/team';
 import { getDisplayName } from 'Models/user';
 import { useCurrentUser } from 'State/current-user';
-import { useAPIHandlers, createAPIHook } from 'State/api';
+import { useAPI, useAPIHandlers } from 'State/api';
 import { useNotifications } from 'State/notifications';
 import { PopoverContainer, PopoverDialog, PopoverInfo, PopoverActions, InfoDescription } from 'Components/popover';
 import AddTeamUserPop from 'Components/team-users/add-team-user';
-import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
 import { UserAvatar } from 'Components/images/avatar';
 import { UserLink } from 'Components/link';
@@ -19,6 +19,7 @@ import { captureException } from 'Utils/sentry';
 
 import TeamUserPop from './team-user-info';
 import styles from './styles.styl';
+import { emoji } from '../global.styl';
 
 // Invited user icon and pop
 
@@ -66,14 +67,14 @@ function InvitedUser({ user, team, onRevokeInvite }) {
               </PopoverInfo>
 
               <PopoverActions>
-                <Button onClick={resendInvite} type="tertiary" size="small" emoji="herb">
-                  Resend invite
+                <Button onClick={resendInvite} variant="secondary" size="small">
+                  Resend invite <Icon className={emoji} icon="herb" />
                 </Button>
               </PopoverActions>
 
               <PopoverActions type="dangerZone">
-                <Button onClick={onRevokeInvite} type="dangerZone" emoji="wave">
-                  Remove
+                <Button onClick={onRevokeInvite} variant="warning" size="small">
+                  Remove <Icon className={emoji} icon="wave" />
                 </Button>
               </PopoverActions>
             </PopoverDialog>
@@ -114,8 +115,8 @@ const WhitelistedDomain = ({ domain, setDomain }) => (
             </PopoverInfo>
             {!!setDomain && (
               <PopoverActions type="dangerZone">
-                <Button type="dangerZone" size="small" emoji="bomb" onClick={() => setDomain(null)}>
-                  Remove {domain}
+                <Button variant="warning" size="small" onClick={() => setDomain(null)}>
+                  Remove {domain} <Icon className={emoji} icon="bomb" />
                 </Button>
               </PopoverActions>
             )}
@@ -138,60 +139,94 @@ WhitelistedDomain.defaultProps = {
 // Join Team
 
 const JoinTeam = ({ onClick }) => (
-  <Button size="small" type="cta" onClick={onClick}>
+  <Button size="small" variant="cta" onClick={onClick}>
     Join Team
   </Button>
 );
 
-const useInvitees = createAPIHook(async (api, team, currentUserIsOnTeam) => {
-  if (!currentUserIsOnTeam) return [];
-  if (!team.tokens.length) return [];
+const useInvitees = (team, currentUserIsOnTeam) => {
+  const api = useAPI();
+  const [tokens, setTokens] = useState(team.tokens || []);
+  const [users, setUsers] = useState({});
 
-  try {
-    const idString = team.tokens.map(({ userId }) => `id=${userId}`).join('&');
-    const { data } = await api.get(`v1/users/by/id?${idString}`);
-    const invitees = Object.values(data);
-    return invitees;
-  } catch (error) {
-    if (!error.response || error.response.status !== 404) {
-      captureException(error);
+  const loadUsers = async (userIds) => {
+    const neededUsers = userIds.map(({ userId }) => userId).filter((id) => users[id] === undefined);
+    if (neededUsers.length) {
+      setUsers((oldUsers) => neededUsers.reduce((accumUsers, id) => ({ [id]: null, ...accumUsers }), oldUsers));
+      const idString = neededUsers.map((id) => `id=${id}`).join('&');
+      const { data } = await api.get(`v1/users/by/id?${idString}`);
+      setUsers((oldUsers) => ({ ...oldUsers, ...data }));
     }
-    return [];
-  }
-});
+  };
+
+  // watch for changes to the team and update tokens
+  useEffect(() => {
+    setTokens(team.tokens || []);
+  }, [team.tokens]);
+
+  // watch for changes to tokens and load new users
+  useEffect(() => {
+    loadUsers(tokens);
+  }, [tokens]);
+
+  const invitees = tokens.map(({ userId }) => users[userId]).filter((user) => !!user).reverse();
+
+  const addInvitee = (user) => {
+    setUsers((oldUsers) => ({ ...oldUsers, [user.id]: user }));
+    setTokens((oldTokens) => [{ userId: user.id }, ...oldTokens]);
+  };
+
+  const removeInvitee = (id) => {
+    setTokens((oldTokens) => oldTokens.filter(({ userId }) => userId !== id));
+  };
+
+  const reloadInvitees = async () => {
+    const { data } = await api.get(`v1/teams/by/id?id=${team.id}`);
+    if (data[team.id]) {
+      const newTokens = data[team.id].tokens || [];
+      await loadUsers(newTokens);
+      setTokens(newTokens);
+    }
+  };
+
+  useEffect(() => {
+    reloadInvitees();
+  }, [currentUserIsOnTeam]);
+
+  return [currentUserIsOnTeam ? invitees : [], addInvitee, removeInvitee, reloadInvitees];
+};
 
 const TeamUserContainer = ({ team, removeUserFromTeam, updateUserPermissions, updateWhitelistedDomain, inviteEmail, inviteUser, joinTeam }) => {
   const { currentUser } = useCurrentUser();
-  const [newlyInvited, setNewlyInvited] = useState([]);
-  const [removedInvitees, setRemovedInvitee] = useState([]);
   const { revokeTeamInvite } = useAPIHandlers();
   const { createNotification } = useNotifications();
 
   const currentUserIsOnTeam = userIsOnTeam({ team, user: currentUser });
   const currentUserIsTeamAdmin = userIsTeamAdmin({ team, user: currentUser });
   const currentUserCanJoinTeam = userCanJoinTeam({ team, user: currentUser });
-  const { value } = useInvitees(team, currentUserIsOnTeam);
-  const invitees = (value || []).concat(newlyInvited).filter((el) => (!removedInvitees.includes(el)));
-
+  const [invitees, addInvitee, removeInvitee, reloadInvitees] = useInvitees(team, currentUserIsOnTeam);
   const members = uniq([...team.users, ...invitees].map((user) => user.id));
 
   const onInviteUser = async (user) => {
-    setNewlyInvited((invited) => [...invited, user]);
+    addInvitee(user);
     try {
       await inviteUser(user);
       createNotification(`Invited ${getDisplayName(user)}!`, { type: 'success' });
     } catch (error) {
-      setNewlyInvited((invited) => invited.filter((u) => u.id !== user.id));
+      reloadInvitees();
       captureException(error);
       createNotification(`Couldn't invite ${getDisplayName(user)}, Try again later`, { type: 'error' });
     }
   };
 
   const onInviteEmail = async (email) => {
+    addInvitee({ id: 0, name: email });
     try {
       await inviteEmail(email);
       createNotification(`Invited ${email}!`, { type: 'success' });
+      reloadInvitees();
     } catch (error) {
+      reloadInvitees();
       captureException(error);
       createNotification(`Couldn't invite ${email}, Try again later`, { type: 'error' });
     }
@@ -215,7 +250,7 @@ const TeamUserContainer = ({ team, removeUserFromTeam, updateUserPermissions, up
             user={user}
             team={team}
             onRevokeInvite={async () => {
-              setRemovedInvitee((removed) => [...removed, user]);
+              removeInvitee(user.id);
               try {
                 await revokeTeamInvite({ team, user });
                 createNotification(`Removed ${user.name} from team`);

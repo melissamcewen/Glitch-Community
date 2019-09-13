@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Loader, TextInput } from '@fogcreek/shared-components';
+import { Button, Loader, TextInput } from '@fogcreek/shared-components';
 
 import Text from 'Components/text/text';
-import Button from 'Components/buttons/button';
 import Notification from 'Components/notification';
 import { useAPI } from 'State/api';
 import { useCurrentUser } from 'State/current-user';

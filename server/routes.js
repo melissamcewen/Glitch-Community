@@ -48,7 +48,7 @@ module.exports = function(external) {
 
   const ms = dayjs.convert(7, 'days', 'miliseconds');
   app.use(express.static('public', { index: false }));
-  app.use(express.static('build', { index: false, maxAge: ms }));
+  app.use(express.static('build/client', { index: false, maxAge: ms }));
 
   const readFilePromise = util.promisify(fs.readFile);
   const imageDefault = 'https://cdn.gomix.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fsocial-card%402x.png';
@@ -65,7 +65,7 @@ module.exports = function(external) {
     }
 
     try {
-      const stats = JSON.parse(await readFilePromise('build/stats.json'));
+      const stats = JSON.parse(await readFilePromise('build/client/stats.json'));
       stats.entrypoints.styles.assets.forEach((file) => {
         if (file.match(/\.css(\?|$)/)) {
           styles.push(`${stats.publicPath}${file}`);
@@ -88,11 +88,11 @@ module.exports = function(external) {
     const signedIn = !!req.cookies.hasLogin;
     const [zine, homeContent] = await Promise.all([getZine(), getData('home')]);
 
-    let ssr = { rendered: null };
+    let ssr = { rendered: null, styleTags: '' };
     if (shouldRender) {
       try {
         const url = new URL(req.url, `${req.protocol}://${req.hostname}`);
-        const { html, context } = await renderPage(url, {
+        const { html, context, styleTags } = await renderPage(url, {
           AB_TESTS: assignments,
           API_CACHE: cache,
           EXTERNAL_ROUTES: external,
@@ -102,6 +102,7 @@ module.exports = function(external) {
         });
         ssr = {
           rendered: html,
+          styleTags,
           ...context,
         };
       } catch (error) {
@@ -178,8 +179,8 @@ module.exports = function(external) {
       description = `${textDescription} 🎏 Glitch is the ${constants.tagline}`;
     }
 
-    // const cache = { [`project:${domain}`]: project };
-    await render(req, res, { title: domain, canonicalUrl, description, image: avatar }, false);
+    const cache = { [`project:${domain}`]: project };
+    await render(req, res, { title: domain, canonicalUrl, description, image: avatar, cache }, true);
   });
 
   app.get('/@:name', async (req, res) => {

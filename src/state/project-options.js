@@ -5,7 +5,7 @@ import { useCurrentUser } from 'State/current-user';
 import { useAPIHandlers, useAPI } from 'State/api';
 import useErrorHandlers from 'State/error-handlers';
 import { userOrTeamIsAuthor, useCollectionReload } from 'State/collection';
-import { useProjectReload } from 'State/project';
+import { useProjectReload, useProjectMembers } from 'State/project';
 import { userIsOnTeam } from 'Models/team';
 import { userIsProjectMember, userIsProjectAdmin, userIsOnlyProjectAdmin } from 'Models/project';
 import { useNotifications } from 'State/notifications';
@@ -78,7 +78,8 @@ export const useProjectOptions = (project, { user, team, collection, ...options 
   }, [user, team, project]);
 
   const isLoggedIn = !!currentUser.login;
-  const isProjectMember = userIsProjectMember({ project, user: currentUser });
+  const { value: members } = useProjectMembers(project.id);
+  const isProjectMember = userIsProjectMember({ members, user: currentUser });
   const isProjectAdmin = userIsProjectAdmin({ project, user: currentUser });
   const isOnlyProjectAdmin = userIsOnlyProjectAdmin({ project, user: currentUser });
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextInput } from '@fogcreek/shared-components';
+import { Button, TextInput } from '@fogcreek/shared-components';
 
-import Button from 'Components/buttons/button';
 import Notification from 'Components/notification';
 import Text from 'Components/text/text';
 
@@ -55,7 +54,7 @@ const TwoFactorSignIn = ({ initialToken, onSuccess }) => {
       <Text>Enter your two factor auth code to finish signing in</Text>
       <TextInput value={code} onChange={onChange} placeholder="123456 or a backup code" label="code" error={status.message} disabled={status.working} />
       <div className={styles.submitWrap}>
-        <Button size="small" disabled={status.working || code.length < 6} submit>Sign in</Button>
+        <Button size="small" disabled={status.working || code.length < 6} onClick={onSubmit}>Sign in</Button>
       </div>
     </form>
   );

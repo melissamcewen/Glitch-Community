@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@fogcreek/shared-components';
 
 import DataLoader from 'Components/data-loader';
-import Button from 'Components/buttons/button';
 import { useCurrentUser } from 'State/current-user';
 
 import styles from './preview-container.styl';
@@ -18,11 +18,11 @@ const PreviewContainer = ({ children, get, onPublish, previewMessage }) => {
               {previewMessage}
             </div>
             {currentUser.login ? (
-              <Button type="cta" onClick={() => onPublish(data)}>
+              <Button variant="cta" onClick={() => onPublish(data)}>
                 Publish
               </Button>
             ) : (
-              <Button type="cta" decorative disabled>
+              <Button as="span" variant="cta" disabled>
                 Log in to publish
               </Button>
             )}

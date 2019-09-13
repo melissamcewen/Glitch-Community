@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { kebabCase, debounce } from 'lodash';
 import { withRouter } from 'react-router-dom';
-import { Loader, TextInput } from '@fogcreek/shared-components';
-
+import { Button, Icon, Loader, TextInput } from '@fogcreek/shared-components';
 
 import { MultiPopoverTitle, PopoverDialog, PopoverInfo, PopoverActions, InfoDescription } from 'Components/popover';
-import Button from 'Components/buttons/button';
-import Emoji from 'Components/images/emoji';
 import { getPredicates, getTeamPair } from 'Models/words';
 import { getTeamLink } from 'Models/team';
 import { useAPI } from 'State/api';
 import { useTracker } from 'State/segment-analytics';
 
 import styles from './styles.styl';
+import { emoji } from '../global.styl';
 
 // Create Team 🌿
 
@@ -121,7 +119,7 @@ const CreateTeamPop = withRouter(({ history }) => {
   return (
     <PopoverDialog align="right" className={styles.createTeamPop}>
       <MultiPopoverTitle>
-        Create Team <Emoji name="herb" inTitle />
+        Create Team <Icon className={emoji} icon="herb" inTitle />
       </MultiPopoverTitle>
 
       <PopoverInfo>
@@ -136,8 +134,9 @@ const CreateTeamPop = withRouter(({ history }) => {
           {state.isLoading ? (
             <Loader style={{ width: '25px' }} />
           ) : (
-            <Button submit size="small" emoji="thumbsUp" disabled={!!state.error}>
+            <Button onClick={handleSubmit} size="small" disabled={!!state.error}>
               Create Team
+              <Icon icon="thumbsUp" className={emoji} />
             </Button>
           )}
         </form>

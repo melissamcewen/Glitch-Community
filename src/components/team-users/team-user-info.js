@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Loader } from '@fogcreek/shared-components';
+import { Button, Icon, Loader } from '@fogcreek/shared-components';
 
 import { getDisplayName } from 'Models/user';
 import { userIsTeamAdmin, userIsOnlyTeamAdmin } from 'Models/team';
@@ -9,7 +9,6 @@ import { UserAvatar, ProjectAvatar } from 'Components/images/avatar';
 import { UserLink } from 'Components/link';
 import Thanks from 'Components/thanks';
 import { PopoverContainer, PopoverDialog, PopoverActions, PopoverInfo, MultiPopover, MultiPopoverTitle, ActionDescription } from 'Components/popover';
-import Button from 'Components/buttons/button';
 import TransparentButton from 'Components/buttons/transparent-button';
 
 import { useTrackedFunc, useTracker } from 'State/segment-analytics';
@@ -19,6 +18,7 @@ import { useNotifications } from 'State/notifications';
 import { getAllPages } from 'Shared/api';
 
 import styles from './styles.styl';
+import { emoji } from '../global.styl';
 
 const MEMBER_ACCESS_LEVEL = 20;
 const ADMIN_ACCESS_LEVEL = 30;
@@ -98,7 +98,7 @@ function TeamUserRemovePop({ user, onRemoveUser, userTeamProjects }) {
       )}
 
       <PopoverActions type="dangerZone">
-        <Button type="dangerZone" onClick={() => onRemoveUser(projectsToRemove)}>
+        <Button variant="warning" onClick={() => onRemoveUser(projectsToRemove)}>
           Remove{' '}
           <span className={styles.tinyAvatar}>
             <UserAvatar user={user} withinButton />
@@ -144,20 +144,20 @@ const TeamUserInfo = ({ user, team, onMakeAdmin, onRemoveAdmin, onRemoveUser }) 
         <PopoverActions>
           <ActionDescription>Admins can update team info, billing, and remove users</ActionDescription>
           {selectedUserIsTeamAdmin ? (
-            <Button size="small" type="tertiary" emoji="fastDown" onClick={onRemoveAdmin}>
-              Remove Admin Status
+            <Button size="small" variant="secondary" onClick={onRemoveAdmin}>
+              Remove Admin Status <Icon className={emoji} icon="fastDown" />
             </Button>
           ) : (
-            <Button size="small" type="tertiary" emoji="fastUp" onClick={onMakeAdmin}>
-              Make an Admin
+            <Button size="small" variant="secondary" onClick={onMakeAdmin}>
+              Make an Admin <Icon className={emoji} icon="fastUp" />
             </Button>
           )}
         </PopoverActions>
       )}
       {canCurrentUserRemoveUser && (
         <PopoverActions type="dangerZone">
-          <Button type="dangerZone" emoji="wave" onClick={onRemoveUser}>
-            {isCurrentUser ? 'Leave Team' : 'Remove from Team'}
+          <Button variant="warning" onClick={onRemoveUser}>
+            {isCurrentUser ? 'Leave Team' : 'Remove from Team'} <Icon className={emoji} icon="wave" />
           </Button>
         </PopoverActions>
       )}

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
+import { Button } from '@fogcreek/shared-components';
+
 import Image from 'Components/images/image';
 import Text from 'Components/text/text';
 import Heading from 'Components/text/heading';
 import Layout from 'Components/layout';
-import Button from 'Components/buttons/button';
 import { useGlobals } from 'State/globals';
 import { Aquarium } from 'Components/errors/not-found';
 
@@ -15,7 +16,7 @@ const ErrorMessage = ({ title, description }) => (
   <div className={styles.errorMessage}>
     <Heading tagName="h1">{title}</Heading>
     <Text>{description}</Text>
-    <Button href="/">Back to Glitch</Button>
+    <Button as="a" href="/">Back to Glitch</Button>
   </div>
 );
 

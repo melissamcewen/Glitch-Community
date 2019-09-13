@@ -14,7 +14,7 @@ const NewStuffArticle = ({ title, body, image, imageAlt, link }) => (
     <h2 className={styles.title}>{title}</h2>
     <div className={styles.body}>
       <Markdown>{body}</Markdown>
-      {image ? <Image src={image} alt={imageAlt || ''} /> : '' }
+      {image && <Image src={image} alt={imageAlt || ''} />}
     </div>
     {!!link && (
       <Text>

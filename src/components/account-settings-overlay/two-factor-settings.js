@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Loader, TextInput } from '@fogcreek/shared-components';
+import { Button, Loader, TextInput } from '@fogcreek/shared-components';
 
 import Heading from 'Components/text/heading';
 import Text from 'Components/text/text';
-import Button from 'Components/buttons/button';
 import Notification from 'Components/notification';
 
 import { useAPI } from 'State/api';
@@ -107,7 +106,7 @@ function TwoFactorSettings() {
               Successfully enabled two-factor authentication
             </Notification>
           )}
-          <Button type="tertiary" size="small" disabled={working} onClick={disableTwoFactor}>
+          <Button variant="secondary" size="small" disabled={working} onClick={disableTwoFactor}>
             Disable Authenticator App
           </Button>
           <Heading tagName="h3">Backup Codes</Heading>
@@ -138,7 +137,7 @@ function TwoFactorSettings() {
               Successfully disabled two-factor authentication
             </Notification>
           )}
-          <Button type="tertiary" size="small" disabled={!!secret || working} onClick={generateSecret}>
+          <Button variant="secondary" size="small" disabled={!!secret || working} onClick={generateSecret}>
             Enable Authenticator App
           </Button>
           {secret && (
