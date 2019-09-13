@@ -124,7 +124,7 @@ function SearchResults({ query, searchResults, activeFilter, setActiveFilter }) 
           <Grid items={searchResults.starterKit} className={styles.starterKitResultsContainer}>
             {(result) => <StarterKitItem result={result} />}
           </Grid>
-          <Grid items={searchResults.topResults} className={styles.resultsContainer}>
+          <Grid items={searchResults.topResults} className={classnames(styles.resultsContainer, searchResults.topResults)}>
             {(result) => <ResultComponent result={result} projectsWithUserData={projectsWithUserData} />}
           </Grid>
         </article>
