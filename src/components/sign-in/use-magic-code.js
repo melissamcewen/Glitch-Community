@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Button, Loader } from '@fogcreek/shared-components';
 
 import Text from 'Components/text/text';
@@ -10,7 +11,7 @@ import { captureException } from 'Utils/sentry';
 
 import styles from './styles.styl';
 
-const UseMagicCode = () => {
+const UseMagicCode = ({ emailAddress }) => {
   const { login } = useCurrentUser();
   const api = useAPI();
   const [code, setCode] = useState('');
@@ -39,19 +40,16 @@ const UseMagicCode = () => {
 
   return (
     <div>
-      <Text>Now paste the code here to sign in.</Text>
+      <Notification persistent type="success">
+        Sent magic link to {emailAddress}
+      </Notification>
+      <Text>Click the magic link in your email to sign in directly.</Text>
+      <Text>...or enter your temporary login code below.</Text>
       {status === 'loading' ? (
         <Loader />
       ) : (
         <form onSubmit={onSubmit} style={{ marginBottom: 10 }} data-cy="sign-in-code-form">
-          <TextInput
-            value={code}
-            onChange={setCode}
-            type="text"
-            labelText="sign in code"
-            placeholder="cute-unique-cosmos"
-            testingId="sign-in-code"
-          />
+          <TextInput value={code} onChange={setCode} type="text" labelText="sign in code" placeholder="cute-unique-cosmos" testingId="sign-in-code" />
           <div className={styles.submitWrap}>
             <Button disabled={!isEnabled} onClick={onSubmit}>
               Sign In
@@ -74,6 +72,10 @@ const UseMagicCode = () => {
       )}
     </div>
   );
+};
+
+UseMagicCode.propTypes = {
+  emailAddress: PropTypes.string.isRequired,
 };
 
 export default UseMagicCode;

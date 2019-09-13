@@ -10,7 +10,7 @@ import { useGlobals } from 'State/globals';
 
 import LoginPage from './login';
 import ResetPasswordPage from './login/reset-password';
-import { FacebookLoginPage, GitHubLoginPage, GoogleLoginPage, EmailTokenLoginPage } from './login';
+import { FacebookLoginPage, GitHubLoginPage, GoogleLoginPage, EmailTokenLoginPage } from './login/callbacks';
 import OauthSignIn from './signin';
 import JoinTeamPage from './join-team';
 import QuestionsPage from './questions';
