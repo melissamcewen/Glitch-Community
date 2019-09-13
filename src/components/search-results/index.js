@@ -92,7 +92,7 @@ function SearchResults({ query, searchResults, activeFilter, setActiveFilter }) 
   const ready = searchResults.status === 'ready';
   const noResults = ready && searchResults.totalHits === 0;
   const showTopResults = ready && searchResults.starterKit.length + searchResults.topResults.length > 0 && activeFilter === 'all';
-  const topResultsIncludesProject = showTopResults && values(mapValues(searchResults.topResults, (result) => result.type), 'project');
+  const topResultsIncludesProject = showTopResults && values(mapValues(searchResults.topResults, (result) => result.type)).includes('project');
 
   const filters = [
     { id: 'all', label: 'All' },
