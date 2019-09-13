@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
-import {Button, Icon, Loader, TextInput } from '@fogcreek/shared-components';
+import { Button, Icon, Loader, TextInput } from '@fogcreek/shared-components';
 
 import SignInButton from 'Components/buttons/sign-in-button';
 import Link from 'Components/link';
